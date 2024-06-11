@@ -17,7 +17,7 @@ void showToast(String message, BuildContext context) {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
         decoration: BoxDecoration(
-          color: appRed,
+          color: primaryBlue,
           borderRadius: BorderRadius.circular(5.r),
         ),
         alignment: Alignment.center,

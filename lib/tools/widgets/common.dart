@@ -2,16 +2,11 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:rediones/tools/constants.dart';
+import 'package:eexily/tools/constants.dart';
 
 
-const SpinKitWave loader = SpinKitWave(
-  color: appRed,
-  size: 20,
-);
-
-const SpinKitWave whiteLoader = SpinKitWave(
-  color: theme,
+const SpinKitFadingFour loader = SpinKitFadingFour(
+  color: primaryBlue,
   size: 20,
 );
 
@@ -158,7 +153,7 @@ class SpecialForm extends StatelessWidget {
             onActionPressed!(controller.text);
           }
         },
-        cursorColor: appRed,
+        cursorColor: primaryBlue,
         style: context.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
         decoration: InputDecoration(
           errorMaxLines: 1,

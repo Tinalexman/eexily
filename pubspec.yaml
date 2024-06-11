@@ -1,0 +1,85 @@
+name: eexily
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  dio:
+  file_picker:
+  intl:
+  path_provider:
+  equatable:
+  flutter_boxicons:
+  flutter_screenutil:
+  flutter_spinkit:
+  connectivity_plus:
+  cached_network_image:
+  flutter_launcher_icons:
+  flutter_native_splash:
+  chatview:
+  timeago:
+  shared_preferences:
+  flutter_svg:
+  socket_io_client:
+  chat_bubbles:
+  go_router:
+  flutter_riverpod:
+  animated_switcher_plus:
+  flutter_staggered_animations:
+  crop_image:
+  path:
+  sqflite:
+  get_it:
+  flex_color_scheme:
+  dropdown_button2:
+  animated_snack_bar:
+  awesome_notifications:
+#  device_preview:
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.1
+
+flutter_icons:
+  image_path_android: "assets/Icon.png"
+  image_path_ios: "assets/Icon.png"
+  android: true
+  ios: true
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/Icon.png"
+  min_sdk_android: 29
+  remove_alpha_ios: true
+
+flutter_native_splash:
+  color: "#D94A4A"
+  android: true
+  ios: true
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+
+  fonts:
+    - family: Nunito
+      fonts:
+        - asset: fonts/Nunito-Black.ttf
+        - asset: fonts/Nunito-Black.ttf
+        - asset: fonts/Nunito-ExtraBold.ttf
+        - asset: fonts/Nunito-ExtraLight.ttf
+        - asset: fonts/Nunito-Italic.ttf
+        - asset: fonts/Nunito-Light.ttf
+        - asset: fonts/Nunito-Medium.ttf
+        - asset: fonts/Nunito-Regular.ttf
+        - asset: fonts/Nunito-SemiBold.ttf

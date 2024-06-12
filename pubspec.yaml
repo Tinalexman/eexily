@@ -52,12 +52,12 @@ dev_dependencies:
   flutter_lints: ^3.0.1
 
 flutter_icons:
-  image_path_android: "assets/Icon.png"
-  image_path_ios: "assets/Icon.png"
+  image_path_android: "assets/images/logo.png"
+  image_path_ios: "assets/images/logo.png"
   android: true
   ios: true
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/Icon.png"
+  adaptive_icon_foreground: "assets/images/logo.png"
   min_sdk_android: 29
   remove_alpha_ios: true
 
@@ -69,17 +69,16 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
   assets:
-    - assets/
+    - assets/images/
 
   fonts:
-    - family: Nunito
+    - family: Poppins
       fonts:
-        - asset: fonts/Nunito-Black.ttf
-        - asset: fonts/Nunito-Black.ttf
-        - asset: fonts/Nunito-ExtraBold.ttf
-        - asset: fonts/Nunito-ExtraLight.ttf
-        - asset: fonts/Nunito-Italic.ttf
-        - asset: fonts/Nunito-Light.ttf
-        - asset: fonts/Nunito-Medium.ttf
-        - asset: fonts/Nunito-Regular.ttf
-        - asset: fonts/Nunito-SemiBold.ttf
+        - asset: assets/fonts/Poppins-Black.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+        - asset: assets/fonts/Poppins-ExtraBold.ttf
+        - asset: assets/fonts/Poppins-Light.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+        - asset: assets/fonts/Poppins-Thin.ttf

@@ -40,41 +40,7 @@ extension RedionesContext on BuildContext {
 
 class Pages
 {
-  static const String splash = "splash";
-  static const String register = "register";
-  static const String login = "login";
-  static const String home = "home";
-  static const String spotlight = "spotlight";
-  static const String search = "search";
-  static const String notification = "notification";
-  static const String events = "events";
-  static const String groups = "groups";
-  static const String communityPractice = "community-practice";
-  static const String createProfile = "create-profile";
-  static const String profile = "profile";
-  static const String otherProfile = "other-profile";
-  static const String message = "messages";
-  static const String messagePocket = "message-pocket";
-  static const String inbox = "inbox";
-  static const String createPosts = "create-post";
-  static const String createProject = "create-project";
-  static const String createStory = "create-story";
-  static const String createGroup = "create-group";
-  static const String createCommunity = "create-community";
-  static const String createEvents = "create-events";
-  static const String createTask = 'create-task';
-  static const String yourSpotlight = "your-spotlight";
-  static const String createSpotlight = "create-spotlight";
-  static const String editSpotlight = "edit-spotlight";
-  static const String editProfile = "edit-profile";
-  static const String viewStory = 'view-story';
-  static const String aspectRatio = 'aspect-ratio';
-  static const String viewMedia = 'view-media';
-  static const String askQuestion = 'ask-question';
-  static const String communityChat = 'community-chat';
-  static const String communityLibrary = 'community-library';
-  static const String communityParticipants = 'community-participants';
-  static const String communitySearch = 'community-search';
+  static String get home => "home";
  }
 
 const String helpMeID = "65454b4db0916c7a0990af7f";

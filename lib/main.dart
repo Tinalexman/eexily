@@ -34,7 +34,7 @@ class _EexilyState extends State<Eexily> {
     super.initState();
 
     _router = GoRouter(
-      initialLocation: Pages.splash.path,
+      initialLocation: Pages.home.path,
       routes: routes,
     );
     time.setDefaultLocale('en_short');
@@ -47,21 +47,22 @@ class _EexilyState extends State<Eexily> {
         title: 'Rediones',
         debugShowCheckedModeBanner: false,
         theme: FlexThemeData.light(
-            fontFamily: "Nunito",
-            useMaterial3: true,
-            scheme: FlexScheme.mandyRed,
-            textTheme: lightTheme,
-            appBarStyle: FlexAppBarStyle.scaffoldBackground,
-            surfaceTint: Colors.transparent,
-            appBarElevation: 1.0),
+          fontFamily: "Poppins",
+          useMaterial3: true,
+          scheme: FlexScheme.mandyRed,
+          textTheme: lightTheme,
+          appBarStyle: FlexAppBarStyle.scaffoldBackground,
+          surfaceTint: Colors.transparent,
+          appBarElevation: 0.0,
+        ),
         darkTheme: FlexThemeData.dark(
-          fontFamily: "Nunito",
+          fontFamily: "Poppins",
           useMaterial3: true,
           scheme: FlexScheme.mandyRed,
           textTheme: darkTheme,
           appBarStyle: FlexAppBarStyle.scaffoldBackground,
           surfaceTint: Colors.transparent,
-          appBarElevation: 1.0,
+          appBarElevation: 0.0,
         ),
         routerConfig: _router,
       ),

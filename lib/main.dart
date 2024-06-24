@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'package:timeago/timeago.dart' as time;
 
 import 'tools/routes.dart';
-import 'tools/styles.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +33,7 @@ class _EexilyState extends State<Eexily> {
     super.initState();
 
     _router = GoRouter(
-      initialLocation: Pages.home.path,
+      initialLocation: Pages.splash.path,
       routes: routes,
     );
     time.setDefaultLocale('en_short');
@@ -49,17 +48,16 @@ class _EexilyState extends State<Eexily> {
         theme: FlexThemeData.light(
           fontFamily: "Poppins",
           useMaterial3: true,
-          scheme: FlexScheme.mandyRed,
-          textTheme: lightTheme,
+          scheme: FlexScheme.bahamaBlue,
           appBarStyle: FlexAppBarStyle.scaffoldBackground,
           surfaceTint: Colors.transparent,
           appBarElevation: 0.0,
+          scaffoldBackground: const Color(0xFFF9F9F9),
         ),
         darkTheme: FlexThemeData.dark(
           fontFamily: "Poppins",
           useMaterial3: true,
-          scheme: FlexScheme.mandyRed,
-          textTheme: darkTheme,
+          scheme: FlexScheme.bahamaBlue,
           appBarStyle: FlexAppBarStyle.scaffoldBackground,
           surfaceTint: Colors.transparent,
           appBarElevation: 0.0,
@@ -67,7 +65,7 @@ class _EexilyState extends State<Eexily> {
         routerConfig: _router,
       ),
       splitScreenMode: true,
-      designSize: const Size(390, 844),
+      designSize: const Size(375, 812),
       minTextAdapt: true,
     );
   }

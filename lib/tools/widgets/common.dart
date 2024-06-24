@@ -1,12 +1,16 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:eexily/tools/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:eexily/tools/constants.dart';
-
 
 const SpinKitFadingFour loader = SpinKitFadingFour(
-  color: primaryBlue,
+  color: primary,
+  size: 20,
+);
+
+const SpinKitFadingFour whiteLoader = SpinKitFadingFour(
+  color: Colors.white,
   size: 20,
 );
 
@@ -23,37 +27,10 @@ class TabHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) =>
+          BuildContext context, double shrinkOffset, bool overlapsContent) =>
       Container(
-        color: context.isDark ? primary1 : Colors.white,
+        color: context.isDark ? Colors.black : Colors.white,
         child: tabBar,
-      );
-
-  @override
-  bool shouldRebuild(TabHeaderDelegate oldDelegate) => false;
-}
-
-class WidgetHeaderDelegate extends SliverPersistentHeaderDelegate {
-  WidgetHeaderDelegate({required this.child, this.color, required this.height});
-
-  final Widget child;
-  final double height;
-  final Color? color;
-
-  @override
-  double get minExtent => height;
-
-  @override
-  double get maxExtent => height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) =>
-      Container(
-        color: color,
-        height: height,
-        width: 390.w,
-        child: child,
       );
 
   @override
@@ -67,10 +44,10 @@ class Popup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const AlertDialog(
-    backgroundColor: Colors.transparent,
-    elevation: 0,
-    content: CenteredPopup(),
-  );
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        content: CenteredPopup(),
+      );
 }
 
 class CenteredPopup extends StatelessWidget {
@@ -101,7 +78,7 @@ class SpecialForm extends StatelessWidget {
   final TextInputAction action;
   final TextStyle? hintStyle;
   final bool readOnly;
-  final int maxLines;
+  final int? maxLines;
   final double width;
   final double height;
 
@@ -129,94 +106,100 @@ class SpecialForm extends StatelessWidget {
     this.hint,
     this.prefix,
     this.suffix,
-    this.maxLines = 1,
+    this.maxLines,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool darkTheme = context.isDark;
     return SizedBox(
       width: width,
       height: height,
-      child: TextFormField(
-        autovalidateMode:
-        autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
-        maxLines: maxLines,
-        focusNode: focus,
-        autofocus: autoFocus,
-        controller: controller,
-        obscureText: obscure,
-        keyboardType: type,
-        textInputAction: action,
-        readOnly: readOnly,
-        onEditingComplete: () {
-          if (onActionPressed != null) {
-            onActionPressed!(controller.text);
-          }
-        },
-        cursorColor: primaryBlue,
-        style: context.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
-        decoration: InputDecoration(
-          errorMaxLines: 1,
-          errorStyle: const TextStyle(height: 0, fontSize: 0),
-          fillColor: fillColor ?? Colors.transparent,
-          filled: true,
-          contentPadding: padding ??
-              EdgeInsets.symmetric(
-                horizontal: 15.w,
-                vertical: maxLines == 1 ? 5.h : 10.h,
-              ),
-          prefixIcon: prefix != null ? SizedBox(
-            width: height,
-            height: height,
-            child: Center(
-              child: prefix,
-            ),
-          ) : null,
-          suffixIcon: suffix != null ? SizedBox(
-            width: height,
-            height: height,
-            child: Center(
-                child: suffix
-            ),
-          ) : null,
-          focusedBorder: OutlineInputBorder(
-            borderRadius:
-            BorderRadius.circular(maxLines > 1 ? 15.r : height * 0.5),
-            borderSide: BorderSide(
-              color: borderColor ?? neutral2
-            ),
-          ),
-          border: OutlineInputBorder(
-            borderRadius:
-            BorderRadius.circular(maxLines > 1 ? 15.r : height * 0.5),
-            borderSide: BorderSide(
-                color: borderColor ?? neutral2
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius:
-            BorderRadius.circular(maxLines > 1 ? 15.r : height * 0.5),
-            borderSide: BorderSide(
-                color: borderColor ?? neutral2
-            ),
-          ),
-          hintText: hint,
-          hintStyle: hintStyle ??
-              context.textTheme.bodyLarge!
-                  .copyWith(fontWeight: FontWeight.w500, color: context.isDark ? Colors.white54 : primaryPoint6),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: darkTheme ? Colors.white12 : Colors.black12,
+              blurRadius: 50,
+            )
+          ]
         ),
-        onChanged: (value) {
-          if (onChange == null) return;
-          onChange!(value);
-        },
-        validator: (value) {
-          if (onValidate == null) return null;
-          return onValidate!(value);
-        },
-        onSaved: (value) {
-          if (onSave == null) return;
-          onSave!(value);
-        },
+        child: TextFormField(
+          autovalidateMode:
+              autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
+          maxLines: maxLines,
+          focusNode: focus,
+          autofocus: autoFocus,
+          controller: controller,
+          obscureText: obscure,
+          keyboardType: type,
+          textInputAction: action,
+          readOnly: readOnly,
+          onEditingComplete: () {
+            if (onActionPressed != null) {
+              onActionPressed!(controller.text);
+            }
+          },
+          cursorColor: primary,
+          style:
+              context.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
+          decoration: InputDecoration(
+            errorMaxLines: 1,
+            errorStyle: const TextStyle(height: 0, fontSize: 0),
+            fillColor: fillColor ?? (darkTheme ? monokai : Colors.white),
+            filled: true,
+            contentPadding: padding ??
+                EdgeInsets.symmetric(
+                  horizontal: 15.w,
+                  vertical: maxLines == 1 ? 5.h : 10.h,
+                ),
+            prefixIcon: prefix != null
+                ? SizedBox(
+                    width: height,
+                    height: height,
+                    child: Center(
+                      child: prefix,
+                    ),
+                  )
+                : null,
+            suffixIcon: suffix != null
+                ? SizedBox(
+                    width: height,
+                    height: height,
+                    child: Center(child: suffix),
+                  )
+                : null,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(7.5.r),
+              borderSide: BorderSide.none,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(7.5.r),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(7.5.r),
+              borderSide: BorderSide.none,
+            ),
+            hintText: hint,
+            hintStyle: hintStyle ??
+                context.textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+          ),
+          onChanged: (value) {
+            if (onChange == null) return;
+            onChange!(value);
+          },
+          validator: (value) {
+            if (onValidate == null) return null;
+            return onValidate!(value);
+          },
+          onSaved: (value) {
+            if (onSave == null) return;
+            onSave!(value);
+          },
+        ),
       ),
     );
   }
@@ -293,27 +276,28 @@ class ComboBox extends StatelessWidget {
             hint,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
-            style: context.textTheme.bodyLarge!
-                .copyWith(fontWeight: FontWeight.w500, color: context.isDark ? offWhite : primaryPoint6),
+            style: context.textTheme.bodyLarge!.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         value: value,
         items: dropdownItems
             .map(
               (String item) => DropdownMenuItem<String>(
-            value: item,
-            child: Container(
-              alignment: valueAlignment,
-              child: Text(
-                item,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: context.textTheme.bodyLarge!
-                    .copyWith(fontWeight: FontWeight.w500),
+                value: item,
+                child: Container(
+                  alignment: valueAlignment,
+                  child: Text(
+                    item,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: context.textTheme.bodyLarge!
+                        .copyWith(fontWeight: FontWeight.w500),
+                  ),
+                ),
               ),
-            ),
-          ),
-        )
+            )
             .toList(),
         onChanged: onChanged,
         selectedItemBuilder: selectedItemBuilder,
@@ -326,10 +310,11 @@ class ComboBox extends StatelessWidget {
           decoration: (noDecoration)
               ? null
               : buttonDecoration ??
-              BoxDecoration(
-                borderRadius: BorderRadius.circular(buttonHeight == null ? 20 : buttonHeight! * 0.5),
-                border: Border.all(color: neutral2),
-              ),
+                  BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      buttonHeight == null ? 20 : 7.5.r,
+                    ),
+                  ),
           elevation: buttonElevation,
         ),
         iconStyleData: IconStyleData(
@@ -368,9 +353,3 @@ class ComboBox extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-

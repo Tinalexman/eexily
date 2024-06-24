@@ -17,14 +17,14 @@ void showToast(String message, BuildContext context) {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
         decoration: BoxDecoration(
-          color: primaryBlue,
+          color: primary,
           borderRadius: BorderRadius.circular(5.r),
         ),
         alignment: Alignment.center,
         child: Text(
           message,
           style: context.textTheme.bodySmall!.copyWith(
-            color: theme,
+            color: Colors.white,
             fontWeight: FontWeight.w700,
           ),
         ),

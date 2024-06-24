@@ -1,30 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-const Color theme = Color.fromARGB(255, 245, 245, 245);
-const Color primaryBlue = Color.fromARGB(255, 217, 74, 74);
-const Color appRed2 = Color.fromARGB(255, 255, 125, 125);
-const Color niceBlue =  Color.fromARGB(255, 73, 121, 209);
-const Color possibleGreen = Color.fromARGB(255, 0, 158, 96);
-const Color goodYellow = Color.fromARGB(255, 252, 163, 17);
-const Color primary = Color.fromARGB(255, 31, 31, 31);
-const Color fadedPrimary = Color.fromARGB(25, 31, 31, 31);
-const Color midPrimary = Color.fromARGB(255, 65, 65, 65);
-const Color neutral = Color.fromARGB(180, 200, 200, 200);
-const Color neutral2 = Color.fromARGB(35, 152, 152, 152);
-const Color neutral3 = Color.fromARGB(255, 165, 165, 165);
-const Color statusColor = Color.fromARGB(255, 229, 229, 229);
-const Color offWhite = Color.fromRGBO(224, 224, 224, 1.0);
+const Color primary = Color(0xFF0054C2);
+const Color secondary = Color(0xFFFFBE03);
+const Color monokai = Color(0xFF0A0A0A);
+const Color neutral = Color.fromARGB(35, 152, 152, 152);
 
-const Color primary1 = Color(0xFF1F1F1F);
-const Color primaryPoint2 = Color.fromRGBO(0, 0, 0, 0.2);
-const Color primaryPoint6 = Color.fromRGBO(0, 0, 0, 0.6);
-const Color gray = Color(0xFF808080);
-const Color gray2 = Color.fromRGBO(65, 65, 65, 0.5);
-const Color gray3 = Color(0xFFD9D9D9);
-const Color border = Color.fromRGBO(31, 31, 31, 0.15);
-
-const Color authFieldBackground = Color.fromRGBO(242, 242, 242, 0.7);
 
 extension StringPath on String {
   String get path => "/$this";
@@ -41,18 +22,10 @@ extension RedionesContext on BuildContext {
 class Pages
 {
   static String get home => "home";
+  static String get splash => "splash";
+  static String get onboard => "onboard";
+  static String get register => "register";
+  static String get login => "login";
  }
 
-const String helpMeID = "65454b4db0916c7a0990af7f";
-const String johnDoeID = "6547e80c1e04b4e42ff06db7";
-
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque feugiat at risus sit amet scelerisque. Curabitur sollicitudin tincidunt erat, sed vehicula ligula ullamcorper at. In in tortor ipsum.";
-
-const String currentUserID = "currentUserID";
-
-class Holder<T> {
-  T value;
-  bool selected;
-
-  Holder(this.value, {this.selected = false});
-}

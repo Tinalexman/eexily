@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'dart:math' as math;
-
+import 'package:sensors/sensors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Homepage extends StatefulWidget {
@@ -41,34 +41,40 @@ class GasContainerRippler extends StatefulWidget {
 }
 
 class _GasContainerRipplerState extends State<GasContainerRippler>
-    with SingleTickerProviderStateMixin {
-  late AnimationController controller;
+    with TickerProviderStateMixin {
+  late AnimationController waveController;
+
+  double rotationAngle = 0.0;
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
+    waveController = AnimationController(
       duration: const Duration(seconds: 5),
       vsync: this,
     )
       ..addStatusListener((status) {
         if (status == AnimationStatus.dismissed) {
-          setState(() => controller.value = 0.0);
+          setState(() => waveController.value = 0.0);
         }
       })
       ..repeat(reverse: true);
+
+    accelerometerEvents.listen((AccelerometerEvent event) {
+      setState(() => rotationAngle = (event.x / 10) * math.pi / 4);
+    });
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    waveController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: controller,
+      animation: waveController,
       builder: (context, child) => DecoratedBox(
         decoration: BoxDecoration(
           border: Border.all(
@@ -85,8 +91,10 @@ class _GasContainerRipplerState extends State<GasContainerRippler>
             child: CustomPaint(
               painter: SineWavePainter(
                 color: widget.gasColor,
-                animationValue: controller.value,
-                value: 200.r * 0.5,// controller.value,
+                animationValue: waveController.value,
+                value: 200.r * 0.5,
+                // TODO: Change this to reflect the value of the gas left in the container
+                rotationAngle: rotationAngle,
               ),
             ),
           ),
@@ -99,10 +107,12 @@ class _GasContainerRipplerState extends State<GasContainerRippler>
 class SineWavePainter extends CustomPainter {
   final double value;
   final double animationValue;
+  final double rotationAngle;
   final Color color;
 
   SineWavePainter({
     required this.color,
+    required this.rotationAngle,
     required this.animationValue,
     required this.value,
   });
@@ -113,8 +123,8 @@ class SineWavePainter extends CustomPainter {
       ..color = color
       ..style = PaintingStyle.fill;
 
-    final path = Path();
-    final centerY = value;
+    Path path = Path();
+    double centerY = value;
 
     path.moveTo(0, centerY);
 

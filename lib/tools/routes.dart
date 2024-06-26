@@ -1,4 +1,6 @@
+import 'package:eexily/pages/auth/login.dart';
 import 'package:eexily/pages/auth/register.dart';
+import 'package:eexily/pages/auth/verify.dart';
 import 'package:eexily/pages/home/home.dart';
 import 'package:eexily/pages/home/onboard/onboard.dart';
 import 'package:eexily/pages/home/splash.dart';
@@ -26,5 +28,15 @@ final List<GoRoute> routes = [
     path: Pages.register.path,
     name: Pages.register,
     builder: (_, __) => const RegisterPage(),
+  ),
+  GoRoute(
+    path: Pages.login.path,
+    name: Pages.login,
+    builder: (_, __) => const LoginPage(),
+  ),
+  GoRoute(
+    path: Pages.verification.path,
+    name: Pages.verification,
+    builder: (_, state) => VerifyOTPPage(number: state.extra as String),
   ),
 ];

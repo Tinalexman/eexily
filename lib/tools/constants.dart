@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 const Color primary = Color(0xFF0054C2);
+const Color primary50 = Color(0xFFB1D3FF);
 const Color secondary = Color(0xFFFFBE03);
 const Color monokai = Color(0xFF0A0A0A);
 const Color neutral = Color.fromARGB(35, 152, 152, 152);
+const Color neutral2 = Color(0xFF494949);
 
 
 extension StringPath on String {
@@ -26,6 +28,7 @@ class Pages
   static String get onboard => "onboard";
   static String get register => "register";
   static String get login => "login";
+  static String get verification => "verification";
  }
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque feugiat at risus sit amet scelerisque. Curabitur sollicitudin tincidunt erat, sed vehicula ligula ullamcorper at. In in tortor ipsum.";

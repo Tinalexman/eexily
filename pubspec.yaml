@@ -43,6 +43,7 @@ dependencies:
   animated_snack_bar:
   awesome_notifications:
   sensors:
+  flutter_otp_text_field:
 #  device_preview:
 
 

@@ -115,91 +115,84 @@ class SpecialForm extends StatelessWidget {
     return SizedBox(
       width: width,
       height: height,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: darkTheme ? Colors.white12 : Colors.black12,
-              blurRadius: 50,
-            )
-          ]
-        ),
-        child: TextFormField(
-          autovalidateMode:
-              autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
-          maxLines: maxLines,
-          focusNode: focus,
-          autofocus: autoFocus,
-          controller: controller,
-          obscureText: obscure,
-          keyboardType: type,
-          textInputAction: action,
-          readOnly: readOnly,
-          onEditingComplete: () {
-            if (onActionPressed != null) {
-              onActionPressed!(controller.text);
-            }
-          },
-          cursorColor: primary,
-          style:
-              context.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
-          decoration: InputDecoration(
-            errorMaxLines: 1,
-            errorStyle: const TextStyle(height: 0, fontSize: 0),
-            fillColor: fillColor ?? (darkTheme ? monokai : Colors.white),
-            filled: true,
-            contentPadding: padding ??
-                EdgeInsets.symmetric(
-                  horizontal: 15.w,
-                  vertical: maxLines == 1 ? 5.h : 10.h,
-                ),
-            prefixIcon: prefix != null
-                ? SizedBox(
-                    width: height,
-                    height: height,
-                    child: Center(
-                      child: prefix,
-                    ),
-                  )
-                : null,
-            suffixIcon: suffix != null
-                ? SizedBox(
-                    width: height,
-                    height: height,
-                    child: Center(child: suffix),
-                  )
-                : null,
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(7.5.r),
-              borderSide: BorderSide.none,
+      child: TextFormField(
+        autovalidateMode:
+            autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
+        maxLines: maxLines,
+        focusNode: focus,
+        autofocus: autoFocus,
+        controller: controller,
+        obscureText: obscure,
+        keyboardType: type,
+        textInputAction: action,
+        readOnly: readOnly,
+        onEditingComplete: () {
+          if (onActionPressed != null) {
+            onActionPressed!(controller.text);
+          }
+        },
+        cursorColor: primary,
+        style:
+            context.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
+        decoration: InputDecoration(
+          errorMaxLines: 1,
+          errorStyle: const TextStyle(height: 0, fontSize: 0),
+          fillColor: fillColor ?? (darkTheme ? monokai : Colors.white),
+          filled: true,
+          contentPadding: padding ??
+              EdgeInsets.symmetric(
+                horizontal: 15.w,
+                vertical: maxLines == 1 ? 5.h : 10.h,
+              ),
+          prefixIcon: prefix != null
+              ? SizedBox(
+                  width: height,
+                  height: height,
+                  child: Center(
+                    child: prefix,
+                  ),
+                )
+              : null,
+          suffixIcon: suffix != null
+              ? SizedBox(
+                  width: height,
+                  height: height,
+                  child: Center(child: suffix),
+                )
+              : null,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(7.5.r),
+            borderSide: const BorderSide(
+              color: primary50,
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(7.5.r),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(7.5.r),
-              borderSide: BorderSide.none,
-            ),
-            hintText: hint,
-            hintStyle: hintStyle ??
-                context.textTheme.bodyLarge!.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
           ),
-          onChanged: (value) {
-            if (onChange == null) return;
-            onChange!(value);
-          },
-          validator: (value) {
-            if (onValidate == null) return null;
-            return onValidate!(value);
-          },
-          onSaved: (value) {
-            if (onSave == null) return;
-            onSave!(value);
-          },
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(7.5.r),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(7.5.r),
+            borderSide: BorderSide.none,
+          ),
+          hintText: hint,
+          hintStyle: hintStyle ??
+              context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w300,
+                color: darkTheme ? Colors.white38 : Colors.black45,
+              ),
         ),
+        onChanged: (value) {
+          if (onChange == null) return;
+          onChange!(value);
+        },
+        validator: (value) {
+          if (onValidate == null) return null;
+          return onValidate!(value);
+        },
+        onSaved: (value) {
+          if (onSave == null) return;
+          onSave!(value);
+        },
       ),
     );
   }

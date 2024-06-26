@@ -60,6 +60,7 @@ class _EexilyState extends State<Eexily> {
           scheme: FlexScheme.bahamaBlue,
           appBarStyle: FlexAppBarStyle.scaffoldBackground,
           surfaceTint: Colors.transparent,
+          scaffoldBackground: neutral,
           appBarElevation: 0.0,
         ),
         routerConfig: _router,

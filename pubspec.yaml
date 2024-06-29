@@ -44,6 +44,7 @@ dependencies:
   awesome_notifications:
   sensors:
   flutter_otp_text_field:
+  video_player:
 #  device_preview:
 
 
@@ -72,6 +73,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/videos/
 
   fonts:
     - family: Poppins

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 const Color primary = Color(0xFF0054C2);
 const Color primary50 = Color(0xFFB1D3FF);
 const Color secondary = Color(0xFFFFBE03);
+const Color secondary2 = Color(0xFF42CD00);
+const Color secondary3 = Color(0xFF00DBB3);
 const Color monokai = Color(0xFF0A0A0A);
 const Color neutral = Color.fromARGB(35, 152, 152, 152);
 const Color neutral2 = Color(0xFF494949);

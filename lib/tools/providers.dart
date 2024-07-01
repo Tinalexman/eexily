@@ -7,6 +7,7 @@ const User dummyUser = User(
 );
 
 final StateProvider<User> userProvider = StateProvider((ref) => dummyUser);
+final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
 
 void logout(WidgetRef ref) {
   ref.invalidate(userProvider);

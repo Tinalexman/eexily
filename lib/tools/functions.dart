@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:eexily/tools/constants.dart';
 
-void showToast(String message, BuildContext context) {
+void showToast(String message, BuildContext context, {Color? backgroundColor}) {
   HapticFeedback.vibrate();
   AnimatedSnackBar snackBar = AnimatedSnackBar(
     builder: (context) => ConstrainedBox(
@@ -15,9 +15,9 @@ void showToast(String message, BuildContext context) {
         minHeight: 40.h,
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
         decoration: BoxDecoration(
-          color: primary,
+          color: backgroundColor ?? primary,
           borderRadius: BorderRadius.circular(5.r),
         ),
         alignment: Alignment.center,
@@ -27,6 +27,7 @@ void showToast(String message, BuildContext context) {
             color: Colors.white,
             fontWeight: FontWeight.w700,
           ),
+          textAlign: TextAlign.center,
         ),
       ),
     ),

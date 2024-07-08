@@ -57,7 +57,7 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.usage.path,
     name: Pages.usage,
-    builder: (_, state) => UsagePage(usage: state.extra as String),
+    builder: (_, __) => const UsagePage(),
   ),
   GoRoute(
     path: Pages.refillNow.path,

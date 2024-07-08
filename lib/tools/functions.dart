@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:eexily/tools/constants.dart';
+import 'package:intl/intl.dart';
 
 void showToast(String message, BuildContext context, {Color? backgroundColor}) {
   HapticFeedback.vibrate();
@@ -75,6 +76,26 @@ String formatDate(String dateTime, {bool shorten = false}) {
   return "${month(m, shorten)} ${day(d)}, $y";
 }
 
+bool isLeapYear(int year) {
+  if (year % 4 == 0) {
+    if (year % 100 == 0) {
+      return year % 400 == 0;
+    } else {
+      return true;
+    }
+  } else {
+    return false;
+  }
+}
+
+int getDaysOfMonth(int month, int year) {
+  if(month == 4 || month == 6 || month == 9 || month == 11) return 30;
+  if(month == 2) {
+    return isLeapYear(year) ? 29 : 28;
+  }
+  return 31;
+}
+
 String month(String val, bool shorten) {
   int month = int.parse(val);
   switch (month) {
@@ -120,11 +141,19 @@ String day(String val) {
   }
 }
 
-String formatDuration(Duration duration) {
-  int total = duration.inSeconds;
+String formatDateRaw(DateTime date, {bool shorten = false}) =>
+    formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten);
+
+String formatDateWithTime(DateTime date, {bool shorten = false}) =>
+    formatDate(DateFormat("dd/MM/yyy").format(date),
+        shorten: shorten);
+
+
+String formatDuration(int total) {
+  int hr = total ~/ 3600;
   int min = total ~/ 60;
-  int secs = total - (min * 60);
-  return "$min:$secs";
+  int secs = total - ((hr * 3600) - (min * 60));
+  return "${hr < 10 ? "0" : ""}$hr:${min < 10 ? "0" : ""}$min:${secs < 10 ? "0" : ""}$secs";
 }
 
 int fastHash(String string) {

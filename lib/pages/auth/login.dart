@@ -147,7 +147,10 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     if (!validateForm(formKey)) return;
                     showToast("Welcome back to Eexily", context);
-                    Future.delayed(const Duration(seconds: 1), () => context.router.pushReplacementNamed(Pages.home));
+                    Future.delayed(
+                      const Duration(seconds: 1),
+                      () => context.router.pushReplacementNamed(Pages.home),
+                    );
                   },
                   child: Text(
                     "Sign in",

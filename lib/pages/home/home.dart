@@ -78,7 +78,6 @@ class _HomepageState extends ConsumerState<Homepage>
     UserRole role = ref.watch(userProvider.select((u) => u.role));
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         toolbarHeight: 0.h,
@@ -100,8 +99,7 @@ class _HomepageState extends ConsumerState<Homepage>
                         CircleAvatar(
                           radius: 22.r,
                           backgroundColor: neutral2,
-                          backgroundImage:
-                              const AssetImage("assets/images/user.png"),
+                          backgroundImage: AssetImage(image),
                         ),
                         SizedBox(width: 10.w),
                         Column(
@@ -145,7 +143,7 @@ class _HomepageState extends ConsumerState<Homepage>
                           width: 7.5.r,
                           height: 7.5.r,
                           decoration: const BoxDecoration(
-                            color: secondary2,
+                            color: secondary4,
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -153,49 +151,76 @@ class _HomepageState extends ConsumerState<Homepage>
                         Text(
                           "In use",
                           style: context.textTheme.bodyMedium!.copyWith(
-                            color: secondary2,
+                            color: secondary4,
                             fontWeight: FontWeight.w600,
                           ),
                         )
                       ],
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Current Gas Level:",
-                          style: context.textTheme.bodyMedium!.copyWith(
+                    Container(
+                      width: 50.r,
+                      height: 50.r,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: gasColor(animationController.value)),
+                      alignment: Alignment.center,
+                      child: AnimatedBuilder(
+                        animation: animationController,
+                        builder: (context, child) => Text(
+                          "${convertProgress(animationController.value)}%",
+                          style: context.textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.w600,
+                            color: Colors.white,
                           ),
                         ),
-                        AnimatedBuilder(
-                          animation: animationController,
-                          builder: (context, child) => Text(
-                            "${convertProgress(animationController.value)}%",
-                            style: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: gasColor(animationController.value),
-                            ),
-                          ),
-                        )
-                      ],
+                      ),
                     )
                   ],
                 ),
-                SizedBox(height: 40.h),
                 SizedBox(
-                  height: 400.h,
-                  child: Center(
-                    child: videoController.value.isInitialized
-                        ? AspectRatio(
-                            aspectRatio: videoController.value.aspectRatio,
-                            child: VideoPlayer(videoController),
-                          )
-                        : const CircularProgressIndicator(
-                            color: primary,
-                          ),
+                  height: 350.h,
+                  child: Stack(
+                    children: [
+                      // Image.asset(
+                      //   "assets/images/Logo Mark.png",
+                      //   height: 350.h,
+                      //   width: 375.w,
+                      //   fit: BoxFit.contain,
+                      // ),
+                      Center(
+                        child: videoController.value.isInitialized
+                            ? AspectRatio(
+                                aspectRatio: videoController.value.aspectRatio,
+                                child: VideoPlayer(videoController),
+                              )
+                            : const CircularProgressIndicator(
+                                color: primary,
+                              ),
+                      ),
+                    ],
                   ),
                 ),
+                SizedBox(height: 20.h),
+                if (role == UserRole.regular)
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primary,
+                      elevation: 1.0,
+                      fixedSize: Size(375.w, 50.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.5.r),
+                      ),
+                    ),
+                    onPressed: () =>
+                        context.router.pushNamed(Pages.startCooking),
+                    child: Text(
+                      "Start cooking",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

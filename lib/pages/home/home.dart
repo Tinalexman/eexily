@@ -1,3 +1,4 @@
+import 'package:eexily/components/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -43,13 +44,8 @@ class _HomepageState extends ConsumerState<Homepage>
 
     videoController = VideoPlayerController.asset("assets/videos/gas.mov")
       ..initialize().then(
-        (_) => setState(
-          () {
-            animationController.forward();
-          },
-        ),
-      )
-      ..play();
+        (_) => setState(() {}),
+      );
   }
 
   @override
@@ -78,6 +74,8 @@ class _HomepageState extends ConsumerState<Homepage>
   @override
   Widget build(BuildContext context) {
     String firstName = ref.watch(userProvider.select((u) => u.firstName));
+    String image = ref.watch(userProvider.select((u) => u.image));
+    UserRole role = ref.watch(userProvider.select((u) => u.role));
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -105,38 +103,15 @@ class _HomepageState extends ConsumerState<Homepage>
                           backgroundImage:
                               const AssetImage("assets/images/user.png"),
                         ),
-                        SizedBox(width: 5.w),
+                        SizedBox(width: 10.w),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Hello $firstName",
-                                  style: context.textTheme.bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                SizedBox(width: 7.5.w),
-                                Container(
-                                  width: 7.5.r,
-                                  height: 7.5.r,
-                                  decoration: const BoxDecoration(
-                                    color: secondary2,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                SizedBox(width: 7.5.w),
-                                Text(
-                                  "Premium user",
-                                  style: context.textTheme.bodySmall!.copyWith(
-                                    color: secondary2,
-                                    fontSize: 10.sp,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                )
-                              ],
+                            Text(
+                              "Hello $firstName",
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                             Text(
                               "Welcome",

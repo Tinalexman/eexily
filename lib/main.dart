@@ -44,6 +44,7 @@ class _EexilyState extends State<Eexily> {
     return ScreenUtilInit(
       builder: (context, widget) => MaterialApp.router(
         title: 'Rediones',
+        themeMode: ThemeMode.light,
         debugShowCheckedModeBanner: false,
         theme: FlexThemeData.light(
           fontFamily: "Poppins",
@@ -53,15 +54,6 @@ class _EexilyState extends State<Eexily> {
           surfaceTint: Colors.transparent,
           appBarElevation: 0.0,
           scaffoldBackground: const Color(0xFFF9F9F9),
-        ),
-        darkTheme: FlexThemeData.dark(
-          fontFamily: "Poppins",
-          useMaterial3: true,
-          scheme: FlexScheme.bahamaBlue,
-          appBarStyle: FlexAppBarStyle.scaffoldBackground,
-          surfaceTint: Colors.transparent,
-          scaffoldBackground: neutral,
-          appBarElevation: 0.0,
         ),
         routerConfig: _router,
       ),

@@ -31,6 +31,11 @@ class Pages
   static String get register => "register";
   static String get login => "login";
   static String get verification => "verification";
+  static String get scheduleRefill => "schedule-refill";
+  static String get refillNow => "refill-now";
+  static String get usage => "usage";
+  static String get notification => "notification";
+  static String get startCooking => "start-cooking";
  }
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque feugiat at risus sit amet scelerisque. Curabitur sollicitudin tincidunt erat, sed vehicula ligula ullamcorper at. In in tortor ipsum.";

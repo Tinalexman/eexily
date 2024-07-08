@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 const User dummyUser = User(
   firstName: "John",
   lastName: "Doe",
+  role: UserRole.regular,
 );
 
 final StateProvider<User> userProvider = StateProvider((ref) => dummyUser);

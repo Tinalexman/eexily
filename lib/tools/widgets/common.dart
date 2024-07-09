@@ -63,6 +63,7 @@ class SpecialForm extends StatelessWidget {
   final String? hint;
   final Color? fillColor;
   final Color? borderColor;
+  final Color? textColor;
   final EdgeInsets? padding;
   final bool obscure;
   final bool autoValidate;
@@ -89,6 +90,7 @@ class SpecialForm extends StatelessWidget {
     required this.height,
     this.fillColor,
     this.borderColor,
+    this.textColor,
     this.padding,
     this.hintStyle,
     this.focus,
@@ -132,8 +134,10 @@ class SpecialForm extends StatelessWidget {
           }
         },
         cursorColor: primary,
-        style:
-            context.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
+        style: context.textTheme.bodyLarge!.copyWith(
+          fontWeight: FontWeight.w500,
+          color: textColor,
+        ),
         decoration: InputDecoration(
           errorMaxLines: 1,
           errorStyle: const TextStyle(height: 0, fontSize: 0),

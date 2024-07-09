@@ -55,8 +55,6 @@ class _EexilyState extends State<Eexily> {
           surfaceTint: Colors.transparent,
           appBarElevation: 0.0,
           scaffoldBackground: const Color(0xFFF9F9F9),
-        ).copyWith(
-          scaffoldBackgroundColor: Colors.white,
         ),
         routerConfig: _router,
       ),

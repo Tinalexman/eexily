@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
@@ -17,6 +16,84 @@ class GasTrackerContainer extends ConsumerStatefulWidget {
 }
 
 class _GasTrackerContainerState extends ConsumerState<GasTrackerContainer> {
+  void showRefillDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        insetPadding: EdgeInsets.symmetric(horizontal: 60.w),
+        child: Container(
+          width: 220.w,
+          height: 150.h,
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                "assets/images/gas station.png",
+                fit: BoxFit.cover,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      context.router.pushNamed(Pages.scheduleRefill);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: primary,
+                        minimumSize: Size(100.w, 30.h),
+                        fixedSize: Size(100.w, 30.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.5.r),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 10.w)),
+                    child: Text(
+                      "Schedule a refill",
+                      style: context.textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontSize: 10.sp,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      context.router.pushNamed(Pages.refillNow);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        minimumSize: Size(100.w, 30.h),
+                        fixedSize: Size(100.w, 30.h),
+                        side: const BorderSide(color: primary),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.5.r),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 10.w)),
+                    child: Text(
+                      "Refill now",
+                      style: context.textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: primary,
+                        fontSize: 10.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -124,56 +201,59 @@ class _GasTrackerContainerState extends ConsumerState<GasTrackerContainer> {
             ),
           ),
         ),
-        Container(
-          width: 200.w,
-          height: 130.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.r),
-            color: secondary3,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: 15.w,
-            vertical: 10.h,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/gas station.png",
-                    fit: BoxFit.cover,
-                  ),
-                  Text(
-                    "Refill Gas",
-                    style: context.textTheme.titleSmall!.copyWith(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+        GestureDetector(
+          onTap: showRefillDialog,
+          child: Container(
+            width: 200.w,
+            height: 130.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.r),
+              color: secondary3,
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: 15.w,
+              vertical: 10.h,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/gas station.png",
+                      fit: BoxFit.cover,
                     ),
-                  )
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/award.png",
-                    fit: BoxFit.cover,
-                  ),
-                  Text(
-                    "Earn Rewards",
-                    style: context.textTheme.titleSmall!.copyWith(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                    Text(
+                      "Refill Gas",
+                      style: context.textTheme.titleSmall!.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/award.png",
+                      fit: BoxFit.cover,
                     ),
-                  )
-                ],
-              ),
-            ],
+                    Text(
+                      "Earn Rewards",
+                      style: context.textTheme.titleSmall!.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -204,7 +284,7 @@ class _GasTimerState extends ConsumerState<GasTimer> {
         timer = Timer.periodic(
           const Duration(seconds: 1),
           (timer) {
-            if(!mounted) return;
+            if (!mounted) return;
             setState(() {
               duration = formatDuration(count + 1);
               count++;

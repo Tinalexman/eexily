@@ -40,7 +40,6 @@ class _StartCookingPageState extends ConsumerState<StartCookingPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () => context.router.pop(),
           icon: const Icon(Icons.arrow_back),

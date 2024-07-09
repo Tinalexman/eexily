@@ -10,6 +10,7 @@ const Color secondary4 = Color(0xFF21EF00);
 const Color monokai = Color(0xFF0A0A0A);
 const Color neutral = Color.fromARGB(35, 152, 152, 152);
 const Color neutral2 = Color(0xFF494949);
+Color neutral3 = const Color(0xFF494949).withOpacity(0.5);
 
 const Color gasUsageContainerStart = Color.fromRGBO(166, 204, 255, 0.4);
 const Color gasUsageStartText = Color(0xFF384C66);

@@ -6,9 +6,11 @@ class User extends Equatable {
   final String lastName;
   final String image;
   final UserRole role;
+  final String address;
 
   const User({
     this.id = "",
+    this.address = "",
     this.firstName = "",
     this.lastName = "",
     this.image = "",

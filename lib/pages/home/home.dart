@@ -120,7 +120,7 @@ class _HomepageState extends ConsumerState<Homepage>
                       ],
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () => context.router.pushNamed(Pages.notification),
                       icon: const Icon(
                         Icons.notifications_outlined,
                         color: Colors.black,

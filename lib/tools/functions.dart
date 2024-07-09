@@ -96,6 +96,19 @@ int getDaysOfMonth(int month, int year) {
   return 31;
 }
 
+String getWeekDay(int day, {bool shorten = false}) {
+  switch(day) {
+    case 1: return shorten ? "Mon" : "Monday";
+    case 2: return shorten ? "Tue" : "Tuesday";
+    case 3: return shorten ? "Wed" : "Wednesday";
+    case 4: return shorten ? "Thur" : "Thursday";
+    case 5: return shorten ? "Fri" : "Friday";
+    case 6: return shorten ? "Sat" : "Saturday";
+    case 7: return shorten ? "Sun" : "Sunday";
+    default: return "";
+  }
+}
+
 String month(String val, bool shorten) {
   int month = int.parse(val);
   switch (month) {

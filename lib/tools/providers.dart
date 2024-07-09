@@ -1,3 +1,4 @@
+import 'package:eexily/components/notification.dart';
 import 'package:eexily/components/usage.dart';
 import 'package:eexily/components/user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,7 @@ const User dummyUser = User(
   lastName: "Doe",
   image: "assets/images/user.png",
   role: UserRole.regular,
+  address: "House 12, Camp Junction, Abeokuta",
 );
 
 final StateProvider<User> userProvider = StateProvider((ref) => dummyUser);
@@ -78,6 +80,20 @@ final StateProvider<UsageData> monthlyUsages = StateProvider(
   ),
 );
 
+final StateProvider<List<Notification>> notificationsProvider = StateProvider((ref) {
+  String name = ref.watch(userProvider.select((u) => u.firstName));
+  return [
+    Notification(
+      message: "Hello $name, your gas has been exhausted completely.",
+      read: false,
+    ),
+    Notification(
+      message: "Hello $name, your gas level is currently low.",
+      read: true,
+    ),
+  ];
+});
+
 void logout(WidgetRef ref) {
   ref.invalidate(shownGasToast);
   ref.invalidate(startGasTimerProvider);
@@ -85,4 +101,5 @@ void logout(WidgetRef ref) {
   ref.invalidate(dailyUsages);
   ref.invalidate(weeklyUsages);
   ref.invalidate(monthlyUsages);
+  ref.invalidate(notificationsProvider);
 }

@@ -1,11 +1,14 @@
+import 'package:eexily/components/points.dart';
 import 'package:eexily/pages/auth/login.dart';
 import 'package:eexily/pages/auth/register.dart';
 import 'package:eexily/pages/auth/verify.dart';
 import 'package:eexily/pages/cooking/start_cooking.dart';
 import 'package:eexily/pages/cooking/usage.dart';
 import 'package:eexily/pages/home/home.dart';
+import 'package:eexily/pages/home/leaderboard.dart';
 import 'package:eexily/pages/home/notifications.dart';
 import 'package:eexily/pages/home/onboard/onboard.dart';
+import 'package:eexily/pages/home/points_saver.dart';
 import 'package:eexily/pages/home/splash.dart';
 import 'package:eexily/pages/refill/refill_now.dart';
 import 'package:eexily/pages/refill/schedule_refill.dart';
@@ -69,4 +72,14 @@ final List<GoRoute> routes = [
     name: Pages.scheduleRefill,
     builder: (_, __) => const ScheduleRefillPage(),
   ),
+  GoRoute(
+    path: Pages.leaderboard.path,
+    name: Pages.leaderboard,
+    builder: (_, __) => const LeaderboardPage(),
+  ),
+  GoRoute(
+    path: Pages.pointsSaver.path,
+    name: Pages.pointsSaver,
+    builder: (_, state) => PointsSaverPage(type: state.extra as PointType),
+  )
 ];

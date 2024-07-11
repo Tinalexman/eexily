@@ -201,24 +201,24 @@ class _GasTrackerContainerState extends ConsumerState<GasTrackerContainer> {
             ),
           ),
         ),
-        GestureDetector(
-          onTap: showRefillDialog,
-          child: Container(
-            width: 200.w,
-            height: 130.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.r),
-              color: secondary3,
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: 15.w,
-              vertical: 10.h,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
+        Container(
+          width: 200.w,
+          height: 130.h,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15.r),
+            color: secondary3,
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: 15.w,
+            vertical: 10.h,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: showRefillDialog,
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -235,7 +235,10 @@ class _GasTrackerContainerState extends ConsumerState<GasTrackerContainer> {
                     )
                   ],
                 ),
-                Column(
+              ),
+              GestureDetector(
+                onTap: () => context.router.pushNamed(Pages.leaderboard),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -252,8 +255,8 @@ class _GasTrackerContainerState extends ConsumerState<GasTrackerContainer> {
                     )
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],

@@ -11,6 +11,7 @@ const Color monokai = Color(0xFF0A0A0A);
 const Color neutral = Color.fromARGB(35, 152, 152, 152);
 const Color neutral2 = Color(0xFF494949);
 Color neutral3 = const Color(0xFF494949).withOpacity(0.5);
+const Color bellySaver = Color(0xFF00C2B6);
 
 const Color gasUsageContainerStart = Color.fromRGBO(166, 204, 255, 0.4);
 const Color gasUsageStartText = Color(0xFF384C66);
@@ -42,6 +43,8 @@ class Pages
   static String get usage => "usage";
   static String get notification => "notification";
   static String get startCooking => "start-cooking";
+  static String get leaderboard => "leaderboard";
+  static String get pointsSaver => "points-saver";
  }
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque feugiat at risus sit amet scelerisque. Curabitur sollicitudin tincidunt erat, sed vehicula ligula ullamcorper at. In in tortor ipsum.";

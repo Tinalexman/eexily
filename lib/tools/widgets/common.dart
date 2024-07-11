@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:eexily/tools/constants.dart';
+import 'package:eexily/tools/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -345,6 +346,148 @@ class ComboBox extends StatelessWidget {
         menuItemStyleData: MenuItemStyleData(
           height: itemHeight ?? 40,
           padding: itemPadding ?? const EdgeInsets.only(left: 14, right: 14),
+        ),
+      ),
+    );
+  }
+}
+
+
+class CustomDatePicker extends StatefulWidget {
+  const CustomDatePicker({super.key});
+
+  @override
+  State<CustomDatePicker> createState() => _CustomDatePickerState();
+}
+
+class _CustomDatePickerState extends State<CustomDatePicker> {
+  late int m, y;
+
+  @override
+  void initState() {
+    super.initState();
+    DateTime now = DateTime.now();
+    m = now.month;
+    y = now.year;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 300.h,
+      width: 375.w,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 30.w,
+          vertical: 15.h,
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Month",
+                  style: context.textTheme.bodyLarge!.copyWith(
+                    color: primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  "Year",
+                  style: context.textTheme.bodyLarge!.copyWith(
+                    color: primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 170.h,
+                  width: 100.w,
+                  child: ListWheelScrollView(
+                    itemExtent: 35.h,
+                    physics: const BouncingScrollPhysics(),
+                    onSelectedItemChanged: (val) => setState(() => m = val + 1),
+                    children: List.generate(
+                      12,
+                          (index) => Text(
+                        month((index + 1).toString(), false),
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          color: Colors.black,
+                          fontWeight: (m == index + 1)
+                              ? FontWeight.w700
+                              : FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 170.h,
+                  width: 80.w,
+                  child: ListWheelScrollView(
+                    itemExtent: 35.h,
+                    physics: const BouncingScrollPhysics(),
+                    onSelectedItemChanged: (index) => setState(() {
+                      int calculatedYear = DateTime.now().year;
+                      if (index <= 3) {
+                        calculatedYear -= 4 - index;
+                      } else if (index > 4) {
+                        calculatedYear += index - 4;
+                      }
+                      y = calculatedYear;
+                    }),
+                    children: List.generate(
+                      9,
+                          (index) {
+                        int calculatedYear = DateTime.now().year;
+                        if (index <= 3) {
+                          calculatedYear -= 4 - index;
+                        } else if (index > 4) {
+                          calculatedYear += index - 4;
+                        }
+
+                        return Text(
+                          calculatedYear.toString(),
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            color: Colors.black,
+                            fontWeight: (y == calculatedYear)
+                                ? FontWeight.w700
+                                : FontWeight.w400,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10.h),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primary,
+                elevation: 1.0,
+                fixedSize: Size(375.w, 50.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7.5.r),
+                ),
+              ),
+              onPressed: () => context.router.pop([m, y]),
+              child: Text(
+                "Confirm",
+                style: context.textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

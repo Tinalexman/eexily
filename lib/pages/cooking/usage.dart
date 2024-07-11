@@ -2,6 +2,7 @@ import 'package:eexily/components/usage.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
+import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,11 +41,6 @@ class _UsagePageState extends State<UsagePage>
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () => context.router.pop(),
-          icon: const Icon(Icons.arrow_back),
-          iconSize: 26.r,
-        ),
         title: Text(
           "Usage",
           style: context.textTheme.bodyLarge!.copyWith(
@@ -138,7 +134,7 @@ class _DailyUsageViewState extends ConsumerState<_UsageView> {
             onTap: () {
               showModalBottomSheet(
                 context: context,
-                builder: (_) => const _CustomDatePicker(),
+                builder: (_) => const CustomDatePicker(),
               ).then((val) {
                 if (val == null) return;
                 setState(() => date = DateTime(val[1], val[0]));
@@ -287,147 +283,6 @@ class _DailyUsageViewState extends ConsumerState<_UsageView> {
       },
       separatorBuilder: (_, __) => SizedBox(height: 10.h),
       itemCount: usages.length + (!widget.isYear ? 2 : 1),
-    );
-  }
-}
-
-class _CustomDatePicker extends StatefulWidget {
-  const _CustomDatePicker({super.key});
-
-  @override
-  State<_CustomDatePicker> createState() => _CustomDatePickerState();
-}
-
-class _CustomDatePickerState extends State<_CustomDatePicker> {
-  late int m, y;
-
-  @override
-  void initState() {
-    super.initState();
-    DateTime now = DateTime.now();
-    m = now.month;
-    y = now.year;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 300.h,
-      width: 375.w,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 30.w,
-          vertical: 15.h,
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Month",
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    color: primary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  "Year",
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    color: primary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 170.h,
-                  width: 100.w,
-                  child: ListWheelScrollView(
-                    itemExtent: 35.h,
-                    physics: const BouncingScrollPhysics(),
-                    onSelectedItemChanged: (val) => setState(() => m = val + 1),
-                    children: List.generate(
-                      12,
-                      (index) => Text(
-                        month((index + 1).toString(), false),
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          color: Colors.black,
-                          fontWeight: (m == index + 1)
-                              ? FontWeight.w700
-                              : FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 170.h,
-                  width: 80.w,
-                  child: ListWheelScrollView(
-                    itemExtent: 35.h,
-                    physics: const BouncingScrollPhysics(),
-                    onSelectedItemChanged: (index) => setState(() {
-                      int calculatedYear = DateTime.now().year;
-                      if (index <= 3) {
-                        calculatedYear -= 4 - index;
-                      } else if (index > 4) {
-                        calculatedYear += index - 4;
-                      }
-                      y = calculatedYear;
-                    }),
-                    children: List.generate(
-                      9,
-                      (index) {
-                        int calculatedYear = DateTime.now().year;
-                        if (index <= 3) {
-                          calculatedYear -= 4 - index;
-                        } else if (index > 4) {
-                          calculatedYear += index - 4;
-                        }
-
-                        return Text(
-                          calculatedYear.toString(),
-                          style: context.textTheme.bodyLarge!.copyWith(
-                            color: Colors.black,
-                            fontWeight: (y == calculatedYear)
-                                ? FontWeight.w700
-                                : FontWeight.w400,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10.h),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primary,
-                elevation: 1.0,
-                fixedSize: Size(375.w, 50.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(7.5.r),
-                ),
-              ),
-              onPressed: () => context.router.pop([m, y]),
-              child: Text(
-                "Confirm",
-                style: context.textTheme.bodyLarge!.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -20,12 +20,6 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () => context.router.pop(),
-          icon: const Icon(Icons.arrow_back),
-          iconSize: 26.r,
-        ),
         title: Text(
           "Notifications",
           style: context.textTheme.bodyLarge!.copyWith(

@@ -95,11 +95,7 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        leading: IconButton(
-          onPressed: () => context.router.pop(),
-          icon: const Icon(Icons.arrow_back),
-          iconSize: 26.r,
-        ),
+
         title: Text(
           "Schedule a refill",
           style: context.textTheme.bodyLarge!.copyWith(

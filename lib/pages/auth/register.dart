@@ -7,7 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  final String type;
+
+  const RegisterPage({
+    super.key,
+    required this.type,
+  });
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -47,27 +52,26 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: 22.w,
-            vertical: 40.h,
+            vertical: 10.h,
           ),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(
-                  "assets/images/${darkTheme ? "" : "Blue"}LogoAndText.png",
-                  width: 100.w,
-                ),
                 SizedBox(height: 30.h),
+                Image.asset(
+                  "assets/images/BlueLogoAndText.png",
+                  width: 120.w,
+                ),
+                SizedBox(height: 5.h),
                 Text(
                   "Register",
                   style: context.textTheme.bodyLarge!.copyWith(
-                    color: darkTheme ? Colors.white : primary,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                SizedBox(height: 30.h),
+                SizedBox(height: 50.h),
                 Form(
                   key: formKey,
                   child: Column(
@@ -275,17 +279,17 @@ class _RegisterPageState extends State<RegisterPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 15.h),
                 RichText(
                   text: TextSpan(
                     children: [
                       TextSpan(
                         text: "Have an account already?",
-                        style: context.textTheme.bodySmall,
+                        style: context.textTheme.bodyMedium,
                       ),
                       TextSpan(
                         text: " Sign in",
-                        style: context.textTheme.bodySmall!.copyWith(
+                        style: context.textTheme.bodyMedium!.copyWith(
                           color: primary,
                         ),
                         recognizer: TapGestureRecognizer()

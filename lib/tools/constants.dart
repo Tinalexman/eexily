@@ -35,6 +35,8 @@ class Pages
   static String get home => "home";
   static String get splash => "splash";
   static String get onboard => "onboard";
+  static String get carousel => "carousel";
+  static String get chooseCategory => "choose-category";
   static String get register => "register";
   static String get login => "login";
   static String get verification => "verification";

@@ -257,7 +257,7 @@ class _PointsViewState extends ConsumerState<_PointsView> {
             horizontal: 0.w,
             vertical: 0.h,
           ),
-          minTileHeight: 35.h,
+          // minTileHeight: 35.h,
           leading: Image.asset(
             "assets/images/${data.pointType == PointType.gas ? "Gold" : "Belly"} Saver.png",
             width: 36.w,

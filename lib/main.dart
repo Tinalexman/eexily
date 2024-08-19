@@ -33,7 +33,7 @@ class _EexilyState extends State<Eexily> {
     super.initState();
 
     _router = GoRouter(
-      initialLocation: Pages.home.path,
+      initialLocation: Pages.chooseCategory.path,
       routes: routes,
     );
     time.setDefaultLocale('en_short');
@@ -43,7 +43,7 @@ class _EexilyState extends State<Eexily> {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       builder: (context, widget) => MaterialApp.router(
-        title: 'Rediones',
+        title: 'Eexily',
         themeMode: ThemeMode.light,
         debugShowCheckedModeBanner: false,
         theme: FlexThemeData.light(

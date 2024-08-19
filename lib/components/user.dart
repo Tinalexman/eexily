@@ -24,5 +24,8 @@ class User extends Equatable {
 enum UserRole {
   nil,
   regular,
-  premium
+  premium,
+  support,
+  driver,
+  attendant
 }

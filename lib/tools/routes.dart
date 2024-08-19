@@ -1,15 +1,17 @@
 import 'package:eexily/components/points.dart';
+import 'package:eexily/pages/auth/category.dart';
 import 'package:eexily/pages/auth/login.dart';
 import 'package:eexily/pages/auth/register.dart';
 import 'package:eexily/pages/auth/verify.dart';
 import 'package:eexily/pages/cooking/start_cooking.dart';
 import 'package:eexily/pages/cooking/usage.dart';
+import 'package:eexily/pages/home/common/leaderboard.dart';
 import 'package:eexily/pages/home/home.dart';
-import 'package:eexily/pages/home/leaderboard.dart';
-import 'package:eexily/pages/home/notifications.dart';
-import 'package:eexily/pages/home/onboard/onboard.dart';
-import 'package:eexily/pages/home/points_saver.dart';
-import 'package:eexily/pages/home/splash.dart';
+import 'package:eexily/pages/home/common/notifications.dart';
+import 'package:eexily/pages/onboard/intro.dart';
+import 'package:eexily/pages/onboard/onboard.dart';
+import 'package:eexily/pages/home/common/points_saver.dart';
+import 'package:eexily/pages/onboard/splash.dart';
 import 'package:eexily/pages/refill/refill_now.dart';
 import 'package:eexily/pages/refill/schedule_refill.dart';
 import 'package:go_router/go_router.dart';
@@ -33,9 +35,12 @@ final List<GoRoute> routes = [
     builder: (_, __) => const Homepage(),
   ),
   GoRoute(
-    path: Pages.register.path,
+    path: "${Pages.register.path}/:type",
     name: Pages.register,
-    builder: (_, __) => const RegisterPage(),
+    builder: (_, state) {
+      String type = state.pathParameters["type"] as String;
+      return RegisterPage(type: type);
+    },
   ),
   GoRoute(
     path: Pages.login.path,
@@ -81,5 +86,15 @@ final List<GoRoute> routes = [
     path: Pages.pointsSaver.path,
     name: Pages.pointsSaver,
     builder: (_, state) => PointsSaverPage(type: state.extra as PointType),
-  )
+  ),
+  GoRoute(
+    path: Pages.carousel.path,
+    name: Pages.carousel,
+    builder: (_, __) => const CarouselPage(),
+  ),
+  GoRoute(
+    path: Pages.chooseCategory.path,
+    name: Pages.chooseCategory,
+    builder: (_, __) => const ChooseCategoryPage(),
+  ),
 ];

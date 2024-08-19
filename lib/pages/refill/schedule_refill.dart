@@ -1,3 +1,4 @@
+import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -90,7 +91,7 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
 
   @override
   Widget build(BuildContext context) {
-    String address = ref.watch(userProvider.select((u) => u.address));
+    String address = ref.watch(userProvider.select((u) => (u as User).address));
 
     return Scaffold(
       appBar: AppBar(

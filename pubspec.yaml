@@ -17,7 +17,7 @@ dependencies:
   intl:
   path_provider:
   equatable:
-  flutter_boxicons:
+  icons_flutter:
   flutter_screenutil:
   flutter_spinkit:
   connectivity_plus:
@@ -76,6 +76,10 @@ flutter_native_splash:
     color: "#FFFFFF"
     image: "assets/images/L12A.png"
     branding: "assets/images/B12A.png"
+
+icons_flutter:
+  includes:
+    -faw5
 
 flutter:
   uses-material-design: true

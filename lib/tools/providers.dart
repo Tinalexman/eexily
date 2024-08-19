@@ -1,10 +1,12 @@
 import 'package:eexily/components/notification.dart';
 import 'package:eexily/components/points.dart';
 import 'package:eexily/components/usage.dart';
-import 'package:eexily/components/user.dart';
+import 'package:eexily/components/user/attendant.dart';
+import 'package:eexily/components/user/support.dart';
+import 'package:eexily/components/user/user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-const User dummyUser = User(
+const User dummyRegularUser = User(
   firstName: "John",
   lastName: "Doe",
   image: "assets/images/user.png",
@@ -12,7 +14,23 @@ const User dummyUser = User(
   address: "House 12, Camp Junction, Abeokuta",
 );
 
-final StateProvider<User> userProvider = StateProvider((ref) => dummyUser);
+const User dummyPremiumUser = User(
+  firstName: "John",
+  lastName: "Doe",
+  image: "assets/images/user.png",
+  role: UserRole.premium,
+  address: "House 12, Camp Junction, Abeokuta",
+);
+
+const Attendant dummyAttendant = Attendant(
+  name: "Abigeal"
+);
+
+const Support dummySupport = Support(
+    name: "Abigeal"
+);
+
+final StateProvider<UserBase> userProvider = StateProvider((ref) => dummySupport);
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
 final StateProvider<bool> startGasTimerProvider = StateProvider((ref) => false);
 final StateProvider<List<int>> saverPointsProvider =
@@ -83,7 +101,7 @@ final StateProvider<UsageData> monthlyUsages = StateProvider(
 );
 final StateProvider<List<Notification>> notificationsProvider =
     StateProvider((ref) {
-  String name = ref.watch(userProvider.select((u) => u.firstName));
+  String name = ref.watch(userProvider.select((u) => u.name));
   return [
     Notification(
       message: "Hello $name, your gas has been exhausted completely.",

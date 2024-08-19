@@ -1,4 +1,4 @@
-import 'package:eexily/components/user.dart';
+import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -73,9 +73,10 @@ class _RegularHomeState extends ConsumerState<RegularHome>
 
   @override
   Widget build(BuildContext context) {
-    String firstName = ref.watch(userProvider.select((u) => u.firstName));
-    String image = ref.watch(userProvider.select((u) => u.image));
-    UserRole role = ref.watch(userProvider.select((u) => u.role));
+    User user = ref.watch(userProvider) as User;
+    String firstName = user.firstName;
+    String image = user.image;
+    UserRole role = user.role;
 
     return Scaffold(
       appBar: AppBar(

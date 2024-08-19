@@ -1,19 +1,14 @@
 import 'package:equatable/equatable.dart';
 
-class User extends Equatable {
-  final String id;
-  final String firstName;
-  final String lastName;
-  final String image;
-  final UserRole role;
-  final String address;
 
-  const User({
+class UserBase extends Equatable {
+  final String id;
+  final String name;
+  final UserRole role;
+
+  const UserBase({
     this.id = "",
-    this.address = "",
-    this.firstName = "",
-    this.lastName = "",
-    this.image = "",
+    this.name = "",
     this.role = UserRole.nil,
   });
 
@@ -27,5 +22,5 @@ enum UserRole {
   premium,
   support,
   driver,
-  attendant
+  attendant,
 }

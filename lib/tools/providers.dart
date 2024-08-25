@@ -22,15 +22,17 @@ const User dummyPremiumUser = User(
   address: "House 12, Camp Junction, Abeokuta",
 );
 
-const Attendant dummyAttendant = Attendant(
-  name: "Abigeal"
-);
+const Attendant dummyAttendant = Attendant();
 
 const Support dummySupport = Support(
-    name: "Abigeal"
+  firstName: "Abigeal",
+  lastName: "Mabinuori",
+  email: "abigail0908@mail.com",
+  supportRole: "Customer Service Rep 1",
 );
 
-final StateProvider<UserBase> userProvider = StateProvider((ref) => dummySupport);
+final StateProvider<UserBase> userProvider =
+    StateProvider((ref) => dummySupport);
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
 final StateProvider<bool> startGasTimerProvider = StateProvider((ref) => false);
 final StateProvider<List<int>> saverPointsProvider =
@@ -101,7 +103,7 @@ final StateProvider<UsageData> monthlyUsages = StateProvider(
 );
 final StateProvider<List<Notification>> notificationsProvider =
     StateProvider((ref) {
-  String name = ref.watch(userProvider.select((u) => u.name));
+  String name = ref.watch(userProvider.select((u) => u.firstName));
   return [
     Notification(
       message: "Hello $name, your gas has been exhausted completely.",
@@ -154,7 +156,12 @@ final StateProvider<List<PointsTransaction>> pointsTransaction = StateProvider(
   ],
 );
 
+
+final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
+
+
 void logout(WidgetRef ref) {
+  ref.invalidate(pageIndexProvider);
   ref.invalidate(shownGasToast);
   ref.invalidate(startGasTimerProvider);
   ref.invalidate(userProvider);

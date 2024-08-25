@@ -1,10 +1,12 @@
-import 'package:eexily/components/user/support.dart';
+import 'package:eexily/pages/home/support/chat.dart';
+import 'package:eexily/pages/home/support/home.dart';
+import 'package:eexily/pages/home/support/profile.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:icons_flutter/icons_flutter.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SupportHome extends ConsumerStatefulWidget {
   const SupportHome({super.key});
@@ -14,51 +16,64 @@ class SupportHome extends ConsumerStatefulWidget {
 }
 
 class _SupportHomeState extends ConsumerState<SupportHome> {
-  final TextEditingController controller = TextEditingController();
-
-
+  late List<Widget> children;
 
   @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    children = const [
+      Home(),
+      Chats(),
+      Profile(),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
-    Support support = ref.watch(userProvider) as Support;
+    int index = ref.watch(pageIndexProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 22.r,
-              backgroundColor: const Color(0xFF7C462F),
-              child: Text(
-                support.name.substring(0, 1).toUpperCase(),
-                style: context.textTheme.titleLarge!.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
+      body: IndexedStack(
+        index: index,
+        children: children,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: index,
+        onTap: (val) => ref.watch(pageIndexProvider.notifier).state = val,
+        items: [
+          BottomNavigationBarItem(
+            icon: Container(
+              alignment: Alignment.center,
+              width: 20.r,
+              height: 20.r,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: primary,
               ),
+              child: SvgPicture.asset("assets/images/Home Inactive.svg"),
             ),
-            SizedBox(width: 10.w),
-            Text(
-              "Hello, ${support.name}",
-              style: context.textTheme.titleMedium!.copyWith(
-                fontWeight: FontWeight.w600,
+            activeIcon: Container(
+              alignment: Alignment.center,
+              width: 20.r,
+              height: 20.r,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: primary,
               ),
-            )
-          ],
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => context.router.pushNamed(Pages.notification),
-            icon: const Icon(FontAwesome5.bell),
-            iconSize: 26.r,
-          )
+              child: SvgPicture.asset("assets/images/Home Active.svg"),
+            ),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset("assets/images/Chat Active.svg"),
+            activeIcon: SvgPicture.asset("assets/images/Chat Inactive.svg"),
+            label: "Chats",
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset("assets/images/Profile Inactive.svg"),
+            activeIcon: SvgPicture.asset("assets/images/Profile Active.svg"),
+            label: "Profile",
+          ),
         ],
       ),
     );

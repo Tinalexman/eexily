@@ -78,9 +78,11 @@ class SpecialForm extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType type;
   final TextInputAction action;
+  final TextStyle? style;
   final TextStyle? hintStyle;
   final bool readOnly;
   final int? maxLines;
+  final bool allowHeightExpand;
   final double width;
   final double height;
 
@@ -94,10 +96,12 @@ class SpecialForm extends StatelessWidget {
     this.textColor,
     this.padding,
     this.hintStyle,
+    this.style,
     this.focus,
     this.autoFocus = false,
     this.readOnly = false,
     this.obscure = false,
+    this.allowHeightExpand = false,
     this.autoValidate = false,
     this.type = TextInputType.text,
     this.action = TextInputAction.none,
@@ -117,7 +121,7 @@ class SpecialForm extends StatelessWidget {
     bool darkTheme = context.isDark;
     return SizedBox(
       width: width,
-      height: height,
+      height: allowHeightExpand ? null : height,
       child: TextFormField(
         autovalidateMode:
             autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
@@ -135,7 +139,7 @@ class SpecialForm extends StatelessWidget {
           }
         },
         cursorColor: primary,
-        style: context.textTheme.bodyLarge!.copyWith(
+        style: style ?? context.textTheme.bodyLarge!.copyWith(
           fontWeight: FontWeight.w500,
           color: textColor,
         ),
@@ -166,17 +170,17 @@ class SpecialForm extends StatelessWidget {
                 )
               : null,
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(7.5.r),
-            borderSide: const BorderSide(
-              color: primary50,
+            borderRadius: radius ?? BorderRadius.circular(7.5.r),
+            borderSide: BorderSide(
+              color: borderColor ?? primary50,
             ),
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(7.5.r),
+            borderRadius: radius ?? BorderRadius.circular(7.5.r),
             borderSide: BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(7.5.r),
+            borderRadius: radius ?? BorderRadius.circular(7.5.r),
             borderSide: BorderSide.none,
           ),
           hintText: hint,

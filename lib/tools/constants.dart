@@ -47,6 +47,9 @@ class Pages
   static String get startCooking => "start-cooking";
   static String get leaderboard => "leaderboard";
   static String get pointsSaver => "points-saver";
+  static String get inbox => "inbox";
+  static String get orderHistory => "order-history";
+  static String get viewOrder => "view-order";
  }
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque feugiat at risus sit amet scelerisque. Curabitur sollicitudin tincidunt erat, sed vehicula ligula ullamcorper at. In in tortor ipsum.";

@@ -1,3 +1,5 @@
+import 'package:eexily/components/chat.dart';
+import 'package:eexily/components/order.dart';
 import 'package:eexily/components/points.dart';
 import 'package:eexily/pages/auth/category.dart';
 import 'package:eexily/pages/auth/login.dart';
@@ -6,11 +8,14 @@ import 'package:eexily/pages/auth/verify.dart';
 import 'package:eexily/pages/cooking/start_cooking.dart';
 import 'package:eexily/pages/cooking/usage.dart';
 import 'package:eexily/pages/home/common/leaderboard.dart';
-import 'package:eexily/pages/home/home.dart';
 import 'package:eexily/pages/home/common/notifications.dart';
+import 'package:eexily/pages/home/common/points_saver.dart';
+import 'package:eexily/pages/home/home.dart';
+import 'package:eexily/pages/home/inbox.dart';
+import 'package:eexily/pages/home/support/order_history.dart';
+import 'package:eexily/pages/home/support/view_order.dart';
 import 'package:eexily/pages/onboard/intro.dart';
 import 'package:eexily/pages/onboard/onboard.dart';
-import 'package:eexily/pages/home/common/points_saver.dart';
 import 'package:eexily/pages/onboard/splash.dart';
 import 'package:eexily/pages/refill/refill_now.dart';
 import 'package:eexily/pages/refill/schedule_refill.dart';
@@ -33,6 +38,11 @@ final List<GoRoute> routes = [
     path: Pages.home.path,
     name: Pages.home,
     builder: (_, __) => const Homepage(),
+  ),
+  GoRoute(
+    path: Pages.inbox.path,
+    name: Pages.inbox,
+    builder: (_, state) => Inbox(conversation: state.extra as Conversation),
   ),
   GoRoute(
     path: "${Pages.register.path}/:type",
@@ -96,5 +106,15 @@ final List<GoRoute> routes = [
     path: Pages.chooseCategory.path,
     name: Pages.chooseCategory,
     builder: (_, __) => const ChooseCategoryPage(),
+  ),
+  GoRoute(
+    path: Pages.orderHistory.path,
+    name: Pages.orderHistory,
+    builder: (_, __) => const OrderHistory(),
+  ),
+  GoRoute(
+    path: Pages.viewOrder.path,
+    name: Pages.viewOrder,
+    builder: (_, state) => ViewOrder(order: state.extra as Order),
   ),
 ];

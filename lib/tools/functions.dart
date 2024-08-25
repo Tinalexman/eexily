@@ -1,9 +1,10 @@
+import 'dart:math';
+
 import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:eexily/tools/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:eexily/tools/constants.dart';
 import 'package:intl/intl.dart';
 
 void showToast(String message, BuildContext context, {Color? backgroundColor}) {
@@ -40,7 +41,6 @@ void showToast(String message, BuildContext context, {Color? backgroundColor}) {
   );
   snackBar.show(context);
 }
-
 
 void unFocus() => FocusManager.instance.primaryFocus?.unfocus();
 
@@ -89,23 +89,31 @@ bool isLeapYear(int year) {
 }
 
 int getDaysOfMonth(int month, int year) {
-  if(month == 4 || month == 6 || month == 9 || month == 11) return 30;
-  if(month == 2) {
+  if (month == 4 || month == 6 || month == 9 || month == 11) return 30;
+  if (month == 2) {
     return isLeapYear(year) ? 29 : 28;
   }
   return 31;
 }
 
 String getWeekDay(int day, {bool shorten = false}) {
-  switch(day) {
-    case 1: return shorten ? "Mon" : "Monday";
-    case 2: return shorten ? "Tue" : "Tuesday";
-    case 3: return shorten ? "Wed" : "Wednesday";
-    case 4: return shorten ? "Thur" : "Thursday";
-    case 5: return shorten ? "Fri" : "Friday";
-    case 6: return shorten ? "Sat" : "Saturday";
-    case 7: return shorten ? "Sun" : "Sunday";
-    default: return "";
+  switch (day) {
+    case 1:
+      return shorten ? "Mon" : "Monday";
+    case 2:
+      return shorten ? "Tue" : "Tuesday";
+    case 3:
+      return shorten ? "Wed" : "Wednesday";
+    case 4:
+      return shorten ? "Thur" : "Thursday";
+    case 5:
+      return shorten ? "Fri" : "Friday";
+    case 6:
+      return shorten ? "Sat" : "Saturday";
+    case 7:
+      return shorten ? "Sun" : "Sunday";
+    default:
+      return "";
   }
 }
 
@@ -158,9 +166,7 @@ String formatDateRaw(DateTime date, {bool shorten = false}) =>
     formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten);
 
 String formatDateWithTime(DateTime date, {bool shorten = false}) =>
-    formatDate(DateFormat("dd/MM/yyy").format(date),
-        shorten: shorten);
-
+    formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten);
 
 String formatDuration(int total) {
   int hr = total ~/ 3600;
@@ -193,10 +199,48 @@ bool validateForm(GlobalKey<FormState> formKey) {
   }
   return false;
 }
+
 List<String> toStringList(List<dynamic> data) {
   List<String> result = [];
-  for(var element in data) {
+  for (var element in data) {
     result.add(element as String);
   }
   return result;
+}
+
+Color randomColor(String id) {
+  Random random = Random(id.hashCode);
+
+  final red = random.nextInt(256);
+  final green = random.nextInt(256);
+  final blue = random.nextInt(256);
+
+  return Color.fromARGB(255, red, green, blue);
+}
+
+double calculateLuminance(Color color) {
+  final r = color.red / 255.0;
+  final g = color.green / 255.0;
+  final b = color.blue / 255.0;
+
+  const lumR = 0.2126;
+  const lumG = 0.7152;
+  const lumB = 0.0722;
+
+  return lumR * r + lumG * g + lumB * b;
+}
+
+
+Color chooseTextColor(Color backgroundColor) {
+  final luminance = calculateLuminance(backgroundColor);
+  return luminance > 0.5 ? Colors.black : Colors.white;
+}
+
+
+String get randomGCode {
+  Random random = Random(DateTime.now().millisecondsSinceEpoch);
+  String randomNumber = random.nextInt(999).toString().padLeft(3, "0");
+  String pre = String.fromCharCode(random.nextInt(26) + 65),
+      suf = String.fromCharCode(random.nextInt(26) + 65);
+  return "$pre$randomNumber$suf";
 }

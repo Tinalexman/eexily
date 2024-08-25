@@ -42,16 +42,7 @@ class _SupportHomeState extends ConsumerState<SupportHome> {
         onTap: (val) => ref.watch(pageIndexProvider.notifier).state = val,
         items: [
           BottomNavigationBarItem(
-            icon: Container(
-              alignment: Alignment.center,
-              width: 20.r,
-              height: 20.r,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: primary,
-              ),
-              child: SvgPicture.asset("assets/images/Home Inactive.svg"),
-            ),
+            icon: SvgPicture.asset("assets/images/Home Inactive.svg"),
             activeIcon: Container(
               alignment: Alignment.center,
               width: 20.r,

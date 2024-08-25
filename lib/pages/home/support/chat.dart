@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:eexily/components/chat.dart';
 import 'package:eexily/tools/constants.dart';
+import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:eexily/tools/widgets/chats.dart';
@@ -45,15 +46,17 @@ class _ChatsState extends ConsumerState<Chats> {
 
     driverConversations = List.generate(
       20,
-      (index) => Conversation(
-        timestamp: DateTime.now(),
-        name: "${faker.person.firstName()} ${faker.person.lastName()}",
-        id: "Driver Conversation ID: $index",
-        image: "assets/images/user.png",
-        lastMessage: faker.lorem.sentence(),
-        active: random.nextBool(),
-        messageCount: random.nextInt(10),
-      ),
+      (index) {
+        return Conversation(
+          timestamp: DateTime.now(),
+          name: "${faker.person.firstName()} ${faker.person.lastName()}",
+          id: "Driver Conversation ID: $index",
+          lastMessage: faker.lorem.sentence(),
+          active: random.nextBool(),
+          messageCount: random.nextInt(10),
+          code: randomGCode,
+        );
+      },
     );
   }
 
@@ -105,7 +108,7 @@ class _ChatsState extends ConsumerState<Chats> {
                         alignment: Alignment.center,
                         child: Text(
                           "Users",
-                          style: context.textTheme.bodyLarge!.copyWith(
+                          style: context.textTheme.bodyMedium!.copyWith(
                             color: tab == 0 ? Colors.white : primary,
                             fontWeight: FontWeight.w500,
                           ),
@@ -125,7 +128,7 @@ class _ChatsState extends ConsumerState<Chats> {
                         alignment: Alignment.center,
                         child: Text(
                           "Rider/Drivers",
-                          style: context.textTheme.bodyLarge!.copyWith(
+                          style: context.textTheme.bodyMedium!.copyWith(
                             color: tab == 1 ? Colors.white : primary,
                             fontWeight: FontWeight.w500,
                           ),
@@ -149,22 +152,26 @@ class _ChatsState extends ConsumerState<Chats> {
                 ),
                 SizedBox(height: 20.h),
                 Expanded(
-                  child: ListView.separated(
-                    itemBuilder: (_, index) {
-                      if ((tab == 0 && index == userConversations.length) ||
-                          (tab == 1 && index == driverConversations.length)) {
-                        return SizedBox(height: 60.h);
-                      }
+                  child: RefreshIndicator(
+                    onRefresh: () async {},
+                    child: ListView.separated(
+                      itemBuilder: (_, index) {
+                        if ((tab == 0 && index == userConversations.length) ||
+                            (tab == 1 && index == driverConversations.length)) {
+                          return SizedBox(height: 60.h);
+                        }
 
-                      List<Conversation> conversations =
-                          tab == 0 ? userConversations : driverConversations;
-                      return ConversationContainer(
-                          conversation: conversations[index]);
-                    },
-                    separatorBuilder: (_, __) => SizedBox(height: 10.h),
-                    itemCount: tab == 0
-                        ? userConversations.length + 1
-                        : driverConversations.length + 1,
+                        List<Conversation> conversations =
+                            tab == 0 ? userConversations : driverConversations;
+                        return ConversationContainer(
+                          conversation: conversations[index],
+                        );
+                      },
+                      separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                      itemCount: tab == 0
+                          ? userConversations.length + 1
+                          : driverConversations.length + 1,
+                    ),
                   ),
                 ),
               ],

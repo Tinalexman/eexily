@@ -1,9 +1,11 @@
 import 'package:eexily/components/notification.dart';
+import 'package:eexily/components/order.dart';
 import 'package:eexily/components/points.dart';
 import 'package:eexily/components/usage.dart';
 import 'package:eexily/components/user/attendant.dart';
 import 'package:eexily/components/user/support.dart';
 import 'package:eexily/components/user/user.dart';
+import 'package:eexily/tools/functions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const User dummyRegularUser = User(
@@ -156,9 +158,24 @@ final StateProvider<List<PointsTransaction>> pointsTransaction = StateProvider(
   ],
 );
 
+final StateProvider<List<Order>> pendingOrdersProvider = StateProvider(
+  (ref) => List.generate(
+    10,
+    (_) => Order(
+      deliveryDate: DateTime.now(),
+      code: randomGCode,
+      name: "Habeeb Lawal",
+      phone: "+2349012345678",
+      address: "No 12, Babylon Street, Accord",
+      cylinderSize: 5.0,
+      deliveryIssue: "Delivery bike broke down",
+      riderBike: "360-HG",
+      riderName: "Dina Martins",
+    ),
+  ),
+);
 
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
-
 
 void logout(WidgetRef ref) {
   ref.invalidate(pageIndexProvider);

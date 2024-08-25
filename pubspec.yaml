@@ -46,6 +46,7 @@ dependencies:
   flutter_otp_text_field:
   video_player:
   badges:
+  emoji_picker_flutter:
   fl_chart:
   faker:
 #  device_preview:

@@ -1,5 +1,6 @@
 import 'package:eexily/components/user/support.dart';
 import 'package:eexily/tools/constants.dart';
+import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,9 +14,23 @@ class Profile extends ConsumerStatefulWidget {
 }
 
 class _ProfileState extends ConsumerState<Profile> {
+
+  late Color background, text;
+
+  @override
+  void initState() {
+    super.initState();
+    String name = ref.read(userProvider.select((value) => value.firstName));
+    background = randomColor(name);
+    text = chooseTextColor(background);
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     Support support = ref.watch(userProvider) as Support;
+
 
     return BackButtonListener(
       onBackButtonPressed: () async {
@@ -44,11 +59,11 @@ class _ProfileState extends ConsumerState<Profile> {
                 SizedBox(height: 70.h),
                 CircleAvatar(
                   radius: 60.r,
-                  backgroundColor: const Color(0xFF7C462F),
+                  backgroundColor: background,
                   child: Text(
                     support.firstName.substring(0, 1).toUpperCase(),
                     style: context.textTheme.displayLarge!.copyWith(
-                      color: Colors.white,
+                      color: text,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

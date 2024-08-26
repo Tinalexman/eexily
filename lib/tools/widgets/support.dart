@@ -76,13 +76,26 @@ class _OrderContainerState extends State<OrderContainer> {
                     Text(
                       widget.order.riderName,
                       style: context.textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Text(
-                      widget.order.deliveryIssue,
-                      style: context.textTheme.bodySmall,
-                    ),
+                    if (widget.order.status == OrderStatus.pending)
+                      Text(
+                        widget.order.deliveryIssue,
+                        style: context.textTheme.bodySmall!.copyWith(
+                          color: Colors.red,
+                        ),
+                      ),
+                    if (widget.order.status == OrderStatus.completed)
+                      Text(
+                        "Completed on ${formatDateRaw(
+                          widget.order.deliveryDate,
+                          shorten: true,
+                        )}",
+                        style: context.textTheme.bodySmall!.copyWith(
+                          color: primary,
+                        ),
+                      ),
                   ],
                 )
               ],

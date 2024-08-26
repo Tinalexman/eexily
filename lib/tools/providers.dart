@@ -160,7 +160,7 @@ final StateProvider<List<PointsTransaction>> pointsTransaction = StateProvider(
 
 final StateProvider<List<Order>> pendingOrdersProvider = StateProvider(
   (ref) => List.generate(
-    10,
+    15,
     (_) => Order(
       deliveryDate: DateTime.now(),
       code: randomGCode,
@@ -175,9 +175,29 @@ final StateProvider<List<Order>> pendingOrdersProvider = StateProvider(
   ),
 );
 
+final StateProvider<List<Order>> orderHistoryProvider = StateProvider(
+  (ref) => List.generate(
+    30,
+    (_) => Order(
+      deliveryDate: DateTime.now(),
+      code: randomGCode,
+      name: "Habeeb Lawal",
+      phone: "+2349012345678",
+      address: "No 12, Babylon Street, Accord",
+      cylinderSize: 5.0,
+      deliveryIssue: "Delivery bike broke down",
+      riderBike: "360-HG",
+      status: OrderStatus.completed,
+      riderName: "Dina Martins",
+    ),
+  ),
+);
+
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
 
 void logout(WidgetRef ref) {
+  ref.invalidate(pendingOrdersProvider);
+  ref.invalidate(orderHistoryProvider);
   ref.invalidate(pageIndexProvider);
   ref.invalidate(shownGasToast);
   ref.invalidate(startGasTimerProvider);

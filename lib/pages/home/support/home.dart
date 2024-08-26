@@ -5,7 +5,6 @@ import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets/common.dart';
 import 'package:eexily/tools/widgets/support.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

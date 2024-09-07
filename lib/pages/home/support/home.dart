@@ -8,7 +8,6 @@ import 'package:eexily/tools/widgets/support.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Home extends ConsumerStatefulWidget {
   const Home({super.key});
@@ -43,32 +42,35 @@ class _HomeState extends ConsumerState<Home> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 22.r,
-              backgroundColor: background,
-              child: Text(
-                support.firstName.substring(0, 1).toUpperCase(),
-                style: context.textTheme.titleLarge!.copyWith(
-                  color: text,
-                  fontWeight: FontWeight.w500,
+        title: GestureDetector(
+          onTap: () => ref.watch(pageIndexProvider.notifier).state = 2,
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 20.r,
+                backgroundColor: background,
+                child: Text(
+                  support.firstName.substring(0, 1).toUpperCase(),
+                  style: context.textTheme.titleLarge!.copyWith(
+                    color: text,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(width: 10.w),
-            Text(
-              "Hello, ${support.firstName}",
-              style: context.textTheme.titleMedium!.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            )
-          ],
+              SizedBox(width: 10.w),
+              Text(
+                "Hello, ${support.firstName}",
+                style: context.textTheme.titleMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              )
+            ],
+          ),
         ),
         actions: [
           IconButton(
             onPressed: () => context.router.pushNamed(Pages.notification),
-            icon: const FaIcon(FontAwesomeIcons.bell),
+            icon: const Icon(Icons.notifications),
             iconSize: 26.r,
           )
         ],

@@ -24,7 +24,7 @@ const User dummyPremiumUser = User(
   address: "House 12, Camp Junction, Abeokuta",
 );
 
-const Attendant dummyAttendant = Attendant();
+const Attendant dummyAttendant = Attendant(gasStation: "Texxon Gas");
 
 const Support dummySupport = Support(
   firstName: "Abigeal",
@@ -34,7 +34,7 @@ const Support dummySupport = Support(
 );
 
 final StateProvider<UserBase> userProvider =
-    StateProvider((ref) => dummySupport);
+    StateProvider((ref) => dummyAttendant);
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
 final StateProvider<bool> startGasTimerProvider = StateProvider((ref) => false);
 final StateProvider<List<int>> saverPointsProvider =

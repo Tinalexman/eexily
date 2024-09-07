@@ -6,7 +6,7 @@ import 'package:eexily/tools/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class SupportHome extends ConsumerStatefulWidget {
   const SupportHome({super.key});
@@ -39,30 +39,41 @@ class _SupportHomeState extends ConsumerState<SupportHome> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
+        selectedItemColor: primary,
+        unselectedItemColor: neutral3,
         onTap: (val) => ref.watch(pageIndexProvider.notifier).state = val,
         items: [
           BottomNavigationBarItem(
-            icon: SvgPicture.asset("assets/images/Home Inactive.svg"),
-            activeIcon: Container(
-              alignment: Alignment.center,
-              width: 20.r,
-              height: 20.r,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: primary,
-              ),
-              child: SvgPicture.asset("assets/images/Home Active.svg"),
+            icon: Icon(
+              IconsaxPlusBroken.home,
+              size: 22.r,
+            ),
+            activeIcon: Icon(
+              IconsaxPlusBold.home,
+              size: 22.r,
             ),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset("assets/images/Chat Active.svg"),
-            activeIcon: SvgPicture.asset("assets/images/Chat Inactive.svg"),
+            icon: Icon(
+              IconsaxPlusBroken.message,
+              size: 22.r,
+            ),
+            activeIcon: Icon(
+              IconsaxPlusBold.message,
+              size: 22.r,
+            ),
             label: "Chats",
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset("assets/images/Profile Inactive.svg"),
-            activeIcon: SvgPicture.asset("assets/images/Profile Active.svg"),
+            icon: Icon(
+              IconsaxPlusBroken.profile,
+              size: 22.r,
+            ),
+            activeIcon: Icon(
+              IconsaxPlusBold.profile,
+              size: 22.r,
+            ),
             label: "Profile",
           ),
         ],

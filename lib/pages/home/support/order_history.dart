@@ -1,14 +1,10 @@
 import 'package:eexily/components/order.dart';
-import 'package:eexily/components/user/support.dart';
 import 'package:eexily/tools/constants.dart';
-import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
-import 'package:eexily/tools/widgets/common.dart';
 import 'package:eexily/tools/widgets/support.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class OrderHistory extends ConsumerStatefulWidget {
   const OrderHistory({super.key});

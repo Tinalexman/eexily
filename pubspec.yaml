@@ -17,7 +17,8 @@ dependencies:
   intl:
   path_provider:
   equatable:
-  font_awesome_flutter:
+  iconsax_plus:
+  glass:
   flutter_screenutil:
   flutter_spinkit:
   connectivity_plus:
@@ -88,13 +89,13 @@ flutter:
     - assets/videos/
 
   fonts:
-    - family: Poppins
+    - family: WorkSans
       fonts:
-        - asset: assets/fonts/Poppins-Black.ttf
-        - asset: assets/fonts/Poppins-Bold.ttf
-        - asset: assets/fonts/Poppins-ExtraBold.ttf
-        - asset: assets/fonts/Poppins-Light.ttf
-        - asset: assets/fonts/Poppins-Medium.ttf
-        - asset: assets/fonts/Poppins-Regular.ttf
-        - asset: assets/fonts/Poppins-SemiBold.ttf
-        - asset: assets/fonts/Poppins-Thin.ttf
+        - asset: assets/fonts/WorkSans-Black.ttf
+        - asset: assets/fonts/WorkSans-Bold.ttf
+        - asset: assets/fonts/WorkSans-ExtraBold.ttf
+        - asset: assets/fonts/WorkSans-Light.ttf
+        - asset: assets/fonts/WorkSans-Medium.ttf
+        - asset: assets/fonts/WorkSans-Regular.ttf
+        - asset: assets/fonts/WorkSans-SemiBold.ttf
+        - asset: assets/fonts/WorkSans-Thin.ttf

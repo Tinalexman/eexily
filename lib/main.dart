@@ -47,7 +47,7 @@ class _EexilyState extends State<Eexily> {
         themeMode: ThemeMode.light,
         debugShowCheckedModeBanner: false,
         theme: FlexThemeData.light(
-          fontFamily: "Poppins",
+          fontFamily: "WorkSans",
           useMaterial3: true,
           scheme: FlexScheme.bahamaBlue,
           background: Colors.white,

@@ -1,4 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:eexily/components/transaction.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:flutter/material.dart';
@@ -139,10 +140,11 @@ class SpecialForm extends StatelessWidget {
           }
         },
         cursorColor: primary,
-        style: style ?? context.textTheme.bodyLarge!.copyWith(
-          fontWeight: FontWeight.w500,
-          color: textColor,
-        ),
+        style: style ??
+            context.textTheme.bodyLarge!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: textColor,
+            ),
         decoration: InputDecoration(
           errorMaxLines: 1,
           errorStyle: const TextStyle(height: 0, fontSize: 0),
@@ -356,7 +358,6 @@ class ComboBox extends StatelessWidget {
   }
 }
 
-
 class CustomDatePicker extends StatefulWidget {
   const CustomDatePicker({super.key});
 
@@ -420,7 +421,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                     onSelectedItemChanged: (val) => setState(() => m = val + 1),
                     children: List.generate(
                       12,
-                          (index) => Text(
+                      (index) => Text(
                         month((index + 1).toString(), false),
                         style: context.textTheme.bodyLarge!.copyWith(
                           color: Colors.black,
@@ -449,7 +450,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                     }),
                     children: List.generate(
                       9,
-                          (index) {
+                      (index) {
                         int calculatedYear = DateTime.now().year;
                         if (index <= 3) {
                           calculatedYear -= 4 - index;
@@ -493,6 +494,110 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+Widget heroShuttleBuilder(
+    BuildContext context,
+    Animation<double> animation,
+    HeroFlightDirection direction,
+    BuildContext fromContext,
+    BuildContext toContext) {
+  switch (direction) {
+    case HeroFlightDirection.push:
+      return ScaleTransition(
+        scale: animation.drive(
+          Tween<double>(
+            begin: 0.0,
+            end: 1.0,
+          ).chain(
+            CurveTween(curve: Curves.fastOutSlowIn),
+          ),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: toContext.widget,
+        ),
+      );
+    case HeroFlightDirection.pop:
+      return fromContext.widget;
+  }
+}
+
+class TransactionContainer extends StatelessWidget {
+  final Transaction transaction;
+
+  const TransactionContainer({
+    super.key,
+    required this.transaction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 375.w,
+      height: 70.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(7.5.r),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 1,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: 10.h,
+        horizontal: 10.w,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: primary50.withOpacity(0.6),
+              borderRadius: BorderRadius.circular(5.r),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(6.r),
+              child: Icon(
+                transaction.credit
+                    ? Icons.arrow_upward_rounded
+                    : Icons.arrow_downward_rounded,
+                size: 32.r,
+                color: primary,
+              ),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                transaction.header,
+                style: context.textTheme.titleMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: monokai,
+                ),
+              ),
+              Text(
+                formatDateRawWithTime(transaction.timestamp, shorten: true),
+                style: context.textTheme.bodySmall,
+              )
+            ],
+          ),
+          Text(
+            "${transaction.credit ? "+" : "-"}₦${formatAmount(transaction.amount.toStringAsFixed(0))}",
+            style: context.textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: transaction.credit ? Colors.green : Colors.red,
+            ),
+          ),
+        ],
       ),
     );
   }

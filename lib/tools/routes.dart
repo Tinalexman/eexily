@@ -7,11 +7,14 @@ import 'package:eexily/pages/auth/register.dart';
 import 'package:eexily/pages/auth/verify.dart';
 import 'package:eexily/pages/cooking/start_cooking.dart';
 import 'package:eexily/pages/cooking/usage.dart';
+import 'package:eexily/pages/home/attendant/all_orders.dart';
+import 'package:eexily/pages/home/common/filter.dart';
 import 'package:eexily/pages/home/common/leaderboard.dart';
 import 'package:eexily/pages/home/common/notifications.dart';
 import 'package:eexily/pages/home/common/points_saver.dart';
 import 'package:eexily/pages/home/home.dart';
 import 'package:eexily/pages/home/inbox.dart';
+import 'package:eexily/pages/home/attendant/view_order.dart';
 import 'package:eexily/pages/home/support/order_history.dart';
 import 'package:eexily/pages/home/support/view_order.dart';
 import 'package:eexily/pages/onboard/intro.dart';
@@ -116,5 +119,20 @@ final List<GoRoute> routes = [
     path: Pages.viewOrder.path,
     name: Pages.viewOrder,
     builder: (_, state) => ViewOrder(order: state.extra as Order),
+  ),
+  GoRoute(
+    path: Pages.allAttendantOrders.path,
+    name: Pages.allAttendantOrders,
+    builder: (_, __) => const AttendantAllOrdersPage(),
+  ),
+  GoRoute(
+    path: Pages.viewAttendantOrder.path,
+    name: Pages.viewAttendantOrder,
+    builder: (_, state) => ViewAttendantOrder(order: state.extra as Order),
+  ),
+  GoRoute(
+    path: Pages.filter.path,
+    name: Pages.filter,
+    builder: (_, __) => const FilterPage(),
   ),
 ];

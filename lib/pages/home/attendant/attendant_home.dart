@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
+import 'account.dart';
+import 'order_history.dart';
+
 class AttendantHome extends ConsumerStatefulWidget {
   const AttendantHome({super.key});
 
@@ -21,6 +24,8 @@ class _AttendantHomeState extends ConsumerState<AttendantHome> {
     super.initState();
     children = const [
       Home(),
+      History(),
+      Account(),
     ];
   }
 
@@ -59,7 +64,7 @@ class _AttendantHomeState extends ConsumerState<AttendantHome> {
               IconsaxPlusBold.graph,
               size: 22.r,
             ),
-            label: "History",
+            label: "Sales",
           ),
           BottomNavigationBarItem(
             icon: Icon(

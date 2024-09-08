@@ -18,6 +18,7 @@ dependencies:
   path_provider:
   equatable:
   iconsax_plus:
+  flutter_boxicons:
   glass:
   flutter_screenutil:
   flutter_spinkit:

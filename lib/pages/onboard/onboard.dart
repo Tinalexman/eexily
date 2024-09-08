@@ -79,7 +79,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   child: Text(
                     "Get Started",
                     style: context.textTheme.bodyLarge!.copyWith(
-                      color: Colors.black,
+                      color: monokai,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

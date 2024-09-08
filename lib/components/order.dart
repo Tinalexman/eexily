@@ -4,6 +4,7 @@ enum OrderStatus {
 }
 
 class Order {
+  final String id;
   final String code;
   final String address;
   final String deliveryIssue;
@@ -19,6 +20,7 @@ class Order {
 
 
   const Order({
+    this.id = "",
     this.code = "",
     this.address = "",
     this.deliveryIssue = "",

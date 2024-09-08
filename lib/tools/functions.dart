@@ -66,7 +66,8 @@ String formatAmount(String price) {
 String format(double val) =>
     val.toStringAsFixed(val.truncateToDouble() == val ? 0 : 2);
 
-String formatDate(String dateTime, {bool shorten = false}) {
+String formatDate(String dateTime,
+    {bool shorten = false, bool withTime = false}) {
   int firIndex = dateTime.indexOf("/");
   String d = dateTime.substring(0, firIndex);
   int secIndex = dateTime.indexOf("/", firIndex + 1);
@@ -137,7 +138,7 @@ String month(String val, bool shorten) {
     case 8:
       return shorten ? "Aug" : "August";
     case 9:
-      return shorten ? "Sep" : "September";
+      return shorten ? "Sept" : "September";
     case 10:
       return shorten ? "Oct" : "October";
     case 11:
@@ -162,10 +163,10 @@ String day(String val) {
   }
 }
 
-String formatDateRaw(DateTime date, {bool shorten = false}) =>
-    formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten);
+String formatDateRawWithTime(DateTime date, {bool shorten = false}) =>
+    "${formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten)}: ${convertTime(date)}";
 
-String formatDateWithTime(DateTime date, {bool shorten = false}) =>
+String formatDateRaw(DateTime date, {bool shorten = false}) =>
     formatDate(DateFormat("dd/MM/yyy").format(date), shorten: shorten);
 
 String formatDuration(int total) {
@@ -173,6 +174,13 @@ String formatDuration(int total) {
   int min = total ~/ 60;
   int secs = total - ((hr * 3600) - (min * 60));
   return "${hr < 10 ? "0" : ""}$hr:${min < 10 ? "0" : ""}$min:${secs < 10 ? "0" : ""}$secs";
+}
+
+String convertTime(DateTime date) {
+  bool isPM = date.hour > 11;
+  int hours = date.hour;
+  int minutes = date.minute;
+  return "${hours == 0 ? "" : hours % 12 < 10 ? "0" : ""}${hours == 0 || hours % 12 == 0 ? "12" : hours % 12}:${minutes < 10 ? "0" : ""}$minutes ${isPM ? "PM" : "AM"}";
 }
 
 int fastHash(String string) {
@@ -230,12 +238,10 @@ double calculateLuminance(Color color) {
   return lumR * r + lumG * g + lumB * b;
 }
 
-
 Color chooseTextColor(Color backgroundColor) {
   final luminance = calculateLuminance(backgroundColor);
   return luminance > 0.5 ? Colors.black : Colors.white;
 }
-
 
 String get randomGCode {
   Random random = Random(DateTime.now().millisecondsSinceEpoch);
@@ -243,4 +249,72 @@ String get randomGCode {
   String pre = String.fromCharCode(random.nextInt(26) + 65),
       suf = String.fromCharCode(random.nextInt(26) + 65);
   return "$pre$randomNumber$suf";
+}
+
+String get randomOrderID {
+  Random random = Random(DateTime.now().millisecondsSinceEpoch);
+  return random.nextInt(999999).toString().padLeft(6, "0");
+}
+
+class DateUtilities {
+  static DateTime getCurrentWeekStart() {
+    return DateTime.now().startOfWeek;
+  }
+
+  static DateTime getCurrentWeekEnd() {
+    return DateTime.now().endOfWeek;
+  }
+
+  static DateTime getLastWeekStart() {
+    return DateTime.now().subtract(const Duration(days: 7)).startOfWeek;
+  }
+
+  static DateTime getLastWeekEnd() {
+    return DateTime.now().subtract(const Duration(days: 7)).endOfWeek;
+  }
+
+  static DateTime getCurrentMonthStart() {
+    return DateTime(DateTime.now().year, DateTime.now().month, 1);
+  }
+
+  static DateTime getCurrentMonthEnd() {
+    return DateTime(DateTime.now().year, DateTime.now().month + 1, 0);
+  }
+
+  static DateTime getLastMonthStart() {
+    return DateTime.now().subtract(const Duration(days: 30)).startOfMonth;
+  }
+
+  static DateTime getLastMonthEnd() {
+    return DateTime.now().subtract(const Duration(days: 30)).endOfMonth;
+  }
+
+  static DateTime getPreviousMonthStart() {
+    return DateTime.now().subtract(const Duration(days: 30)).startOfMonth;
+  }
+
+  static DateTime getPreviousMonthEnd() {
+    return DateTime.now().subtract(const Duration(days: 30)).endOfMonth;
+  }
+
+  static DateTime getThreeMonthsAgoStart() {
+    return DateTime.now().subtract(const Duration(days: 90));
+  }
+
+  static DateTime getThreeMonthsAgoEnd() {
+    return DateTime.now().subtract(const Duration(days: 90)).endOfMonth;
+  }
+}
+
+// Helper methods
+extension DateTimeExtensions on DateTime {
+  DateTime get startOfWeek =>
+      DateTime(year, this.month, this.day - weekday + 1);
+
+  DateTime get endOfWeek =>
+      DateTime(year, this.month, this.day + (7 - weekday));
+
+  DateTime get startOfMonth => DateTime(year, this.month, 1);
+
+  DateTime get endOfMonth => DateTime(year, this.month + 1, 0);
 }

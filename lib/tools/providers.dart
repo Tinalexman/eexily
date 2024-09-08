@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:eexily/components/notification.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/points.dart';
+import 'package:eexily/components/sale_report.dart';
+import 'package:eexily/components/transaction.dart';
 import 'package:eexily/components/usage.dart';
 import 'package:eexily/components/user/attendant.dart';
 import 'package:eexily/components/user/support.dart';
@@ -24,7 +28,12 @@ const User dummyPremiumUser = User(
   address: "House 12, Camp Junction, Abeokuta",
 );
 
-const Attendant dummyAttendant = Attendant(gasStation: "Texxon Gas");
+const Attendant dummyAttendant = Attendant(
+  gasStation: "Texxon Gas",
+  balance: 250450,
+  retailGasPrice: 800,
+  regularGasPrice: 900,
+);
 
 const Support dummySupport = Support(
   firstName: "Abigeal",
@@ -193,9 +202,46 @@ final StateProvider<List<Order>> orderHistoryProvider = StateProvider(
   ),
 );
 
+final StateProvider<List<Order>> attendantOrdersProvider = StateProvider(
+  (ref) => List.generate(
+    30,
+    (_) => Order(
+      id: randomOrderID,
+      deliveryDate: DateTime.now(),
+      code: randomGCode,
+      name: "Habeeb Lawal",
+      phone: "+2349012345678",
+      address: "No 12, Babylon Street, Accord",
+      cylinderSize: 5.0,
+      deliveryIssue: "Delivery bike broke down",
+      riderBike: "360-HG",
+      status: OrderStatus.completed,
+      riderName: "Dina Martins",
+      riderImage: "assets/images/man.png",
+    ),
+  ),
+);
+
+final StateProvider<List<Transaction>> transactionsProvider = StateProvider(
+  (ref) => List.generate(10, (index) {
+    Random random = Random();
+    return Transaction(
+      id: "Transaction $index",
+      timestamp: DateTime.now(),
+      header: "Transfer from Eexily",
+      amount: min(1000, random.nextInt(100000)).toDouble(),
+      credit: random.nextBool(),
+    );
+  }),
+);
+
+final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider((ref) => []);
+
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
 
 void logout(WidgetRef ref) {
+  ref.invalidate(saleReportsProvider);
+  ref.invalidate(attendantOrdersProvider);
   ref.invalidate(pendingOrdersProvider);
   ref.invalidate(orderHistoryProvider);
   ref.invalidate(pageIndexProvider);

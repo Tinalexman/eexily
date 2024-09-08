@@ -257,6 +257,14 @@ String get randomOrderID {
 }
 
 class DateUtilities {
+  static DateTime getDaysAgo(int day) {
+    return DateTime.now().subtract(Duration(days: day));
+  }
+
+  static DateTime getDaysAhead(int day) {
+    return DateTime.now().add(Duration(days: day));
+  }
+
   static DateTime getCurrentWeekStart() {
     return DateTime.now().startOfWeek;
   }

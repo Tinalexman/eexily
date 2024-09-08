@@ -18,6 +18,8 @@ class Order {
   final String riderName;
   final String riderBike;
 
+  final double? price;
+
 
   const Order({
     this.id = "",
@@ -32,6 +34,7 @@ class Order {
     this.riderImage,
     this.riderName = "",
     this.riderBike = "",
+    this.price,
   });
 
 }

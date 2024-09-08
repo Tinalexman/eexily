@@ -1,5 +1,6 @@
 import 'package:eexily/components/filter_data.dart';
 import 'package:eexily/components/sale_report.dart';
+import 'package:eexily/components/user/attendant.dart';
 import 'package:eexily/pages/home/attendant/widgets.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
@@ -21,6 +22,7 @@ class _HistoryState extends ConsumerState<History> {
 
   @override
   Widget build(BuildContext context) {
+    Attendant attendant = ref.watch(userProvider) as Attendant;
     List<SaleReport> reports = ref.watch(saleReportsProvider);
 
     return BackButtonListener(
@@ -50,9 +52,52 @@ class _HistoryState extends ConsumerState<History> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20.h),
-                // const WalletSlider(),
-                SizedBox(height: 30.h),
+                SizedBox(
+                  width: 375.w,
+                  height: 102.h,
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10.w,
+                      mainAxisExtent: 100.h,
+                    ),
+                    itemBuilder: (_, index) {
+                      String label =
+                          index == 0 ? "Retail Price" : "Regular Price";
+                      double price = index == 0
+                          ? attendant.retailGasPrice
+                          : attendant.regularGasPrice;
+                      void onUpdate(double val) {
+                        double regular = 0.0, retail = 0.0;
+                        if (index == 0) {
+                          regular = attendant.regularGasPrice;
+                          retail = val;
+                        } else {
+                          retail = attendant.retailGasPrice;
+                          regular = val;
+                        }
+
+                        Attendant newAttendant = Attendant(
+                          balance: attendant.balance,
+                          retailGasPrice: retail,
+                          regularGasPrice: regular,
+                          gasStation: attendant.gasStation,
+                        );
+                        ref.watch(userProvider.notifier).state = newAttendant;
+                      }
+
+                      return SalePriceContainer(
+                        label: label,
+                        price: price,
+                        onPriceUpdated: onUpdate,
+                      );
+                    },
+                    itemCount: 2,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(1),
+                  ),
+                ),
+                SizedBox(height: 10.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,7 +145,6 @@ class _HistoryState extends ConsumerState<History> {
                     side: const BorderSide(color: Colors.transparent),
                   ),
                 if (filterData != null) SizedBox(height: 10.h),
-
                 Expanded(
                   child: ListView.separated(
                     padding: const EdgeInsets.all(1),

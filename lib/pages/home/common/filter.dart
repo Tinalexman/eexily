@@ -96,8 +96,8 @@ class _FilterPageState extends State<FilterPage> {
       lastDate: endDate ?? DateTime(2050),
     );
     if (pickedDate != null) {
-      startController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
-      setState(() => startDate = pickedDate);
+      endController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
+      setState(() => endDate = pickedDate);
     }
   }
 

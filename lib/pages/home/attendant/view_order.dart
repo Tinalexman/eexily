@@ -1,5 +1,7 @@
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/attendant.dart';
+import 'package:eexily/main.dart';
+import 'package:eexily/pages/home/support/details.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -79,10 +81,10 @@ class _ViewAttendantOrderState extends ConsumerState<ViewAttendantOrder> {
                       ),
                     ),
                     Text(
-                      "Pending",
+                      widget.order.status.name.capitalize,
                       style: context.textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500,
-                        color: secondary,
+                        color: widget.order.status == OrderStatus.pending ? secondary : primary,
                       ),
                     ),
                     Row(
@@ -98,7 +100,7 @@ class _ViewAttendantOrderState extends ConsumerState<ViewAttendantOrder> {
                         Container(
                           width: 180.w,
                           decoration: BoxDecoration(
-                            color: primary50.withOpacity(0.6),
+                            color: primary50.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(7.5.r),
                           ),
                           padding: EdgeInsets.symmetric(
@@ -170,7 +172,7 @@ class _ViewAttendantOrderState extends ConsumerState<ViewAttendantOrder> {
                                     ),
                                   ),
                                   Text(
-                                    "-₦0",
+                                    "₦0",
                                     style:
                                         context.textTheme.titleMedium!.copyWith(
                                       fontWeight: FontWeight.w500,

@@ -7,6 +7,7 @@ import 'package:eexily/components/user/attendant.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
+import 'package:eexily/tools/widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -454,6 +455,8 @@ class _SaleReportContainerState extends State<SaleReportContainer>
     with SingleTickerProviderStateMixin {
   bool expanded = false;
 
+  double total = 0.0;
+
   late AnimationController controller;
   late Animation<double> animation;
 
@@ -472,6 +475,14 @@ class _SaleReportContainerState extends State<SaleReportContainer>
         reverseCurve: Curves.easeIn,
       ),
     );
+    Future.delayed(Duration.zero, getTotal);
+  }
+
+  void getTotal() {
+    for (Order order in widget.report.orders) {
+      total += order.price! * order.cylinderSize;
+    }
+    setState(() {});
   }
 
   @override
@@ -482,6 +493,362 @@ class _SaleReportContainerState extends State<SaleReportContainer>
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      width: 375.w,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.r),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 1,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: 10.h,
+        horizontal: 10.w,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Sale Report for ${formatDateRaw(widget.report.timestamp, shorten: true)}",
+                style: context.textTheme.bodyLarge!.copyWith(
+                  color: monokai,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              if (widget.report.orders.isNotEmpty)
+                IconButton(
+                  onPressed: () {
+                    setState(() => expanded = !expanded);
+                    if (expanded) {
+                      controller.forward();
+                    } else {
+                      controller.reverse();
+                    }
+                  },
+                  icon: AnimatedSwitcherTranslation.right(
+                    duration: const Duration(milliseconds: 300),
+                    child: Icon(
+                      expanded
+                          ? IconsaxPlusBroken.arrow_up_1
+                          : IconsaxPlusBroken.arrow_down,
+                      color: monokai,
+                      key: ValueKey<bool>(expanded),
+                    ),
+                  ),
+                  iconSize: 26.r,
+                )
+            ],
+          ),
+          Text(
+            "₦${formatAmount(total.toStringAsFixed(0))}",
+            style: context.textTheme.titleLarge!.copyWith(
+              color: primary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          if (widget.report.orders.isNotEmpty)
+            SizeTransition(
+              sizeFactor: animation,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 100.w,
+                        child: Text(
+                          "G-Code",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: monokai,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 100.w,
+                        child: Text(
+                          "Cylinder Size",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: monokai,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 100.w,
+                        child: Text(
+                          "Amount",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: monokai,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.end,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: List.generate(
+                      widget.report.orders.length,
+                      (index) {
+                        Order order = widget.report.orders[index];
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 5.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 100.w,
+                                child: Text(
+                                  order.code,
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: monokai,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 100.w,
+                                child: Text(
+                                  "${order.cylinderSize.toStringAsFixed(1)}kg",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: monokai,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 100.w,
+                                child: Text(
+                                  "₦${formatAmount(order.price!.toStringAsFixed(0))}",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: monokai,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class SalePriceContainer extends StatefulWidget {
+  final String label;
+  final double price;
+  final Function onPriceUpdated;
+
+  const SalePriceContainer({
+    super.key,
+    required this.label,
+    required this.price,
+    required this.onPriceUpdated,
+  });
+
+  @override
+  State<SalePriceContainer> createState() => _SalePriceContainerState();
+}
+
+class _SalePriceContainerState extends State<SalePriceContainer> {
+  void showModal() {
+    showDialog(
+      context: context,
+      builder: (context) => _PriceUpdate(
+        price: widget.price,
+        onUpdate: widget.onPriceUpdated,
+      ),
+      useSafeArea: true,
+      barrierDismissible: false,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.r),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 1,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: 10.h,
+        horizontal: 10.w,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            widget.label,
+            style: context.textTheme.labelLarge!.copyWith(
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 5.h),
+          Text(
+            "₦${formatAmount(widget.price.toStringAsFixed(0))}",
+            style: context.textTheme.headlineLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: primary,
+            ),
+          ),
+          SizedBox(height: 5.h),
+          GestureDetector(
+            onTap: showModal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Edit",
+                  style: context.textTheme.bodySmall,
+                ),
+                SizedBox(width: 2.w),
+                Icon(
+                  IconsaxPlusBroken.edit,
+                  size: 12.r,
+                  color: monokai,
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PriceUpdate extends StatefulWidget {
+  final double price;
+  final Function onUpdate;
+
+  const _PriceUpdate({
+    super.key,
+    required this.price,
+    required this.onUpdate,
+  });
+
+  @override
+  State<_PriceUpdate> createState() => _PriceUpdateState();
+}
+
+class _PriceUpdateState extends State<_PriceUpdate> {
+  late TextEditingController controller;
+  FocusNode node = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController(text: widget.price.toStringAsFixed(0));
+    node.requestFocus();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(horizontal: 80.w),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15.r),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Price update",
+                style: context.textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              SpecialForm(
+                controller: controller,
+                width: 160.w,
+                height: 40.h,
+                focus: node,
+                type: TextInputType.number,
+                hint: "New price",
+              ),
+              SizedBox(height: 20.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Text(
+                      "Cancel",
+                      style: context.textTheme.bodyLarge,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      String text = controller.text.trim();
+                      double? value = double.tryParse(text);
+                      if(text.isEmpty || value == null) return;
+
+                      widget.onUpdate(value);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "Update",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 5.h),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

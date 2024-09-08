@@ -20,6 +20,7 @@ const Color gasUsageEndText = Color(0xFF497442);
 
 extension StringPath on String {
   String get path => "/$this";
+  String get capitalize => "${substring(0, 1).toUpperCase()}${substring(1)}";
 }
 
 extension RedionesContext on BuildContext {

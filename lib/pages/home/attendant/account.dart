@@ -54,7 +54,6 @@ class _AccountState extends ConsumerState<Account> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20.h),
                 const WalletSlider(),
                 SizedBox(height: 30.h),
                 Row(

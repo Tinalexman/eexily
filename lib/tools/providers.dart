@@ -215,7 +215,7 @@ final StateProvider<List<Order>> attendantOrdersProvider = StateProvider(
       cylinderSize: 5.0,
       deliveryIssue: "Delivery bike broke down",
       riderBike: "360-HG",
-      status: OrderStatus.completed,
+      status: OrderStatus.pending,
       riderName: "Dina Martins",
       riderImage: "assets/images/man.png",
     ),
@@ -235,7 +235,39 @@ final StateProvider<List<Transaction>> transactionsProvider = StateProvider(
   }),
 );
 
-final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider((ref) => []);
+final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider(
+  (ref) => List.generate(
+    5,
+    (index) {
+      Random random = Random();
+      DateTime dateTime = DateUtilities.getDaysAgo(4 - index);
+      return SaleReport(
+        timestamp: dateTime,
+        id: "Sale Report $index",
+        orders: List.generate(
+          min(2, random.nextInt(7)),
+          (i) {
+            return Order(
+              deliveryDate: dateTime,
+              id: randomOrderID,
+              price: 800,
+              code: randomGCode,
+              name: "Habeeb Lawal",
+              phone: "+2349012345678",
+              address: "No 12, Babylon Street, Accord",
+              cylinderSize: 5.0,
+              deliveryIssue: "Delivery bike broke down",
+              riderBike: "360-HG",
+              status: OrderStatus.completed,
+              riderName: "Dina Martins",
+              riderImage: "assets/images/man.png",
+            );
+          },
+        ),
+      );
+    },
+  ),
+);
 
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
 

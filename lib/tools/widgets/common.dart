@@ -1,4 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:eexily/components/order.dart';
 import 'package:eexily/components/transaction.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
@@ -173,9 +174,7 @@ class SpecialForm extends StatelessWidget {
               : null,
           focusedBorder: OutlineInputBorder(
             borderRadius: radius ?? BorderRadius.circular(7.5.r),
-            borderSide: BorderSide(
-              color: borderColor ?? primary50,
-            ),
+            borderSide: BorderSide.none,
           ),
           border: OutlineInputBorder(
             borderRadius: radius ?? BorderRadius.circular(7.5.r),
@@ -596,6 +595,173 @@ class TransactionContainer extends StatelessWidget {
               fontWeight: FontWeight.w600,
               color: transaction.credit ? Colors.green : Colors.red,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class OrderContainer extends StatelessWidget {
+  final String link;
+  final Order order;
+
+  const OrderContainer({
+    super.key,
+    required this.link,
+    required this.order,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.router.pushNamed(
+        link,
+        extra: order,
+      ),
+      child: Container(
+        height: 200.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.r),
+          color: Colors.white,
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 1,
+            ),
+          ],
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: 10.h,
+          horizontal: 10.w,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 80.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(7.5.r),
+                image: DecorationImage(
+                  image: AssetImage(order.riderImage!),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Text(
+              order.riderName,
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: monokai,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Gas Ordered:",
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: monokai,
+                  ),
+                ),
+                Text(
+                  "₦${formatAmount(order.price.toStringAsFixed(0))}",
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: monokai,
+                  ),
+                )
+              ],
+            ),
+            Text(
+              "Rider",
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: secondary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RiderOrderDetail extends StatelessWidget {
+  final Order order;
+  const RiderOrderDetail({super.key, required this.order,});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 140.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.r),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 1,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: 10.h,
+        horizontal: 10.w,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Rider",
+            style: context.textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 80.h,
+                width: 80.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7.5.r),
+                  image: DecorationImage(
+                    image: AssetImage(order.riderImage!),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    order.riderName,
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: monokai,
+                    ),
+                  ),
+                  SizedBox(height: 5.h),
+                  Text(
+                    "Vehicle Number: ${order.riderBike}",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: monokai,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),

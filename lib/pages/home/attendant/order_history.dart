@@ -1,7 +1,7 @@
 import 'package:eexily/components/filter_data.dart';
 import 'package:eexily/components/sale_report.dart';
 import 'package:eexily/components/user/attendant.dart';
-import 'package:eexily/pages/home/attendant/widgets.dart';
+import 'package:eexily/tools/widgets/attendant.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:flutter/material.dart';

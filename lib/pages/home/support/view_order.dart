@@ -2,22 +2,23 @@ import 'package:eexily/components/order.dart';
 import 'package:eexily/pages/home/support/details.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
+import 'package:eexily/tools/widgets/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ViewOrder extends StatefulWidget {
+class ViewSupportOrder extends StatefulWidget {
   final Order order;
 
-  const ViewOrder({
+  const ViewSupportOrder({
     super.key,
     required this.order,
   });
 
   @override
-  State<ViewOrder> createState() => _ViewOrderState();
+  State<ViewSupportOrder> createState() => _ViewSupportOrderState();
 }
 
-class _ViewOrderState extends State<ViewOrder> {
+class _ViewSupportOrderState extends State<ViewSupportOrder> {
   late Color background, text;
 
   @override
@@ -33,7 +34,7 @@ class _ViewOrderState extends State<ViewOrder> {
       appBar: AppBar(
         title: Text(
           "View Order",
-          style: context.textTheme.titleMedium!.copyWith(
+          style: context.textTheme.titleLarge!.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -46,25 +47,11 @@ class _ViewOrderState extends State<ViewOrder> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 10.h),
-                RichText(
-                  text: TextSpan(children: [
-                    TextSpan(
-                      text: "G-Code: ",
-                      style: context.textTheme.titleSmall,
-                    ),
-                    TextSpan(
-                      text: widget.order.code,
-                      style: context.textTheme.titleSmall!.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    )
-                  ]),
-                ),
-                SizedBox(height: 10.h),
                 TabBar(
-                  dividerColor: const Color(0xFF898A8D).withOpacity(0.5),
+                  labelColor: primary,
                   labelStyle: context.textTheme.bodyLarge,
+                  unselectedLabelColor: neutral2,
+                  indicatorColor: primary,
                   tabs: const [
                     Tab(text: "Details"),
                     Tab(text: "Track Order"),
@@ -74,10 +61,19 @@ class _ViewOrderState extends State<ViewOrder> {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      OrderDetails(
-                        order: widget.order,
-                        background: background,
-                        text: text,
+                      Padding(
+                        padding: const EdgeInsets.all(1),
+                        child: Column(
+                          children: [
+                            OrderDetails(
+                              order: widget.order,
+                              background: background,
+                              text: text,
+                            ),
+                            SizedBox(height: 20.h),
+                            RiderOrderDetail(order: widget.order),
+                          ],
+                        ),
                       ),
                       TrackOrder(order: widget.order),
                     ],

@@ -1,8 +1,8 @@
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/attendant.dart';
-import 'package:eexily/pages/home/attendant/widgets.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
+import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,7 +16,6 @@ class Home extends ConsumerStatefulWidget {
 
 class _HomeState extends ConsumerState<Home> {
   bool active = true;
-
 
   @override
   void initState() {
@@ -43,7 +42,7 @@ class _HomeState extends ConsumerState<Home> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: 250.w,
+                    width: 220.w,
                     child: Text(
                       attendant.gasStation,
                       style: context.textTheme.titleLarge!.copyWith(
@@ -53,12 +52,25 @@ class _HomeState extends ConsumerState<Home> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Transform.scale(
-                    scale: 0.75,
-                    child: Switch(
-                      value: active,
-                      onChanged: (val) => setState(() => active = !active),
-                    ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        active ? "Opened" : "Closed",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: monokai,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Transform.scale(
+                        scale: 0.75,
+                        child: Switch(
+                          value: active,
+                          onChanged: (val) => setState(() => active = !active),
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),
@@ -81,7 +93,8 @@ class _HomeState extends ConsumerState<Home> {
                   ),
                   if (orders.length > 2)
                     GestureDetector(
-                      onTap: () => context.router.pushNamed(Pages.allAttendantOrders),
+                      onTap: () =>
+                          context.router.pushNamed(Pages.allAttendantOrders),
                       child: Text(
                         "View all",
                         style: context.textTheme.bodyMedium!.copyWith(
@@ -100,8 +113,10 @@ class _HomeState extends ConsumerState<Home> {
                     mainAxisExtent: 165.h,
                     crossAxisSpacing: 20.h,
                   ),
-                  itemBuilder: (_, index) =>
-                      OrderContainer(order: orders[index]),
+                  itemBuilder: (_, index) => OrderContainer(
+                    order: orders[index],
+                    link: Pages.viewAttendantOrder,
+                  ),
                   physics: const BouncingScrollPhysics(),
                   itemCount: orders.length < 2 ? orders.length : 2,
                 ),

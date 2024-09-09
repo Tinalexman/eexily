@@ -3,11 +3,12 @@ import 'package:eexily/components/user/support.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
-import 'package:eexily/tools/widgets/common.dart';
-import 'package:eexily/tools/widgets/support.dart';
+import 'package:eexily/tools/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class Home extends ConsumerStatefulWidget {
   const Home({super.key});
@@ -70,7 +71,10 @@ class _HomeState extends ConsumerState<Home> {
         actions: [
           IconButton(
             onPressed: () => context.router.pushNamed(Pages.notification),
-            icon: const Icon(Icons.notifications),
+            icon: const Icon(
+              IconsaxPlusBroken.notification_1,
+              color: monokai,
+            ),
             iconSize: 26.r,
           )
         ],
@@ -79,15 +83,15 @@ class _HomeState extends ConsumerState<Home> {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 10.h),
               SpecialForm(
                 controller: controller,
                 width: 375.w,
-                height: 40.h,
+                height: 50.h,
                 hint: "Search orders",
                 prefix: Icon(
-                  Icons.search_rounded,
+                  IconsaxPlusBroken.search_normal,
                   color: const Color(0xFFA9A9A9),
                   size: 20.r,
                 ),
@@ -99,35 +103,38 @@ class _HomeState extends ConsumerState<Home> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Orders",
+                    "Orders of the day",
                     style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w500,
+                      color: monokai,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   GestureDetector(
                     onTap: () => context.router.pushNamed(Pages.orderHistory),
                     child: Text(
                       "View History",
-                      style: context.textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.w500,
+                      style: context.textTheme.bodyMedium!.copyWith(
                         color: primary,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               SizedBox(height: 10.h),
               Expanded(
-                child: ListView.separated(
-                  itemBuilder: (_, index) {
-                    if(index == pendingOrders.length) {
-                      return SizedBox(height: 50.h);
-                    }
-
-                    return OrderContainer(order: pendingOrders[index]);
-                  },
-                  separatorBuilder: (_, __) => SizedBox(height: 15.h),
-                  itemCount: pendingOrders.length + 1,
+                child: GridView.builder(
+                  itemBuilder: (_, index) => OrderContainer(
+                    order: pendingOrders[index],
+                    link: Pages.viewSupportOrder,
+                  ),
+                  padding: const EdgeInsets.all(1),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisExtent: 165.h,
+                    crossAxisSpacing: 10.h,
+                    mainAxisSpacing: 10.h,
+                  ),
+                  itemCount: pendingOrders.length,
                   physics: const BouncingScrollPhysics(),
                 ),
               )

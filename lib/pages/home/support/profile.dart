@@ -5,6 +5,7 @@ import 'package:eexily/tools/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class Profile extends ConsumerStatefulWidget {
   const Profile({super.key});
@@ -44,12 +45,24 @@ class _ProfileState extends ConsumerState<Profile> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            "My Profile",
-            style: context.textTheme.titleMedium!.copyWith(
+            "Profile",
+            style: context.textTheme.titleLarge!.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
-          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              onPressed: () {
+                logout(ref);
+                context.router.goNamed(Pages.login);
+              },
+              icon: const Icon(
+                IconsaxPlusBroken.logout,
+                color: monokai,
+              ),
+              iconSize: 26.r,
+            ),
+          ],
         ),
         body: SafeArea(
           child: Center(
@@ -72,67 +85,20 @@ class _ProfileState extends ConsumerState<Profile> {
                 Text(
                   "${support.firstName} ${support.lastName}",
                   style: context.textTheme.headlineSmall!.copyWith(
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   support.email,
-                  style: context.textTheme.bodyLarge,
+                  style: context.textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 Text(
                   support.supportRole,
                   style: context.textTheme.bodyMedium,
                 ),
-                SizedBox(height: 30.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        logout(ref);
-                        context.router.goNamed(Pages.login);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        elevation: 0.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.5.r)
-                        ),
-                        side: const BorderSide(color: primary),
-                        fixedSize: Size(130.w, 40.h),
-                        minimumSize: Size(130.w, 40.h),
-                      ),
-                      child: Text(
-                        "Sign out",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          color: primary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10.w),
-                    ElevatedButton(
-                      onPressed: () => ref.watch(pageIndexProvider.notifier).state = 0,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: primary,
-                        elevation: 0.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7.5.r)
-                        ),
 
-                        fixedSize: Size(130.w, 40.h),
-                        minimumSize: Size(130.w, 40.h),
-                      ),
-                      child: Text(
-                        "Go home",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    )
-                  ],
-                )
               ],
             ),
           ),

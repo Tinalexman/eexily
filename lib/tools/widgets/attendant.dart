@@ -264,105 +264,6 @@ class _RevenueChartState extends ConsumerState<RevenueChart> {
   }
 }
 
-class OrderContainer extends StatelessWidget {
-  final Order order;
-
-  const OrderContainer({
-    super.key,
-    required this.order,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.router.pushNamed(
-        Pages.viewAttendantOrder,
-        extra: order,
-      ),
-      child: Container(
-        height: 200.h,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.r),
-          color: Colors.white,
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 1,
-            ),
-          ],
-        ),
-        padding: EdgeInsets.symmetric(
-          vertical: 10.h,
-          horizontal: 10.w,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 80.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7.5.r),
-                image: DecorationImage(
-                  image: AssetImage(order.riderImage!),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Text(
-              order.riderName,
-              style: context.textTheme.bodyLarge!.copyWith(
-                fontWeight: FontWeight.w600,
-                color: monokai,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  order.code,
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: monokai,
-                  ),
-                ),
-                Text(
-                  "Rider",
-                  style: context.textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w400,
-                    color: secondary,
-                  ),
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Cylinder size:",
-                  style: context.textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: monokai,
-                  ),
-                ),
-                Text(
-                  "${order.cylinderSize}kg",
-                  style: context.textTheme.titleMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: monokai,
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class WalletSlider extends ConsumerStatefulWidget {
   const WalletSlider({super.key});
 
@@ -480,7 +381,7 @@ class _SaleReportContainerState extends State<SaleReportContainer>
 
   void getTotal() {
     for (Order order in widget.report.orders) {
-      total += order.price! * order.cylinderSize;
+      total += order.price;
     }
     setState(() {});
   }
@@ -578,7 +479,7 @@ class _SaleReportContainerState extends State<SaleReportContainer>
                       SizedBox(
                         width: 100.w,
                         child: Text(
-                          "Cylinder Size",
+                          "Gas Quantity",
                           style: context.textTheme.bodyMedium!.copyWith(
                             fontWeight: FontWeight.w600,
                             color: monokai,
@@ -606,6 +507,8 @@ class _SaleReportContainerState extends State<SaleReportContainer>
                       widget.report.orders.length,
                       (index) {
                         Order order = widget.report.orders[index];
+                        double gasQuantity =
+                            order.price / widget.report.retailPrice;
                         return Padding(
                           padding: EdgeInsets.symmetric(vertical: 5.h),
                           child: Row(
@@ -627,7 +530,7 @@ class _SaleReportContainerState extends State<SaleReportContainer>
                               SizedBox(
                                 width: 100.w,
                                 child: Text(
-                                  "${order.cylinderSize.toStringAsFixed(1)}kg",
+                                  "${gasQuantity.toStringAsFixed(1)}kg",
                                   style: context.textTheme.bodyMedium!.copyWith(
                                     fontWeight: FontWeight.w500,
                                     color: monokai,
@@ -639,7 +542,7 @@ class _SaleReportContainerState extends State<SaleReportContainer>
                               SizedBox(
                                 width: 100.w,
                                 child: Text(
-                                  "₦${formatAmount(order.price!.toStringAsFixed(0))}",
+                                  "₦${formatAmount(order.price.toStringAsFixed(0))}",
                                   style: context.textTheme.bodyMedium!.copyWith(
                                     fontWeight: FontWeight.w500,
                                     color: monokai,
@@ -830,7 +733,7 @@ class _PriceUpdateState extends State<_PriceUpdate> {
                     onTap: () {
                       String text = controller.text.trim();
                       double? value = double.tryParse(text);
-                      if(text.isEmpty || value == null) return;
+                      if (text.isEmpty || value == null) return;
 
                       widget.onUpdate(value);
                       Navigator.of(context).pop();
@@ -848,6 +751,131 @@ class _PriceUpdateState extends State<_PriceUpdate> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class GasOrderDetail extends StatelessWidget {
+  final Order order;
+  final double retailPrice;
+
+  const GasOrderDetail({
+    super.key,
+    required this.order,
+    required this.retailPrice,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 250.h,
+      width: 375.w,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.r),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 1,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: 10.h,
+        horizontal: 10.w,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Order #${order.id}",
+            style: context.textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: monokai,
+            ),
+          ),
+          Text(
+            order.status.name.capitalize,
+            style: context.textTheme.bodyLarge!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: order.status == OrderStatus.pending ? secondary : primary,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Image.asset(
+                "assets/images/Two Cylinders.png",
+                width: 120.w,
+                height: 180.h,
+                fit: BoxFit.cover,
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 18.h),
+                child: Container(
+                  width: 180.w,
+                  decoration: BoxDecoration(
+                    color: primary50.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(7.5.r),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 5.h,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Price:",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: monokai,
+                            ),
+                          ),
+                          Text(
+                            "₦${formatAmount(order.price.toStringAsFixed(0))}",
+                            style: context.textTheme.titleMedium!.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: monokai,
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 5.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Quantity:",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: monokai,
+                            ),
+                          ),
+                          Text(
+                            "${(order.price / retailPrice).toStringAsFixed(1)}kg",
+                            style: context.textTheme.titleMedium!.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: monokai,
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 5.h),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

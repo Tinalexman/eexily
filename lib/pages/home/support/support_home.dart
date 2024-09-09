@@ -45,14 +45,14 @@ class _SupportHomeState extends ConsumerState<SupportHome> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(
-              IconsaxPlusBroken.home,
+              IconsaxPlusBroken.gift,
               size: 22.r,
             ),
             activeIcon: Icon(
-              IconsaxPlusBold.home,
+              IconsaxPlusBold.gift,
               size: 22.r,
             ),
-            label: "Home",
+            label: "Orders",
           ),
           BottomNavigationBarItem(
             icon: Icon(

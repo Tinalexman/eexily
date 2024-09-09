@@ -5,11 +5,11 @@ import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
-import 'package:eexily/tools/widgets/chats.dart';
 import 'package:faker/faker.dart' as fk;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class Chats extends ConsumerStatefulWidget {
   const Chats({super.key});
@@ -19,9 +19,7 @@ class Chats extends ConsumerStatefulWidget {
 }
 
 class _ChatsState extends ConsumerState<Chats> {
-  int tab = 0;
   final TextEditingController controller = TextEditingController();
-
   late List<Conversation> userConversations, driverConversations;
 
   @override
@@ -37,10 +35,10 @@ class _ChatsState extends ConsumerState<Chats> {
         timestamp: DateTime.now(),
         name: "${faker.person.firstName()} ${faker.person.lastName()}",
         id: "User Conversation ID: $index",
-        image: "assets/images/user.png",
         lastMessage: faker.lorem.sentence(),
         active: random.nextBool(),
         messageCount: random.nextInt(10),
+        code: randomGCode,
       ),
     );
 
@@ -51,10 +49,10 @@ class _ChatsState extends ConsumerState<Chats> {
           timestamp: DateTime.now(),
           name: "${faker.person.firstName()} ${faker.person.lastName()}",
           id: "Driver Conversation ID: $index",
+          image: "assets/images/man.png",
           lastMessage: faker.lorem.sentence(),
           active: random.nextBool(),
           messageCount: random.nextInt(10),
-          code: randomGCode,
         );
       },
     );
@@ -76,105 +74,84 @@ class _ChatsState extends ConsumerState<Chats> {
         }
         return !canPop;
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Chats",
-            style: context.textTheme.titleMedium!.copyWith(
-              fontWeight: FontWeight.w600,
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              "Chats",
+              style: context.textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
             ),
+            automaticallyImplyLeading: false,
           ),
-          automaticallyImplyLeading: false,
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Column(
-              children: [
-                SizedBox(height: 10.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () => setState(() => tab = 0),
-                      child: Container(
-                        width: 160.w,
-                        height: 40.h,
-                        decoration: BoxDecoration(
-                            color: tab == 0 ? primary : Colors.transparent,
-                            borderRadius: BorderRadius.circular(20.h),
-                            border:
-                                tab != 0 ? Border.all(color: primary) : null),
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Users",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            color: tab == 0 ? Colors.white : primary,
-                            fontWeight: FontWeight.w500,
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 20.w,
+                right: 20.w,
+                bottom: 5.h,
+              ),
+              child: Column(
+                children: [
+                  SpecialForm(
+                    controller: controller,
+                    width: 375.w,
+                    height: 50.h,
+                    hint: "Search conversations",
+                    prefix: Icon(
+                      IconsaxPlusBroken.search_normal,
+                      color: const Color(0xFFA9A9A9),
+                      size: 20.r,
+                    ),
+                    fillColor: const Color(0xFFF4F4F4),
+                  ),
+                  SizedBox(height: 5.h),
+                  TabBar(
+                    tabs: const [
+                      Tab(text: "Users"),
+                      Tab(text: "Riders/Drivers"),
+                    ],
+                    labelColor: primary,
+                    labelStyle: context.textTheme.bodyLarge,
+                    unselectedLabelColor: neutral2,
+                    indicatorColor: primary,
+                  ),
+                  SizedBox(height: 5.h),
+                  Expanded(
+                    child: TabBarView(
+                      physics: const BouncingScrollPhysics(),
+                      children: [
+                        RefreshIndicator(
+                          onRefresh: () async {},
+                          child: ListView.separated(
+                            itemBuilder: (_, index) => ConversationContainer(
+                              conversation: userConversations[index],
+                            ),
+                            separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                            itemCount: userConversations.length,
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.all(1),
                           ),
                         ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => setState(() => tab = 1),
-                      child: Container(
-                        width: 160.w,
-                        height: 40.h,
-                        decoration: BoxDecoration(
-                            color: tab == 1 ? primary : Colors.transparent,
-                            borderRadius: BorderRadius.circular(20.h),
-                            border:
-                                tab != 1 ? Border.all(color: primary) : null),
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Rider/Drivers",
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            color: tab == 1 ? Colors.white : primary,
-                            fontWeight: FontWeight.w500,
+                        RefreshIndicator(
+                          onRefresh: () async {},
+                          child: ListView.separated(
+                            itemBuilder: (_, index) => ConversationContainer(
+                              conversation: driverConversations[index],
+                            ),
+                            separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                            itemCount: driverConversations.length,
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.all(1),
                           ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-                SpecialForm(
-                  controller: controller,
-                  width: 375.w,
-                  height: 40.h,
-                  hint: "Search orders",
-                  prefix: Icon(
-                    Icons.search_rounded,
-                    color: const Color(0xFFA9A9A9),
-                    size: 20.r,
-                  ),
-                  fillColor: const Color(0xFFF4F4F4),
-                ),
-                SizedBox(height: 20.h),
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async {},
-                    child: ListView.separated(
-                      itemBuilder: (_, index) {
-                        if ((tab == 0 && index == userConversations.length) ||
-                            (tab == 1 && index == driverConversations.length)) {
-                          return SizedBox(height: 60.h);
-                        }
-
-                        List<Conversation> conversations =
-                            tab == 0 ? userConversations : driverConversations;
-                        return ConversationContainer(
-                          conversation: conversations[index],
-                        );
-                      },
-                      separatorBuilder: (_, __) => SizedBox(height: 10.h),
-                      itemCount: tab == 0
-                          ? userConversations.length + 1
-                          : driverConversations.length + 1,
+                      ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:timeago/timeago.dart' as time;
 
 class Inbox extends ConsumerStatefulWidget {
@@ -144,9 +145,9 @@ class _InboxState extends ConsumerState<Inbox>
               children: [
                 Text(
                   widget.conversation.name,
-                  style: context.textTheme.bodyMedium!.copyWith(
+                  style: context.textTheme.bodyLarge!.copyWith(
                     color: Colors.white,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 if (widget.conversation.code != null)
@@ -165,15 +166,7 @@ class _InboxState extends ConsumerState<Inbox>
           IconButton(
             onPressed: () {},
             icon: const Icon(
-              Icons.phone_rounded,
-              color: Colors.white,
-            ),
-            iconSize: 26.r,
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.delete_rounded,
+              IconsaxPlusBold.call,
               color: Colors.white,
             ),
             iconSize: 26.r,
@@ -236,8 +229,8 @@ class _InboxState extends ConsumerState<Inbox>
                           ),
                         ),
                         Positioned(
-                          bottom: 2.h,
-                          right: 5.w,
+                          bottom: 3.h,
+                          right: 10.w,
                           child: Text(
                             time.format(message.timestamp),
                             style: context.textTheme.bodySmall!.copyWith(
@@ -287,7 +280,7 @@ class _InboxState extends ConsumerState<Inbox>
                     child: Icon(
                       Icons.emoji_emotions_outlined,
                       size: 26.r,
-                      color: const Color(0xFF757575),
+                      color: primary,
                     ),
                   ),
                   suffix: GestureDetector(
@@ -308,7 +301,7 @@ class _InboxState extends ConsumerState<Inbox>
                       setState(() {});
                     },
                     child: Icon(
-                      Icons.send,
+                      IconsaxPlusBold.send_2,
                       color: primary,
                       size: 26.r,
                     ),

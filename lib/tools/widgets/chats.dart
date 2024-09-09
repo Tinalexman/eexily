@@ -38,13 +38,19 @@ class _ConversationContainerState extends State<ConversationContainer> {
       child: Container(
         width: 375.w,
         height: 70.h,
-        padding: EdgeInsets.symmetric(
-          horizontal: 10.w,
-          vertical: 5.h,
-        ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(7.5.r),
-          color: const Color(0xFFD9D9D9).withOpacity(0.2),
+          borderRadius: BorderRadius.circular(15.r),
+          color: Colors.white,
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 1,
+            ),
+          ],
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: 10.h,
+          horizontal: 10.w,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,24 +99,27 @@ class _ConversationContainerState extends State<ConversationContainer> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       RichText(
-                          text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: widget.conversation.name,
-                            style: context.textTheme.bodySmall,
-                          ),
-                          if (widget.conversation.code != null)
+                        text: TextSpan(
+                          children: [
                             TextSpan(
-                              text: "   ${widget.conversation.code}",
+                              text: widget.conversation.name,
                               style: context.textTheme.bodySmall!.copyWith(
-                                color: primary,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 10.sp,
+                                color: monokai,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                        ],
-                      )),
-                      SizedBox(height: 1.h),
+                            if (widget.conversation.code != null)
+                              TextSpan(
+                                text: "   ${widget.conversation.code}",
+                                style: context.textTheme.bodySmall!.copyWith(
+                                  color: primary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 5.h),
                       Text(
                         widget.conversation.lastMessage,
                         style: context.textTheme.bodySmall!.copyWith(

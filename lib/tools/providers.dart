@@ -7,6 +7,7 @@ import 'package:eexily/components/sale_report.dart';
 import 'package:eexily/components/transaction.dart';
 import 'package:eexily/components/usage.dart';
 import 'package:eexily/components/user/attendant.dart';
+import 'package:eexily/components/user/driver.dart';
 import 'package:eexily/components/user/support.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/functions.dart';
@@ -42,8 +43,15 @@ const Support dummySupport = Support(
   supportRole: "Customer Service Rep 1",
 );
 
+const Driver dummyDriver = Driver(
+  firstName: "Mide",
+  lastName: "Martins",
+  image: "assets/images/man.png",
+);
+
 final StateProvider<UserBase> userProvider =
-    StateProvider((ref) => dummyAttendant);
+    StateProvider((ref) => dummyDriver);
+
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
 final StateProvider<bool> startGasTimerProvider = StateProvider((ref) => false);
 final StateProvider<List<int>> saverPointsProvider =
@@ -119,10 +127,12 @@ final StateProvider<List<Notification>> notificationsProvider =
     Notification(
       message: "Hello $name, your gas has been exhausted completely.",
       read: false,
+      timestamp: DateTime.now(),
     ),
     Notification(
       message: "Hello $name, your gas level is currently low.",
       read: true,
+      timestamp: DateTime.now(),
     ),
   ];
 });
@@ -174,12 +184,31 @@ final StateProvider<List<Order>> pendingOrdersProvider = StateProvider(
       deliveryDate: DateTime.now(),
       code: randomGCode,
       name: "Habeeb Lawal",
-      phone: "+2349012345678",
+      phone: "09012345678",
       address: "No 12, Babylon Street, Accord",
-      cylinderSize: 5.0,
       deliveryIssue: "Delivery bike broke down",
       riderBike: "360-HG",
+      price: 3000,
       riderName: "Dina Martins",
+      riderImage: "assets/images/man.png",
+    ),
+  ),
+);
+
+final StateProvider<List<Order>> driverOrdersProvider = StateProvider(
+      (ref) => List.generate(
+    15,
+        (_) => Order(
+      deliveryDate: DateTime.now(),
+      code: randomGCode,
+      name: "Habeeb Lawal",
+      phone: "09012345678",
+      address: "No 12, Babylon Street, Accord",
+      deliveryIssue: "Delivery bike broke down",
+      riderBike: "360-HG",
+      price: 3000,
+      riderName: "Dina Martins",
+      riderImage: "assets/images/man.png",
     ),
   ),
 );
@@ -191,13 +220,14 @@ final StateProvider<List<Order>> orderHistoryProvider = StateProvider(
       deliveryDate: DateTime.now(),
       code: randomGCode,
       name: "Habeeb Lawal",
-      phone: "+2349012345678",
+      phone: "09012345678",
       address: "No 12, Babylon Street, Accord",
-      cylinderSize: 5.0,
       deliveryIssue: "Delivery bike broke down",
       riderBike: "360-HG",
+      price: 3000,
       status: OrderStatus.completed,
       riderName: "Dina Martins",
+      riderImage: "assets/images/man.png",
     ),
   ),
 );
@@ -210,12 +240,12 @@ final StateProvider<List<Order>> attendantOrdersProvider = StateProvider(
       deliveryDate: DateTime.now(),
       code: randomGCode,
       name: "Habeeb Lawal",
-      phone: "+2349012345678",
+      phone: "09012345678",
       address: "No 12, Babylon Street, Accord",
-      cylinderSize: 5.0,
       deliveryIssue: "Delivery bike broke down",
       riderBike: "360-HG",
       status: OrderStatus.pending,
+      price: 5000,
       riderName: "Dina Martins",
       riderImage: "assets/images/man.png",
     ),
@@ -244,18 +274,19 @@ final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider(
       return SaleReport(
         timestamp: dateTime,
         id: "Sale Report $index",
+        regularPrice: 950,
+        retailPrice: 800,
         orders: List.generate(
           min(2, random.nextInt(7)),
           (i) {
             return Order(
               deliveryDate: dateTime,
               id: randomOrderID,
-              price: 800,
+              price: 5000,
               code: randomGCode,
               name: "Habeeb Lawal",
-              phone: "+2349012345678",
+              phone: "09012345678",
               address: "No 12, Babylon Street, Accord",
-              cylinderSize: 5.0,
               deliveryIssue: "Delivery bike broke down",
               riderBike: "360-HG",
               status: OrderStatus.completed,
@@ -272,6 +303,7 @@ final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider(
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
 
 void logout(WidgetRef ref) {
+  ref.invalidate(driverOrdersProvider);
   ref.invalidate(saleReportsProvider);
   ref.invalidate(attendantOrdersProvider);
   ref.invalidate(pendingOrdersProvider);

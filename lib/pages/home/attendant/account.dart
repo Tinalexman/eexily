@@ -1,6 +1,5 @@
 import 'package:eexily/components/filter_data.dart';
 import 'package:eexily/components/transaction.dart';
-import 'package:eexily/pages/home/attendant/widgets.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
@@ -9,8 +8,6 @@ import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-
-
 
 class Account extends ConsumerStatefulWidget {
   const Account({super.key});
@@ -43,6 +40,19 @@ class _AccountState extends ConsumerState<Account> {
               fontWeight: FontWeight.w600,
             ),
           ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                logout(ref);
+                context.router.goNamed(Pages.login);
+              },
+              icon: const Icon(
+                IconsaxPlusBroken.logout,
+                color: monokai,
+              ),
+              iconSize: 26.r,
+            ),
+          ],
         ),
         body: SafeArea(
           child: Padding(
@@ -106,7 +116,8 @@ class _AccountState extends ConsumerState<Account> {
                 Expanded(
                   child: ListView.separated(
                     padding: const EdgeInsets.all(1),
-                    itemBuilder: (_, index) => TransactionContainer(transaction: transactions[index]),
+                    itemBuilder: (_, index) =>
+                        TransactionContainer(transaction: transactions[index]),
                     separatorBuilder: (_, __) => SizedBox(height: 10.h),
                     itemCount: transactions.length,
                   ),

@@ -12,13 +12,12 @@ class Order {
   final DateTime deliveryDate;
   final String name;
   final String phone;
-  final double cylinderSize;
 
-  final String? riderImage;
+  final String riderImage;
   final String riderName;
   final String riderBike;
 
-  final double? price;
+  final double price;
 
 
   const Order({
@@ -30,11 +29,10 @@ class Order {
     required this.deliveryDate,
     this.name = "",
     this.phone = "",
-    this.cylinderSize = 0.0,
-    this.riderImage,
+    this.riderImage = "",
     this.riderName = "",
     this.riderBike = "",
-    this.price,
+    this.price = 0.0,
   });
 
 }

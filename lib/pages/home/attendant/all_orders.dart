@@ -1,8 +1,7 @@
 import 'package:eexily/components/order.dart';
-import 'package:eexily/pages/home/attendant/widgets.dart';
 import 'package:eexily/tools/constants.dart';
-import 'package:eexily/tools/widgets.dart';
 import 'package:eexily/tools/providers.dart';
+import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -46,7 +45,10 @@ class _AttendantAllOrdersPageState
               crossAxisSpacing: 10.h,
               mainAxisSpacing: 10.h,
             ),
-            itemBuilder: (_, index) => OrderContainer(order: orders[index]),
+            itemBuilder: (_, index) => OrderContainer(
+              order: orders[index],
+              link: Pages.viewAttendantOrder,
+            ),
             physics: const BouncingScrollPhysics(),
             itemCount: orders.length,
           ),

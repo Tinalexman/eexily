@@ -602,7 +602,6 @@ class TransactionContainer extends StatelessWidget {
   }
 }
 
-
 class OrderContainer extends StatelessWidget {
   final String link;
   final Order order;

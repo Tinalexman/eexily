@@ -79,7 +79,7 @@ class _OrderContainerState extends State<OrderContainer> {
                   ),
                 ),
                 Text(
-                  widget.order.code,
+                  "G-Code: ${widget.order.code}",
                   style: context.textTheme.titleSmall!.copyWith(
                     color: primary,
                     fontWeight: FontWeight.w500,
@@ -87,13 +87,26 @@ class _OrderContainerState extends State<OrderContainer> {
                 ),
               ],
             ),
-            // Text(
-            //   formatDateRaw(widget.order.deliveryDate, shorten: true),
-            //   style: context.textTheme.bodyMedium!.copyWith(
-            //     color: monokai,
-            //     fontWeight: FontWeight.w400,
-            //   ),
-            // )
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  "Delivery Time",
+                  style: context.textTheme.bodySmall!.copyWith(
+                    color: monokai,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Text(
+                  convertTime(widget.order.deliveryDate),
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    color: monokai,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),

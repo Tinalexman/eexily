@@ -66,7 +66,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 ),
                 SizedBox(height: 8.h),
                 ElevatedButton(
-                  onPressed: () => context.router.pushReplacementNamed(Pages.chooseCategory),
+                  onPressed: () => context.router.pushReplacementNamed(Pages.register),
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(330.w, 50.h),
                     fixedSize: Size(330.w, 50.h),

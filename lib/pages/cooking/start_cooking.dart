@@ -67,7 +67,6 @@ class _StartCookingPageState extends ConsumerState<StartCookingPage> {
                 SpecialForm(
                   controller: foodType,
                   width: 375.w,
-                  height: 50.h,
                   hint: "e.g Rice and Beans",
                 ),
                 SizedBox(height: 10.h),
@@ -79,7 +78,6 @@ class _StartCookingPageState extends ConsumerState<StartCookingPage> {
                 SpecialForm(
                   controller: houseSize,
                   width: 375.w,
-                  height: 50.h,
                   type: TextInputType.number,
                   hint: "e.g 4",
                 ),

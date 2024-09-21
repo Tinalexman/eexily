@@ -8,18 +8,21 @@ export 'base.dart' show imgPrefix, vidPrefix;
 export 'package:file_picker/file_picker.dart' show FileType;
 
 class FileHandler {
+  static const String eexilyUserEmail = "eexilyUserEmail";
+  static const String eexilyUserPassword = "eexilyUserPassword";
+
   static Future<void> saveAuthDetails(Map<String, String>? auth) async {
     SharedPreferences instance = await SharedPreferences.getInstance();
     await instance.setString(
-        "user_rediones_email", auth == null ? "" : auth["email"]!);
+        eexilyUserEmail, auth == null ? "" : auth["email"]!);
     await instance.setString(
-        "user_rediones_password", auth == null ? "" : auth["password"]!);
+        eexilyUserPassword, auth == null ? "" : auth["password"]!);
   }
 
   static Future<Map<String, String>?> loadAuthDetails() async {
     SharedPreferences instance = await SharedPreferences.getInstance();
-    String? email = instance.getString("user_rediones_email");
-    String? password = instance.getString("user_rediones_password");
+    String? email = instance.getString(eexilyUserEmail);
+    String? password = instance.getString(eexilyUserPassword);
 
     if (email == null || password == null || email.isEmpty || password.isEmpty) {
       return null;

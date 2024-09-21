@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-const SpinKitFadingFour loader = SpinKitFadingFour(
+const SpinKitThreeBounce loader = SpinKitThreeBounce(
   color: primary,
   size: 20,
 );
 
-const SpinKitFadingFour whiteLoader = SpinKitFadingFour(
+const SpinKitThreeBounce whiteLoader = SpinKitThreeBounce(
   color: Colors.white,
   size: 20,
 );
@@ -86,13 +86,11 @@ class SpecialForm extends StatelessWidget {
   final int? maxLines;
   final bool allowHeightExpand;
   final double width;
-  final double height;
 
   const SpecialForm({
     super.key,
     required this.controller,
     required this.width,
-    required this.height,
     this.fillColor,
     this.borderColor,
     this.textColor,
@@ -123,7 +121,6 @@ class SpecialForm extends StatelessWidget {
     bool darkTheme = context.isDark;
     return SizedBox(
       width: width,
-      height: allowHeightExpand ? null : height,
       child: TextFormField(
         autovalidateMode:
             autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
@@ -148,7 +145,10 @@ class SpecialForm extends StatelessWidget {
             ),
         decoration: InputDecoration(
           errorMaxLines: 1,
-          errorStyle: const TextStyle(height: 0, fontSize: 0),
+          errorStyle: context.textTheme.bodySmall!.copyWith(
+            color: Colors.red,
+            fontWeight: FontWeight.w300,
+          ),
           fillColor: fillColor ?? (darkTheme ? monokai : Colors.white),
           filled: true,
           contentPadding: padding ??
@@ -158,8 +158,8 @@ class SpecialForm extends StatelessWidget {
               ),
           prefixIcon: prefix != null
               ? SizedBox(
-                  width: height,
-                  height: height,
+                  width: kMinInteractiveDimension,
+                  height: kMinInteractiveDimension,
                   child: Center(
                     child: prefix,
                   ),
@@ -167,8 +167,8 @@ class SpecialForm extends StatelessWidget {
               : null,
           suffixIcon: suffix != null
               ? SizedBox(
-                  width: height,
-                  height: height,
+                  width: kMinInteractiveDimension,
+                  height: kMinInteractiveDimension,
                   child: Center(child: suffix),
                 )
               : null,
@@ -188,7 +188,7 @@ class SpecialForm extends StatelessWidget {
           hintStyle: hintStyle ??
               context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w300,
-                color: darkTheme ? Colors.white38 : Colors.black45,
+                color: Colors.black45,
               ),
         ),
         onChanged: (value) {
@@ -280,7 +280,8 @@ class ComboBox extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             style: context.textTheme.bodyLarge!.copyWith(
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
+              color: Colors.black45,
             ),
           ),
         ),
@@ -305,18 +306,20 @@ class ComboBox extends StatelessWidget {
         onChanged: onChanged,
         selectedItemBuilder: selectedItemBuilder,
         buttonStyleData: ButtonStyleData(
-          height: (noDecoration) ? null : buttonHeight ?? 40,
-          width: (noDecoration) ? 80 : buttonWidth ?? 140,
+          height:
+              (noDecoration) ? null : buttonHeight ?? kMinInteractiveDimension,
+          width: (noDecoration) ? 80 : buttonWidth ?? 375.w,
           padding: (noDecoration)
               ? null
-              : buttonPadding ?? const EdgeInsets.only(left: 14, right: 14),
+              : buttonPadding ?? const EdgeInsets.symmetric(horizontal: 14),
           decoration: (noDecoration)
               ? null
               : buttonDecoration ??
                   BoxDecoration(
                     borderRadius: BorderRadius.circular(
-                      buttonHeight == null ? 20 : 7.5.r,
+                      7.5.r,
                     ),
+                    color: Colors.white,
                   ),
           elevation: buttonElevation,
         ),
@@ -692,7 +695,11 @@ class OrderContainer extends StatelessWidget {
 
 class RiderOrderDetail extends StatelessWidget {
   final Order order;
-  const RiderOrderDetail({super.key, required this.order,});
+
+  const RiderOrderDetail({
+    super.key,
+    required this.order,
+  });
 
   @override
   Widget build(BuildContext context) {

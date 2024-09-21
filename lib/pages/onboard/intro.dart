@@ -115,15 +115,15 @@ class _CarouselPageState extends State<CarouselPage> {
               ),
               SizedBox(height: 30.h),
               SizedBox(
-                width: 55.r,
+                width: 40.r,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: List.generate(
                     items.length,
                     (index) => Container(
-                      width: index == page ? 15.r : 12.r,
-                      height: index == page ? 15.r : 12.r,
+                      width: index == page ? 10.r : 8.r,
+                      height: index == page ? 10.r : 8.r,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color:

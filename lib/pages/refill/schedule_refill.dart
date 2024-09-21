@@ -120,7 +120,6 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
                 SpecialForm(
                   controller: quantityController,
                   width: 375.w,
-                  height: 50.h,
                   type: TextInputType.number,
                   hint: "e.g 10",
                 ),
@@ -178,7 +177,6 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
                 SpecialForm(
                   controller: priceController,
                   width: 375.w,
-                  height: 50.h,
                   type: TextInputType.number,
                   hint: "0.00",
                   textColor: primary,

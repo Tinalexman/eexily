@@ -68,7 +68,6 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
               SpecialForm(
                 controller: controller,
                 width: 375.w,
-                height: 50.h,
                 hint: "Search orders",
                 prefix: Icon(
                   IconsaxPlusBroken.search_normal,

@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:timeago/timeago.dart' as time;
 
+import 'api/base.dart';
 import 'tools/routes.dart';
 
 Future<void> main() async {
@@ -33,10 +34,12 @@ class _EexilyState extends State<Eexily> {
     super.initState();
 
     _router = GoRouter(
-      initialLocation: Pages.home.path,
+      initialLocation: Pages.register.path,
       routes: routes,
     );
     time.setDefaultLocale('en_short');
+
+    initializeAPIServices();
   }
 
   @override

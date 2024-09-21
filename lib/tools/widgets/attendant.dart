@@ -712,7 +712,6 @@ class _PriceUpdateState extends State<_PriceUpdate> {
               SpecialForm(
                 controller: controller,
                 width: 160.w,
-                height: 40.h,
                 focus: node,
                 type: TextInputType.number,
                 hint: "New price",

@@ -37,9 +37,13 @@ class Pages
   static String get splash => "splash";
   static String get onboard => "onboard";
   static String get carousel => "carousel";
-  static String get chooseCategory => "choose-category";
-  static String get register => "register";
-  static String get login => "login";
+  static String get register => "sign-up";
+  static String get registerUser => "register-user";
+  static String get registerBusiness => "register-business";
+  static String get registerRider => "register-rider";
+  static String get registerStation => "register-station";
+  static String get registerSupport => "register-support";
+  static String get login => "sign-in";
   static String get verification => "verification";
   static String get scheduleRefill => "schedule-refill";
   static String get refillNow => "refill-now";

@@ -98,7 +98,6 @@ class _ChatsState extends ConsumerState<Chats> {
                   SpecialForm(
                     controller: controller,
                     width: 375.w,
-                    height: 50.h,
                     hint: "Search conversations",
                     prefix: Icon(
                       IconsaxPlusBroken.search_normal,

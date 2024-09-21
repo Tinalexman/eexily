@@ -160,7 +160,6 @@ class _FilterPageState extends State<FilterPage> {
                 SpecialForm(
                   controller: startController,
                   width: 375.w,
-                  height: 50.h,
                   hint: "dd/MM/yyyy",
                   readOnly: true,
                   suffix: GestureDetector(
@@ -181,7 +180,6 @@ class _FilterPageState extends State<FilterPage> {
                 SpecialForm(
                   controller: endController,
                   width: 375.w,
-                  height: 50.h,
                   readOnly: true,
                   hint: "dd/MM/yyyy",
                   suffix: GestureDetector(

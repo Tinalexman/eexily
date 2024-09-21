@@ -1,9 +1,13 @@
 import 'package:eexily/components/chat.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/points.dart';
-import 'package:eexily/pages/auth/category.dart';
+import 'package:eexily/pages/auth/create_account.dart';
 import 'package:eexily/pages/auth/login.dart';
-import 'package:eexily/pages/auth/register.dart';
+import 'package:eexily/pages/auth/register_business.dart';
+import 'package:eexily/pages/auth/register_rider.dart';
+import 'package:eexily/pages/auth/register_station.dart';
+import 'package:eexily/pages/auth/register_support.dart';
+import 'package:eexily/pages/auth/register_user.dart';
 import 'package:eexily/pages/auth/verify.dart';
 import 'package:eexily/pages/cooking/start_cooking.dart';
 import 'package:eexily/pages/cooking/usage.dart';
@@ -49,12 +53,34 @@ final List<GoRoute> routes = [
     builder: (_, state) => Inbox(conversation: state.extra as Conversation),
   ),
   GoRoute(
-    path: "${Pages.register.path}/:type",
+    path: Pages.register.path,
     name: Pages.register,
-    builder: (_, state) {
-      String type = state.pathParameters["type"] as String;
-      return RegisterPage(type: type);
-    },
+    builder: (_, __) => const CreateAccountPage(),
+  ),
+  GoRoute(
+    path: Pages.registerUser.path,
+    name: Pages.registerUser,
+    builder: (_, __) => const RegisterUserPage(),
+  ),
+  GoRoute(
+    path: Pages.registerBusiness.path,
+    name: Pages.registerBusiness,
+    builder: (_, __) => const RegisterBusinessPage(),
+  ),
+  GoRoute(
+    path: Pages.registerRider.path,
+    name: Pages.registerRider,
+    builder: (_, __) => const RegisterRiderPage(),
+  ),
+  GoRoute(
+    path: Pages.registerSupport.path,
+    name: Pages.registerSupport,
+    builder: (_, __) => const RegisterSupportPage(),
+  ),
+  GoRoute(
+    path: Pages.registerStation.path,
+    name: Pages.registerStation,
+    builder: (_, __) => const RegisterGasStationPage(),
   ),
   GoRoute(
     path: Pages.login.path,
@@ -105,11 +131,6 @@ final List<GoRoute> routes = [
     path: Pages.carousel.path,
     name: Pages.carousel,
     builder: (_, __) => const CarouselPage(),
-  ),
-  GoRoute(
-    path: Pages.chooseCategory.path,
-    name: Pages.chooseCategory,
-    builder: (_, __) => const ChooseCategoryPage(),
   ),
   GoRoute(
     path: Pages.orderHistory.path,

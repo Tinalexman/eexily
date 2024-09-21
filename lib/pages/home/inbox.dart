@@ -264,7 +264,6 @@ class _InboxState extends ConsumerState<Inbox>
                 height: 50.h,
                 child: SpecialForm(
                   width: 375.w,
-                  height: 40.h,
                   allowHeightExpand: true,
                   radius: BorderRadius.circular(200.h),
                   controller: textController,

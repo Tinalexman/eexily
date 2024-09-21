@@ -1,102 +1,91 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:eexily/api/authentication.dart';
-import 'package:eexily/api/file_handler.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
-class LoginPage extends StatefulWidget {
-  final Map<String, String>? savedDetails;
-  const LoginPage({super.key, this.savedDetails,});
+class CreateAccountPage extends StatefulWidget {
+  const CreateAccountPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<CreateAccountPage> createState() => _CreateAccountPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _CreateAccountPageState extends State<CreateAccountPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  final TextEditingController address = TextEditingController();
   final TextEditingController email = TextEditingController();
-  final TextEditingController phoneNumber = TextEditingController();
-  final TextEditingController fullName = TextEditingController();
-  final TextEditingController cylinderSize = TextEditingController();
-  final TextEditingController houseSize = TextEditingController();
-  final TextEditingController cookingAppliance = TextEditingController();
   final TextEditingController password = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
 
   final Map<String, String> authDetails = {
     "email": "",
     "password": "",
+    "type": "",
   };
 
-  bool showPassword = false, remember = false, loading = false;
+  final Map<String, String> options = {
+    "Business": "BUSINESS",
+    "Individual/Household": "INDIVIDUAL",
+    "Driver/Rider": "RIDER",
+    "Customer Support": "CUSTOMER_SERVICE",
+    "Gas Station Attendant": "GAS_STATION",
+  };
+
+  late List<String> optionKeys;
+
+  bool showPassword = false ,showConfirmPassword = false, loading = false;
 
 
+  String? type;
 
   @override
   void initState() {
     super.initState();
-    if(widget.savedDetails != null) {
-      Future.delayed(Duration.zero, autoLogin);
-    }
+    optionKeys = options.keys.toList();
   }
 
   @override
   void dispose() {
     email.dispose();
     password.dispose();
+    confirmPassword.dispose();
     super.dispose();
   }
 
-
   void showMessage(String message) => showToast(message, context);
 
-  Future<void> login() async {
-    var response = await authenticate(Pages.login, authDetails);
+  Future<void> createAccount() async {
+    var response = await authenticate(Pages.register, authDetails);
     setState(() => loading = false);
     if(!response.status) {
       showMessage(response.message);
       return;
     }
 
-    if(remember) {
-      FileHandler.saveAuthDetails(authDetails);
-    }
+    navigate();
   }
 
-
-  Future<void> autoLogin() async {
-    String savedEmail = widget.savedDetails!["email"]!;
-    String savedPassword = widget.savedDetails!["password"]!;
-
-    setState(() {
-      email.text = savedEmail;
-      password.text = savedPassword;
-      remember = true;
-      loading = true;
-    });
-
-    authDetails["email"] = savedEmail;
-    authDetails["password"] = savedPassword;
-
-    var response = await authenticate(Pages.login, authDetails);
-    setState(() => loading = false);
-    if(!response.status) {
-      showMessage(response.message);
-      return;
+  void navigate() {
+    if(type == optionKeys[0]) {
+      context.router.pushReplacementNamed(Pages.registerBusiness);
+    } else if(type == optionKeys[1]) {
+      context.router.pushReplacementNamed(Pages.registerUser);
+    } else if(type == optionKeys[2]) {
+      context.router.pushReplacementNamed(Pages.registerRider);
+    } else if(type == optionKeys[3]) {
+      context.router.pushReplacementNamed(Pages.registerSupport);
+    } else if(type == optionKeys[4]) {
+      context.router.pushReplacementNamed(Pages.registerStation);
     }
-
-
   }
 
   @override
   Widget build(BuildContext context) {
-    bool darkTheme = context.isDark;
-
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -118,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Text(
-                  "We are happy to see you again",
+                  "Create a new account with us",
                   style: context.textTheme.bodyLarge,
                 ),
                 SizedBox(height: 50.h),
@@ -169,8 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                                   : Icons.visibility_off,
                               size: 18.r,
                               key: ValueKey<bool>(showPassword),
-                              color:
-                                  darkTheme ? Colors.white70 : Colors.black87,
+                              color: Colors.black87,
                             ),
                           ),
                         ),
@@ -184,31 +172,57 @@ class _LoginPageState extends State<LoginPage> {
                         onSave: (value) => authDetails["password"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Checkbox(
-                            value: remember,
-                            onChanged: (val) {
-                              if(!loading) {
-                                setState(() => remember = !remember);
-                              }
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(2.r),
-                            ),
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            side: BorderSide(
-                              color: darkTheme ? Colors.white : monokai,
-                              width: 1.0,
+                      Text(
+                        "Confirm Password",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      SpecialForm(
+                        controller: confirmPassword,
+                        width: 375.w,
+                        hint: "e.g ********",
+                        maxLines: 1,
+                        obscure: !showConfirmPassword,
+                        suffix: GestureDetector(
+                          onTap: () => setState(
+                              () => showConfirmPassword = !showConfirmPassword),
+                          child: AnimatedSwitcherTranslation.right(
+                            duration: const Duration(milliseconds: 500),
+                            child: Icon(
+                              !showConfirmPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              size: 18.r,
+                              key: ValueKey<bool>(showConfirmPassword),
+                              color: Colors.black87,
                             ),
                           ),
-                          Text(
-                            "Remember me",
-                            style: context.textTheme.bodyMedium,
-                          )
-                        ],
-                      )
+                        ),
+                        onValidate: (value) {
+                          value = value.trim();
+                          if (password.text.trim() != value) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Type",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      ComboBox(
+                        onChanged: (val) => setState(() => type = val),
+                        value: type,
+                        dropdownItems: optionKeys,
+                        hint: "Select Type",
+                        dropdownWidth: 330.w,
+                        icon: const Icon(
+                          IconsaxPlusLinear.arrow_down,
+                          color: monokai,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -225,19 +239,26 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     if (!validateForm(formKey)) return;
 
+                    if(type == null) {
+                      showToast("Please choose a user type", context);
+                      return;
+                    } else {
+                      authDetails["type"] = options[type!]!;
+                    }
+
                     if(loading) return;
                     setState(() => loading = true);
-                    login();
+                    createAccount();
                   },
                   child: loading ? whiteLoader : Text(
-                    "Sign in",
+                    "Create Account",
                     style: context.textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
                   ),
                 ),
-                // SizedBox(height: 15.h),
+                SizedBox(height: 30.h),
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //   crossAxisAlignment: CrossAxisAlignment.center,
@@ -267,7 +288,7 @@ class _LoginPageState extends State<LoginPage> {
                 //   width: 375.w,
                 //   height: 50.h,
                 //   decoration: BoxDecoration(
-                //     color: darkTheme ? neutral : Colors.white,
+                //     color: Colors.white,
                 //     border: Border.all(color: primary50),
                 //     borderRadius: BorderRadius.circular(7.5.r),
                 //   ),
@@ -287,23 +308,23 @@ class _LoginPageState extends State<LoginPage> {
                 //     ],
                 //   ),
                 // ),
-                SizedBox(height: 30.h),
+                // SizedBox(height: 15.h),
                 RichText(
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: "Don't have an account?",
+                        text: "Have an account already?",
                         style: context.textTheme.bodyMedium,
                       ),
                       TextSpan(
-                        text: " Register",
+                        text: " Sign in",
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: primary,
                           fontWeight: FontWeight.w500,
                         ),
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () => context.router
-                              .pushReplacementNamed(Pages.register),
+                          ..onTap = () =>
+                              context.router.pushReplacementNamed(Pages.login),
                       ),
                     ],
                   ),

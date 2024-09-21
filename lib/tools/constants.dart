@@ -43,6 +43,8 @@ class Pages
   static String get registerRider => "register-rider";
   static String get registerStation => "register-station";
   static String get registerSupport => "register-support";
+  static String get chooseDriverImage => "choose-driver-image";
+  static String get chooseBusinessCategory => "choose-business-category";
   static String get login => "sign-in";
   static String get verification => "verification";
   static String get scheduleRefill => "schedule-refill";

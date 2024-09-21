@@ -9,7 +9,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RegisterSupportPage extends StatefulWidget {
-  const RegisterSupportPage({super.key});
+  final Map<String, dynamic> initialDetails;
+  const RegisterSupportPage({super.key, required this.initialDetails,});
 
   @override
   State<RegisterSupportPage> createState() => _RegisterSupportPageState();

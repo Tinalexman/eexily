@@ -1,15 +1,16 @@
-import 'package:animated_switcher_plus/animated_switcher_plus.dart';
-import 'package:eexily/api/authentication.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/widgets.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RegisterGasStationPage extends StatefulWidget {
-  const RegisterGasStationPage({super.key});
+  final Map<String, dynamic> initialDetails;
+
+  const RegisterGasStationPage({
+    super.key,
+    required this.initialDetails,
+  });
 
   @override
   State<RegisterGasStationPage> createState() => _RegisterGasStationPageState();
@@ -18,55 +19,38 @@ class RegisterGasStationPage extends StatefulWidget {
 class _RegisterGasStationPageState extends State<RegisterGasStationPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  final TextEditingController email = TextEditingController();
-  final TextEditingController password = TextEditingController();
-  final TextEditingController confirmPassword = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController accountNameController = TextEditingController();
+  final TextEditingController accountNumberController = TextEditingController();
+  final TextEditingController bankNameController = TextEditingController();
 
   final Map<String, String> authDetails = {
-    "email": "",
-    "password": "",
-    "type": "",
+    "gasStationName": "",
+    "address": "",
   };
 
-  final Map<String, String> options = {
-    "Business": "BUSINESS",
-    "Individual/Household": "INDIVIDUAL",
-    "Driver/Rider": "RIDER",
-    "Customer Support": "CUSTOMER_SERVICE",
-    "Gas Station Attendant": "GAS_STATION",
-  };
-
-  late List<String> optionKeys;
-
-  bool showPassword = false ,showConfirmPassword = false, loading = false;
-
-
-  String? type;
+  bool loading = false;
 
   @override
   void initState() {
     super.initState();
-    optionKeys = options.keys.toList();
   }
 
   @override
   void dispose() {
-    email.dispose();
-    password.dispose();
-    confirmPassword.dispose();
+    nameController.dispose();
+    addressController.dispose();
+    bankNameController.dispose();
+    accountNameController.dispose();
+    accountNumberController.dispose();
     super.dispose();
   }
 
   void showMessage(String message) => showToast(message, context);
 
-  Future<void> createAccount() async {
-    var response = await authenticate(Pages.register, authDetails);
-    setState(() => loading = false);
-    if(!response.status) {
-      showMessage(response.message);
-      return;
-    }
-  }
+  Future<void> createGasStation() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +75,7 @@ class _RegisterGasStationPageState extends State<RegisterGasStationPage> {
                   ),
                 ),
                 Text(
-                  "Create a new account with us",
+                  "Please fill the details below",
                   style: context.textTheme.bodyLarge,
                 ),
                 SizedBox(height: 50.h),
@@ -101,116 +85,110 @@ class _RegisterGasStationPageState extends State<RegisterGasStationPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "E-mail address",
+                        "Gas Station Name",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: email,
+                        controller: nameController,
                         width: 375.w,
-                        type: TextInputType.emailAddress,
-                        hint: "e.g johndoe@mail.com",
+                        hint: "e.g A&B Gas Industries",
                         onValidate: (value) {
                           value = value.trim();
-                          if (value!.isEmpty || !value.contains("@")) {
-                            return 'Invalid Email Address';
+                          if (value!.isEmpty) {
+                            return 'Invalid Gas Station Name';
                           }
                           return null;
                         },
-                        onSave: (value) => authDetails["email"] = value!.trim(),
+                        onSave: (value) =>
+                            authDetails["gasStationName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        "Password",
+                        "Account Name",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: password,
+                        controller: accountNameController,
                         width: 375.w,
-                        hint: "e.g ********",
-                        maxLines: 1,
-                        obscure: !showPassword,
-                        suffix: GestureDetector(
-                          onTap: () =>
-                              setState(() => showPassword = !showPassword),
-                          child: AnimatedSwitcherTranslation.right(
-                            duration: const Duration(milliseconds: 500),
-                            child: Icon(
-                              !showPassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              size: 18.r,
-                              key: ValueKey<bool>(showPassword),
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
+                        hint: "e.g John Doe",
                         onValidate: (value) {
                           value = value.trim();
-                          if (value!.isEmpty || value.length < 8) {
-                            return 'Password should have at least 8 characters';
+                          if (value!.isEmpty) {
+                            return 'Invalid Bank Account Name';
                           }
                           return null;
                         },
-                        onSave: (value) => authDetails["password"] = value!.trim(),
+                        onSave: (value) =>
+                            authDetails["accountName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        "Confirm Password",
+                        "Account Number",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: confirmPassword,
+                        controller: accountNumberController,
                         width: 375.w,
-                        hint: "e.g ********",
-                        maxLines: 1,
-                        obscure: !showConfirmPassword,
-                        suffix: GestureDetector(
-                          onTap: () => setState(
-                                  () => showConfirmPassword = !showConfirmPassword),
-                          child: AnimatedSwitcherTranslation.right(
-                            duration: const Duration(milliseconds: 500),
-                            child: Icon(
-                              !showConfirmPassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              size: 18.r,
-                              key: ValueKey<bool>(showConfirmPassword),
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
+                        hint: "e.g 1234567890",
+                        type: TextInputType.number,
                         onValidate: (value) {
                           value = value.trim();
-                          if (password.text.trim() != value) {
-                            return 'Passwords do not match';
+                          if (value!.isEmpty) {
+                            return 'Invalid Account Number';
                           }
                           return null;
                         },
+                        onSave: (value) =>
+                            authDetails["accountNumber"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        "Type",
+                        "Bank Name",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),
-                      ComboBox(
-                        onChanged: (val) => setState(() => type = val),
-                        value: type,
-                        dropdownItems: optionKeys,
-                        hint: "Select Type",
-                        dropdownWidth: 330.w,
-                        icon: const Icon(
-                          IconsaxPlusLinear.arrow_down,
-                          color: monokai,
-                        ),
+                      SpecialForm(
+                        controller: bankNameController,
+                        width: 375.w,
+                        hint: "e.g First Bank",
+                        onValidate: (value) {
+                          value = value.trim();
+                          if (value!.isEmpty) {
+                            return 'Invalid Bank Name';
+                          }
+                          return null;
+                        },
+                        onSave: (value) =>
+                            authDetails["bankName"] = value!.trim(),
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Address",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      SpecialForm(
+                        controller: addressController,
+                        width: 375.w,
+                        hint: "e.g No 12, Camp Junction, Alabata, Abeokuta",
+                        maxLines: 3,
+                        onValidate: (value) {
+                          value = value.trim();
+                          if (value!.isEmpty) {
+                            return 'Invalid address';
+                          }
+                          return null;
+                        },
+                        onSave: (value) =>
+                            authDetails["address"] = value!.trim(),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 50.h),
+                SizedBox(height: 100.h),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primary,
@@ -223,97 +201,21 @@ class _RegisterGasStationPageState extends State<RegisterGasStationPage> {
                   onPressed: () {
                     if (!validateForm(formKey)) return;
 
-                    if(type == null) {
-                      showToast("Please choose a user type", context);
-                      return;
-                    } else {
-                      authDetails["type"] = options[type!]!;
-                    }
-
-                    if(loading) return;
+                    if (loading) return;
                     setState(() => loading = true);
-                    createAccount();
+                    createGasStation();
                   },
-                  child: loading ? whiteLoader : Text(
-                    "Create Account",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: loading
+                      ? whiteLoader
+                      : Text(
+                          "Continue",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
                 SizedBox(height: 30.h),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   children: [
-                //     SizedBox(
-                //       width: 140.w,
-                //       child: Divider(
-                //         color: neutral2,
-                //         thickness: 1.h,
-                //       ),
-                //     ),
-                //     Text(
-                //       "OR",
-                //       style: context.textTheme.bodyLarge,
-                //     ),
-                //     SizedBox(
-                //       width: 140.w,
-                //       child: Divider(
-                //         color: neutral2,
-                //         thickness: 1.h,
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                // SizedBox(height: 15.h),
-                // Container(
-                //   width: 375.w,
-                //   height: 50.h,
-                //   decoration: BoxDecoration(
-                //     color: Colors.white,
-                //     border: Border.all(color: primary50),
-                //     borderRadius: BorderRadius.circular(7.5.r),
-                //   ),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     crossAxisAlignment: CrossAxisAlignment.center,
-                //     children: [
-                //       Image.asset(
-                //         "assets/images/Google.png",
-                //         width: 40.w,
-                //       ),
-                //       SizedBox(width: 10.w),
-                //       Text(
-                //         "Continue with Google",
-                //         style: context.textTheme.bodyLarge,
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // SizedBox(height: 15.h),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Have an account already?",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      TextSpan(
-                        text: " Sign in",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: primary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () =>
-                              context.router.pushReplacementNamed(Pages.login),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 40.h),
               ],
             ),
           ),

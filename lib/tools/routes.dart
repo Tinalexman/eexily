@@ -1,6 +1,8 @@
 import 'package:eexily/components/chat.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/points.dart';
+import 'package:eexily/pages/auth/choose_business_category.dart';
+import 'package:eexily/pages/auth/choose_driver_image.dart';
 import 'package:eexily/pages/auth/create_account.dart';
 import 'package:eexily/pages/auth/login.dart';
 import 'package:eexily/pages/auth/register_business.dart';
@@ -60,27 +62,44 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.registerUser.path,
     name: Pages.registerUser,
-    builder: (_, __) => const RegisterUserPage(),
+    builder: (_, state) =>
+        RegisterUserPage(initialDetails: state.extra as Map<String, dynamic>),
   ),
   GoRoute(
     path: Pages.registerBusiness.path,
     name: Pages.registerBusiness,
-    builder: (_, __) => const RegisterBusinessPage(),
+    builder: (_, state) => RegisterBusinessPage(
+        initialDetails: state.extra as Map<String, dynamic>),
   ),
   GoRoute(
     path: Pages.registerRider.path,
     name: Pages.registerRider,
-    builder: (_, __) => const RegisterRiderPage(),
+    builder: (_, state) =>
+        RegisterRiderPage(initialDetails: state.extra as Map<String, dynamic>),
   ),
   GoRoute(
     path: Pages.registerSupport.path,
     name: Pages.registerSupport,
-    builder: (_, __) => const RegisterSupportPage(),
+    builder: (_, state) => RegisterSupportPage(
+        initialDetails: state.extra as Map<String, dynamic>),
   ),
   GoRoute(
     path: Pages.registerStation.path,
     name: Pages.registerStation,
-    builder: (_, __) => const RegisterGasStationPage(),
+    builder: (_, state) => RegisterGasStationPage(
+        initialDetails: state.extra as Map<String, dynamic>),
+  ),
+  GoRoute(
+    path: Pages.chooseDriverImage.path,
+    name: Pages.chooseDriverImage,
+    builder: (_, state) =>
+        ChooseDriverImage(data: state.extra as Map<String, dynamic>),
+  ),
+  GoRoute(
+    path: Pages.chooseBusinessCategory.path,
+    name: Pages.chooseBusinessCategory,
+    builder: (_, state) =>
+        ChooseBusinessCategoryPage(initial: state.extra as String),
   ),
   GoRoute(
     path: Pages.login.path,

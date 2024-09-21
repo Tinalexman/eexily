@@ -9,7 +9,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RegisterUserPage extends StatefulWidget {
-  const RegisterUserPage({super.key});
+  final Map<String, dynamic> initialDetails;
+
+  const RegisterUserPage({
+    super.key,
+    required this.initialDetails,
+  });
 
   @override
   State<RegisterUserPage> createState() => _RegisterUserPageState();
@@ -40,7 +45,6 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
 
   bool showPassword = false, showConfirmPassword = false, loading = false;
 
-
   String? type;
 
   @override
@@ -62,7 +66,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
   Future<void> createAccount() async {
     var response = await authenticate(Pages.register, authDetails);
     setState(() => loading = false);
-    if(!response.status) {
+    if (!response.status) {
       showMessage(response.message);
       return;
     }
@@ -153,7 +157,8 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                           }
                           return null;
                         },
-                        onSave: (value) => authDetails["password"] = value!.trim(),
+                        onSave: (value) =>
+                            authDetails["password"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
@@ -169,7 +174,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                         obscure: !showConfirmPassword,
                         suffix: GestureDetector(
                           onTap: () => setState(
-                                  () => showConfirmPassword = !showConfirmPassword),
+                              () => showConfirmPassword = !showConfirmPassword),
                           child: AnimatedSwitcherTranslation.right(
                             duration: const Duration(milliseconds: 500),
                             child: Icon(
@@ -223,24 +228,26 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                   onPressed: () {
                     if (!validateForm(formKey)) return;
 
-                    if(type == null) {
+                    if (type == null) {
                       showToast("Please choose a user type", context);
                       return;
                     } else {
                       authDetails["type"] = options[type!]!;
                     }
 
-                    if(loading) return;
+                    if (loading) return;
                     setState(() => loading = true);
                     createAccount();
                   },
-                  child: loading ? whiteLoader : Text(
-                    "Create Account",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: loading
+                      ? whiteLoader
+                      : Text(
+                          "Create Account",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
                 SizedBox(height: 30.h),
                 // Row(

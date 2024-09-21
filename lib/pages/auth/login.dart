@@ -19,14 +19,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  final TextEditingController address = TextEditingController();
-  final TextEditingController email = TextEditingController();
-  final TextEditingController phoneNumber = TextEditingController();
-  final TextEditingController fullName = TextEditingController();
-  final TextEditingController cylinderSize = TextEditingController();
-  final TextEditingController houseSize = TextEditingController();
-  final TextEditingController cookingAppliance = TextEditingController();
-  final TextEditingController password = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   final Map<String, String> authDetails = {
     "email": "",
@@ -47,8 +41,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    email.dispose();
-    password.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -74,8 +68,8 @@ class _LoginPageState extends State<LoginPage> {
     String savedPassword = widget.savedDetails!["password"]!;
 
     setState(() {
-      email.text = savedEmail;
-      password.text = savedPassword;
+      emailController.text = savedEmail;
+      passwordController.text = savedPassword;
       remember = true;
       loading = true;
     });
@@ -133,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: email,
+                        controller: emailController,
                         width: 375.w,
                         type: TextInputType.emailAddress,
                         hint: "e.g johndoe@mail.com",
@@ -153,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: password,
+                        controller: passwordController,
                         width: 375.w,
                         hint: "e.g ********",
                         maxLines: 1,

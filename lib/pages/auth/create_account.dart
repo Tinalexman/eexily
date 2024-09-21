@@ -18,9 +18,9 @@ class CreateAccountPage extends StatefulWidget {
 class _CreateAccountPageState extends State<CreateAccountPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  final TextEditingController email = TextEditingController();
-  final TextEditingController password = TextEditingController();
-  final TextEditingController confirmPassword = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
   final Map<String, String> authDetails = {
     "email": "",
@@ -32,8 +32,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     "Business": "BUSINESS",
     "Individual/Household": "INDIVIDUAL",
     "Driver/Rider": "RIDER",
-    "Customer Support": "CUSTOMER_SERVICE",
     "Gas Station Attendant": "GAS_STATION",
+    "Customer Support": "CUSTOMER_SERVICE",
   };
 
   late List<String> optionKeys;
@@ -51,9 +51,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   @override
   void dispose() {
-    email.dispose();
-    password.dispose();
-    confirmPassword.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -67,21 +67,23 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       return;
     }
 
-    navigate();
+    navigate({});
   }
 
-  void navigate() {
+  void navigate(Map<String, dynamic> response) {
+    String destination = "";
     if(type == optionKeys[0]) {
-      context.router.pushReplacementNamed(Pages.registerBusiness);
+      destination = Pages.registerBusiness;
     } else if(type == optionKeys[1]) {
-      context.router.pushReplacementNamed(Pages.registerUser);
+      destination = Pages.registerUser;
     } else if(type == optionKeys[2]) {
-      context.router.pushReplacementNamed(Pages.registerRider);
+      destination = Pages.registerRider;
     } else if(type == optionKeys[3]) {
-      context.router.pushReplacementNamed(Pages.registerSupport);
+      destination = Pages.registerStation;
     } else if(type == optionKeys[4]) {
-      context.router.pushReplacementNamed(Pages.registerStation);
+      destination = Pages.registerSupport;
     }
+    context.router.pushNamed(destination, extra: response,);
   }
 
   @override
@@ -122,7 +124,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: email,
+                        controller: emailController,
                         width: 375.w,
                         type: TextInputType.emailAddress,
                         hint: "e.g johndoe@mail.com",
@@ -142,7 +144,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: password,
+                        controller: passwordController,
                         width: 375.w,
                         hint: "e.g ********",
                         maxLines: 1,
@@ -178,7 +180,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: confirmPassword,
+                        controller: confirmPasswordController,
                         width: 375.w,
                         hint: "e.g ********",
                         maxLines: 1,
@@ -200,7 +202,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         ),
                         onValidate: (value) {
                           value = value.trim();
-                          if (password.text.trim() != value) {
+                          if (passwordController.text.trim() != value) {
                             return 'Passwords do not match';
                           }
                           return null;
@@ -237,7 +239,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     ),
                   ),
                   onPressed: () {
-                    if (!validateForm(formKey)) return;
+                    // if (!validateForm(formKey)) return;
 
                     if(type == null) {
                       showToast("Please choose a user type", context);
@@ -246,9 +248,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       authDetails["type"] = options[type!]!;
                     }
 
-                    if(loading) return;
-                    setState(() => loading = true);
-                    createAccount();
+                    // if(loading) return;
+                    // setState(() => loading = true);
+                    // createAccount();
+                    navigate({});
                   },
                   child: loading ? whiteLoader : Text(
                     "Create Account",

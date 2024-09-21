@@ -305,6 +305,10 @@ class DateUtilities {
     return DateTime.now().subtract(const Duration(days: 30)).endOfMonth;
   }
 
+  static DateTime getYearsAhead(int years) {
+    return DateTime.now().add(Duration(days: 365 * years));
+  }
+
   static DateTime getThreeMonthsAgoStart() {
     return DateTime.now().subtract(const Duration(days: 90));
   }

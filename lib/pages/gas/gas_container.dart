@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'dart:math' as math;
-import 'package:sensors/sensors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GasContainerRippler extends StatefulWidget {
@@ -37,9 +36,7 @@ class _GasContainerRipplerState extends State<GasContainerRippler>
       })
       ..repeat(reverse: true);
 
-    accelerometerEvents.listen((AccelerometerEvent event) {
-      setState(() => rotationAngle = (event.x / 10) * math.pi / 4);
-    });
+
   }
 
   @override

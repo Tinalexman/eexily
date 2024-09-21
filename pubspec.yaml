@@ -19,38 +19,31 @@ dependencies:
   equatable:
   iconsax_plus:
   flutter_boxicons:
-  glass:
   flutter_screenutil:
   flutter_spinkit:
-  connectivity_plus:
   cached_network_image:
   flutter_launcher_icons:
   flutter_native_splash:
-  chatview:
   timeago:
   shared_preferences:
   flutter_svg:
   socket_io_client:
-  chat_bubbles:
   go_router:
   flutter_riverpod:
   animated_switcher_plus:
+  skeletonizer:
   flutter_staggered_animations:
-  crop_image:
-  path:
-  sqflite:
-  get_it:
   flex_color_scheme:
   dropdown_button2:
   animated_snack_bar:
   awesome_notifications:
-  sensors:
   flutter_otp_text_field:
   video_player:
   badges:
   emoji_picker_flutter:
   fl_chart:
   faker:
+  curved_labeled_navigation_bar:
 #  device_preview:
 
 

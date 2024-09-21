@@ -20,7 +20,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   final Map<String, String> authDetails = {
     "email": "",
@@ -38,8 +39,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   late List<String> optionKeys;
 
-  bool showPassword = false ,showConfirmPassword = false, loading = false;
-
+  bool showPassword = false, showConfirmPassword = false, loading = false;
 
   String? type;
 
@@ -62,7 +62,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   Future<void> createAccount() async {
     var response = await authenticate(Pages.register, authDetails);
     setState(() => loading = false);
-    if(!response.status) {
+    if (!response.status) {
       showMessage(response.message);
       return;
     }
@@ -72,18 +72,21 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   void navigate(Map<String, dynamic> response) {
     String destination = "";
-    if(type == optionKeys[0]) {
+    if (type == optionKeys[0]) {
       destination = Pages.registerBusiness;
-    } else if(type == optionKeys[1]) {
+    } else if (type == optionKeys[1]) {
       destination = Pages.registerUser;
-    } else if(type == optionKeys[2]) {
+    } else if (type == optionKeys[2]) {
       destination = Pages.registerRider;
-    } else if(type == optionKeys[3]) {
+    } else if (type == optionKeys[3]) {
       destination = Pages.registerStation;
     } else if(type == optionKeys[4]) {
       destination = Pages.registerSupport;
     }
-    context.router.pushNamed(destination, extra: response,);
+    context.router.pushNamed(
+      destination,
+      extra: response,
+    );
   }
 
   @override
@@ -171,7 +174,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                           }
                           return null;
                         },
-                        onSave: (value) => authDetails["password"] = value!.trim(),
+                        onSave: (value) =>
+                            authDetails["password"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
@@ -241,7 +245,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   onPressed: () {
                     // if (!validateForm(formKey)) return;
 
-                    if(type == null) {
+                    if (type == null) {
                       showToast("Please choose a user type", context);
                       return;
                     } else {
@@ -253,13 +257,15 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     // createAccount();
                     navigate({});
                   },
-                  child: loading ? whiteLoader : Text(
-                    "Create Account",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: loading
+                      ? whiteLoader
+                      : Text(
+                          "Create Account",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
                 SizedBox(height: 30.h),
                 // Row(

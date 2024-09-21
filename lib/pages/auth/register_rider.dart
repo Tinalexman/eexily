@@ -110,8 +110,11 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
 
                           return null;
                         },
-                        onSave: (value) =>
-                            authDetails["fullName"] = value!.trim(),
+                        onSave: (value) {
+                          List<String> names = value!.trim().split(" ");
+                          authDetails["firstName"] = names[0];
+                          authDetails["lastName"] = names[1];
+                        },
                       ),
                       SizedBox(height: 10.h),
                       Text(

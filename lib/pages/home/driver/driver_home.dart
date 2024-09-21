@@ -32,33 +32,33 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 20.r,
-              backgroundImage: AssetImage(driver.image),
+      automaticallyImplyLeading: false,
+      title: Row(
+        children: [
+          CircleAvatar(
+            radius: 20.r,
+            backgroundImage: AssetImage(driver.image),
+          ),
+          SizedBox(width: 10.w),
+          Text(
+            "Hello, ${driver.firstName}",
+            style: context.textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.w600,
             ),
-            SizedBox(width: 10.w),
-            Text(
-              "Hello, ${driver.firstName}",
-              style: context.textTheme.titleMedium!.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            )
-          ],
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => context.router.pushNamed(Pages.notification),
-            icon: const Icon(
-              IconsaxPlusBroken.notification_1,
-              color: monokai,
-            ),
-            iconSize: 26.r,
           )
         ],
       ),
+      actions: [
+        IconButton(
+          onPressed: () => context.router.pushNamed(Pages.notification),
+          icon: const Icon(
+            IconsaxPlusBroken.notification_1,
+            color: monokai,
+          ),
+          iconSize: 26.r,
+        )
+      ],
+    ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),

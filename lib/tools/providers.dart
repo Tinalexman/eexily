@@ -16,7 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 const User dummyRegularUser = User(
   firstName: "John",
   lastName: "Doe",
-  image: "assets/images/user.png",
+  image: "assets/images/man.png",
   role: UserRole.regular,
   address: "House 12, Camp Junction, Abeokuta",
 );
@@ -24,7 +24,7 @@ const User dummyRegularUser = User(
 const User dummyPremiumUser = User(
   firstName: "John",
   lastName: "Doe",
-  image: "assets/images/user.png",
+  image: "assets/images/man.png",
   role: UserRole.premium,
   address: "House 12, Camp Junction, Abeokuta",
 );
@@ -50,7 +50,7 @@ const Driver dummyDriver = Driver(
 );
 
 final StateProvider<UserBase> userProvider =
-    StateProvider((ref) => dummyDriver);
+    StateProvider((ref) => dummyRegularUser);
 
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
 final StateProvider<bool> startGasTimerProvider = StateProvider((ref) => false);

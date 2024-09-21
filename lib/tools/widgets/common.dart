@@ -331,14 +331,17 @@ class ComboBox extends StatelessWidget {
         ),
         dropdownStyleData: DropdownStyleData(
           //Max height for the dropdown menu & becoming scrollable if there are more items. If you pass Null it will take max height possible for the items.
-          maxHeight: dropdownHeight ?? 200,
+          maxHeight: dropdownHeight ?? 250,
           width: dropdownWidth ?? 140,
           padding: dropdownPadding,
           decoration: dropdownDecoration ??
               BoxDecoration(
                 borderRadius: BorderRadius.circular(8.r),
+                boxShadow: const [
+                  BoxShadow(color: Colors.black12, blurRadius: 10)
+                ],
               ),
-          elevation: dropdownElevation ?? 8,
+          elevation: dropdownElevation ?? 1,
           //Null or Offset(0, 0) will open just under the button. You can edit as you want.
           offset: offset,
           scrollbarTheme: ScrollbarThemeData(

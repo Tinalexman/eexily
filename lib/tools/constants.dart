@@ -56,11 +56,13 @@ class Pages
   static String get pointsSaver => "points-saver";
   static String get inbox => "inbox";
   static String get filter => "filter";
+  static String get individualGasActivation => "individual-gas-activation";
   static String get orderHistory => "order-history";
   static String get viewSupportOrder => "view-support-order";
   static String get viewAttendantOrder => "view-attendant-order";
   static String get allAttendantOrders => "all-attendant-orders";
   static String get viewDriverOrder => "view-driver-order";
  }
+
 
 const String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque feugiat at risus sit amet scelerisque. Curabitur sollicitudin tincidunt erat, sed vehicula ligula ullamcorper at. In in tortor ipsum.";

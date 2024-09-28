@@ -1,15 +1,11 @@
-import "package:curved_labeled_navigation_bar/curved_navigation_bar.dart";
-import "package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart";
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
-import 'package:eexily/tools/widgets/home.dart';
 import 'package:eexily/tools/widgets/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:video_player/video_player.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -48,7 +44,7 @@ class _HomeState extends ConsumerState<Home>
 
     videoController = VideoPlayerController.asset("assets/videos/gas.mov")
       ..initialize().then(
-            (_) => setState(() {}),
+        (_) => setState(() {}),
       );
   }
 
@@ -77,16 +73,29 @@ class _HomeState extends ConsumerState<Home>
 
   @override
   Widget build(BuildContext context) {
-    User user = ref.watch(userProvider) as User;
-
-
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: SingleChildScrollView(
         child: Column(
           children: [
-
-            const UserGasUsageGraph()
+            const UserGasUsageGraph(),
+            SizedBox(height: 20.h),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "Likely running out on ",
+                    style: context.textTheme.bodySmall,
+                  ),
+                  TextSpan(
+                    text: "May 31st, 2002",
+                    style: context.textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),

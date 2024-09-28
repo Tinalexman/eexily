@@ -24,36 +24,32 @@ class _UserGasUsageGraphState extends ConsumerState<UserGasUsageGraph> {
   ];
 
   int currentFilterIndex = 0;
-  double change = 12.5;
 
-  late List<List<BarChartGroupData>> barData;
+  late List<List<FlSpot>> lineChartData = [];
 
   @override
   void initState() {
     super.initState();
-    barData = getData();
+    getData();
   }
 
-  List<List<BarChartGroupData>> getData() {
-    Random random = Random();
-    return List.generate(
+
+  void getData() {
+    List<List<FlSpot>> newData = List.generate(
       filterOptions.length,
-      (i) => List.generate(
-        maxLength(i),
-        (index) => BarChartGroupData(
-          x: (index + 1),
-          barRods: [
-            BarChartRodData(
-              toY: random.nextInt(100).toDouble(),
-              fromY: 0,
-              width: 25.w,
-              color: primary,
-              borderRadius: BorderRadius.circular(7.5.r),
-            ),
-          ],
-        ),
-      ),
+      (i) {
+        Random random = Random(DateTime.now().millisecondsSinceEpoch + i);
+        int min = 50, max = random.nextInt(250);
+        return List.generate(
+          maxLength(i),
+          (index) => FlSpot(
+            (index + 1).toDouble(),
+            (max + min).toDouble(),
+          ),
+        );
+      },
     );
+    lineChartData.addAll(newData);
   }
 
   int maxLength(int index) {
@@ -79,6 +75,16 @@ class _UserGasUsageGraphState extends ConsumerState<UserGasUsageGraph> {
     return length;
   }
 
+  double get maxValue {
+    double max = 0.0;
+    for (var spot in lineChartData[currentFilterIndex]) {
+      if (spot.y >= max) {
+        max = spot.y;
+      }
+    }
+    return max + 20;
+  }
+
   String get bottomAxisTitle {
     if (currentFilterIndex <= 1) {
       return "Days";
@@ -88,143 +94,175 @@ class _UserGasUsageGraphState extends ConsumerState<UserGasUsageGraph> {
     return "Months";
   }
 
+  String convertIndexName(int index) {
+    if (currentFilterIndex <= 1) {
+      return getWeekDay(index, shorten: true);
+    } else if (currentFilterIndex <= 3) {
+      return "$index";
+    }
+    DateTime threeMonthsAgo = DateUtilities.getThreeMonthsAgoStart();
+    return month("${threeMonthsAgo.month + index - 1}", true);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 50.h,
-          child: ListView.separated(
-            itemBuilder: (_, index) {
-              bool selected = currentFilterIndex == index;
-              return GestureDetector(
-                onTap: () => setState(() => currentFilterIndex = index),
-                child: Chip(
-                  label: Text(
-                    filterOptions[index],
-                    style: context.textTheme.bodySmall!.copyWith(
-                      fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
-                    ),
-                  ),
-                  backgroundColor:
-                      selected ? secondary : primary50.withOpacity(0.2),
-                  elevation: selected ? 1.0 : 0.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7.5.r),
-                  ),
-                  side: const BorderSide(color: Colors.transparent),
-                ),
-              );
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 10.w),
-            itemCount: filterOptions.length,
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 30,
           ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: 20.h,
+          bottom: 5.h,
+          right: 20.w,
+          left: 20.w,
         ),
-        SizedBox(height: 10.h),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 30,
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(
-              top: 20.h,
-              bottom: 5.h,
-              right: 20.w,
-              left: 20.w,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Gas Usage",
-                      style: context.textTheme.headlineMedium!.copyWith(
-                        fontWeight: FontWeight.w500,
+                Text(
+                  "Gas Usage",
+                  style: context.textTheme.headlineMedium!.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  "History",
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    color: primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 50.h,
+              child: ListView.separated(
+                itemBuilder: (_, index) {
+                  bool selected = currentFilterIndex == index;
+                  return GestureDetector(
+                    onTap: () => setState(() => currentFilterIndex = index),
+                    child: Chip(
+                      label: Text(
+                        filterOptions[index],
+                        style: context.textTheme.bodySmall!.copyWith(
+                          fontWeight:
+                              selected ? FontWeight.w500 : FontWeight.w400,
+                        ),
+                      ),
+                      backgroundColor:
+                          selected ? secondary : primary50.withOpacity(0.2),
+                      elevation: selected ? 1.0 : 0.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.5.r),
+                      ),
+                      side: const BorderSide(color: Colors.transparent),
+                    ),
+                  );
+                },
+                separatorBuilder: (_, __) => SizedBox(width: 15.w),
+                itemCount: filterOptions.length,
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+              ),
+            ),
+            SizedBox(
+              width: 375.w,
+              height: 230.h,
+              child: LineChart(
+                LineChartData(
+                  minY: 0,
+                  maxY: maxValue,
+                  minX: 1,
+                  maxX: maxLength(currentFilterIndex).toDouble(),
+                  clipData: const FlClipData.horizontal(),
+                  backgroundColor: Colors.transparent,
+                  gridData: const FlGridData(
+                    drawHorizontalLine: true,
+                    drawVerticalLine: false,
+                  ),
+                  borderData: FlBorderData(
+                    show: false,
+                  ),
+                  titlesData: FlTitlesData(
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        interval: 1.0,
+                        getTitlesWidget: (index, meta) {
+                          return Text(
+                            convertIndexName(index.toInt()),
+                            style: context.textTheme.bodySmall,
+                          );
+                        },
+                      ),
+                      axisNameSize: 30,
+                      axisNameWidget: Text(
+                        bottomAxisTitle,
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                    Text(
-                      "History",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        color: primary,
-                        fontWeight: FontWeight.w500,
+                  ),
+                  lineBarsData: [
+                    LineChartBarData(
+                      color: primary,
+                      gradient: const LinearGradient(
+                        colors: [
+                          primary,
+                          primary,
+                        ],
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
                       ),
+                      belowBarData: BarAreaData(
+                        color: primary,
+                        show: true,
+                        gradient: const LinearGradient(
+                          colors: [primary50, primary50],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      ),
+                      shadow: const Shadow(
+                        color: primary50,
+                      ),
+                      isCurved: true,
+                      isStrokeCapRound: true,
+                      curveSmoothness: 0.75,
+                      spots: lineChartData[currentFilterIndex],
                     ),
                   ],
                 ),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Likely running out on ",
-                        style: context.textTheme.bodySmall,
-                      ),
-                      TextSpan(
-                        text: "May 31st, 2002",
-                        style: context.textTheme.bodySmall!.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 375.w,
-                  height: 300.h,
-                  child: BarChart(
-                    BarChartData(
-                      minY: 0,
-                      maxY: 100,
-                      alignment: BarChartAlignment.spaceBetween,
-                      titlesData: FlTitlesData(
-                        topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        rightTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        leftTitles: const AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: false,
-                          ),
-                        ),
-                        bottomTitles: AxisTitles(
-                          sideTitles: const SideTitles(showTitles: true),
-                          axisNameSize: 40,
-                          axisNameWidget: Text(
-                            bottomAxisTitle,
-                            style: context.textTheme.bodyMedium,
-                          ),
-                        ),
-                      ),
-                      gridData: const FlGridData(
-                        drawHorizontalLine: true,
-                        drawVerticalLine: false,
-                      ),
-                      borderData: FlBorderData(
-                        show: false,
-                      ),
-                      barGroups: barData[currentFilterIndex],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        )
-      ],
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

@@ -22,6 +22,7 @@ import 'package:eexily/pages/home/common/points_saver.dart';
 import 'package:eexily/pages/home/driver/view_order.dart';
 import 'package:eexily/pages/home/home.dart';
 import 'package:eexily/pages/home/inbox.dart';
+import 'package:eexily/pages/home/regular/activation/activation.dart';
 import 'package:eexily/pages/home/support/order_history.dart';
 import 'package:eexily/pages/home/support/view_order.dart';
 import 'package:eexily/pages/onboard/intro.dart';
@@ -130,6 +131,11 @@ final List<GoRoute> routes = [
     path: Pages.refillNow.path,
     name: Pages.refillNow,
     builder: (_, __) => const RefillNowPage(),
+  ),
+  GoRoute(
+    path: Pages.individualGasActivation.path,
+    name: Pages.individualGasActivation,
+    builder: (_, __) => const ActivationPages(),
   ),
   GoRoute(
     path: Pages.scheduleRefill.path,

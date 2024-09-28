@@ -138,7 +138,7 @@ String month(String val, bool shorten) {
     case 8:
       return shorten ? "Aug" : "August";
     case 9:
-      return shorten ? "Sept" : "September";
+      return shorten ? "Sep" : "September";
     case 10:
       return shorten ? "Oct" : "October";
     case 11:
@@ -329,4 +329,12 @@ extension DateTimeExtensions on DateTime {
   DateTime get startOfMonth => DateTime(year, this.month, 1);
 
   DateTime get endOfMonth => DateTime(year, this.month + 1, 0);
+
+  String get shortDayName => getWeekDay(this.day, shorten: true);
+
+  String get longDayName => getWeekDay(this.day, shorten: false);
+
+  String get shortMonthName => month("${this.month}", true);
+
+  String get longMonthName => month("${this.month}", false);
 }

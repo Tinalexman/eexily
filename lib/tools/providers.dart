@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:eexily/components/gas_questions.dart';
 import 'package:eexily/components/notification.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/points.dart';
@@ -10,6 +11,7 @@ import 'package:eexily/components/user/attendant.dart';
 import 'package:eexily/components/user/driver.dart';
 import 'package:eexily/components/user/support.dart';
 import 'package:eexily/components/user/user.dart';
+import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -302,7 +304,11 @@ final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider(
 
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
 
+
+final StateProvider<IndividualGasQuestionsData> individualGasQuestionsProvider = StateProvider((ref) => const IndividualGasQuestionsData());
+
 void logout(WidgetRef ref) {
+  ref.invalidate(individualGasQuestionsProvider);
   ref.invalidate(driverOrdersProvider);
   ref.invalidate(saleReportsProvider);
   ref.invalidate(attendantOrdersProvider);

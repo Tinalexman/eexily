@@ -49,11 +49,9 @@ class Pages
   static String get verification => "verification";
   static String get scheduleRefill => "schedule-refill";
   static String get refillNow => "refill-now";
-  static String get usage => "usage";
+  static String get refill => "refill";
+  static String get individualProfile => "individual-profile";
   static String get notification => "notification";
-  static String get startCooking => "start-cooking";
-  static String get leaderboard => "leaderboard";
-  static String get pointsSaver => "points-saver";
   static String get inbox => "inbox";
   static String get filter => "filter";
   static String get individualGasActivation => "individual-gas-activation";

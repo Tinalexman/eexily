@@ -244,6 +244,8 @@ class UserGasStatistics extends ConsumerStatefulWidget {
 class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
   late DateTime likelyRunningOutDate;
 
+  int cylinderSize = 12;
+
   @override
   void initState() {
     super.initState();
@@ -287,12 +289,37 @@ class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
                 ),
               ),
               SizedBox(height: 10.h),
-              Text(
-                "$level%",
-                style: context.textTheme.displayMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "$level%",
+                    style: context.textTheme.displayMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Cylinder Size",
+                        style: context.textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        "${cylinderSize}kg",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
               ),
               SizedBox(height: 5.h),
               SizedBox(

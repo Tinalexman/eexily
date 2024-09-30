@@ -15,8 +15,6 @@ class EexilyUserDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Color selectedTileColor = primary50.withOpacity(0.2);
-    int currentTile = ref.watch(pageIndexProvider);
 
     return Drawer(
       width: 270.w,
@@ -41,21 +39,13 @@ class EexilyUserDrawer extends ConsumerWidget {
                       color: primary,
                     ),
                   ),
-                  Text(
-                    "Everything made easy",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
+
                 ],
               ),
             ),
             SizedBox(height: 40.h),
             ListTile(
-              onTap: () {
-                ref.watch(pageIndexProvider.notifier).state = 0;
-                onCloseDrawer();
-              },
+              onTap: onCloseDrawer,
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
               leading: Icon(
                 IconsaxPlusBroken.home,
@@ -67,12 +57,11 @@ class EexilyUserDrawer extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              tileColor: currentTile == 0 ? selectedTileColor : null,
             ),
             ListTile(
               onTap: () {
-                ref.watch(pageIndexProvider.notifier).state = 1;
                 onCloseDrawer();
+                context.router.pushNamed(Pages.refill);
               },
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
               leading: Icon(
@@ -85,11 +74,9 @@ class EexilyUserDrawer extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              tileColor: currentTile == 1 ? selectedTileColor : null,
             ),
             ListTile(
               onTap: () {
-                // ref.watch(pageIndexProvider.notifier).state = 1;
                 onCloseDrawer();
               },
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -106,7 +93,6 @@ class EexilyUserDrawer extends ConsumerWidget {
             ),
             ListTile(
               onTap: () {
-                ref.watch(pageIndexProvider.notifier).state = 2;
                 onCloseDrawer();
               },
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -120,12 +106,11 @@ class EexilyUserDrawer extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              tileColor: currentTile == 2 ? selectedTileColor : null,
             ),
             ListTile(
               onTap: () {
-                ref.watch(pageIndexProvider.notifier).state = 3;
                 onCloseDrawer();
+                context.router.pushNamed(Pages.individualProfile);
               },
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
               leading: Icon(
@@ -138,7 +123,6 @@ class EexilyUserDrawer extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              tileColor: currentTile == 3 ? selectedTileColor : null,
             ),
             ListTile(
               onTap: () {

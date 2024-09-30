@@ -20,8 +20,8 @@ class UserBase extends Equatable {
 
 enum UserRole {
   nil,
-  regular,
-  premium,
+  individual,
+  business,
   support,
   driver,
   attendant,

@@ -1,7 +1,6 @@
 import 'package:eexily/components/user/base.dart';
 import 'package:eexily/pages/home/attendant/attendant_home.dart';
 import 'package:eexily/pages/home/driver/driver_home.dart';
-import 'package:eexily/pages/home/premium/premium_home.dart';
 import 'package:eexily/pages/home/regular/regular_home.dart';
 import 'package:eexily/pages/home/support/support_home.dart';
 import 'package:eexily/tools/providers.dart';
@@ -21,10 +20,8 @@ class _HomepageState extends ConsumerState<Homepage> {
     UserRole role = ref.watch(userProvider.select((u) => u.role));
 
     switch (role) {
-      case UserRole.regular:
+      case UserRole.individual:
         return const RegularHome();
-      case UserRole.premium:
-        return const PremiumHome();
       case UserRole.attendant:
         return const AttendantHome();
       case UserRole.support:

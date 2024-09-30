@@ -51,6 +51,7 @@ class _ActivationPagesState extends State<ActivationPages> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         toolbarHeight: 100.h,

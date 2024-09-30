@@ -302,12 +302,14 @@ final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider(
   ),
 );
 
+final StateProvider<int> gasLevelProvider = StateProvider((ref) => 38);
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
-
 
 final StateProvider<IndividualGasQuestionsData> individualGasQuestionsProvider = StateProvider((ref) => const IndividualGasQuestionsData());
 
+
 void logout(WidgetRef ref) {
+  ref.invalidate(gasLevelProvider);
   ref.invalidate(individualGasQuestionsProvider);
   ref.invalidate(driverOrdersProvider);
   ref.invalidate(saleReportsProvider);

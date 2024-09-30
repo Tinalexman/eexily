@@ -1,12 +1,14 @@
 import 'package:eexily/components/gas_questions.dart';
 import 'package:eexily/tools/constants.dart';
+import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
+import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class StepSeven extends ConsumerStatefulWidget {
-
   const StepSeven({
     super.key,
   });
@@ -16,10 +18,32 @@ class StepSeven extends ConsumerStatefulWidget {
 }
 
 class _StepSevenState extends ConsumerState<StepSeven> {
+  final TextEditingController controller = TextEditingController();
+
+  DateTime? lastGasFilledDate;
+
+  @override
+  void initState() {
+    super.initState();
+    String lastFilledDate =
+        ref.read(individualGasQuestionsProvider).lastGasFilledPeriod;
+    if (lastFilledDate.isNotEmpty) {
+      lastGasFilledDate = DateTime.parse(lastFilledDate);
+      controller.text = formatDateRaw(lastGasFilledDate!);
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool darkTheme = context.isDark;
     IndividualGasQuestionsData details =
-    ref.watch(individualGasQuestionsProvider);
+        ref.watch(individualGasQuestionsProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -35,59 +59,32 @@ class _StepSevenState extends ConsumerState<StepSeven> {
           style: context.textTheme.bodyLarge,
         ),
         SizedBox(height: 10.h),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              value: details.lastGasFilledPeriod,
-              groupValue: "1-3 days ago",
-              onChanged: (val) {
+        SpecialForm(
+          controller: controller,
+          width: 375.w,
+          hint: "e.g Jan 1, 1960",
+          readOnly: true,
+          suffix: GestureDetector(
+            onTap: () async {
+              DateTime? pickedDate = await showDatePicker(
+                context: context,
+                firstDate: DateUtilities.getThreeMonthsAgoStart(),
+                lastDate: DateTime.now(),
+              );
+              if (pickedDate != null) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledPeriod: "1-3 days ago");
-              },
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    details.copyWith(
+                        lastGasFilledPeriod: pickedDate.toIso8601String());
+                controller.text = formatDateRaw(pickedDate);
+                setState(() => lastGasFilledDate = pickedDate);
+              }
+            },
+            child: Icon(
+              IconsaxPlusBroken.calendar,
+              size: 18.r,
+              color: darkTheme ? Colors.white70 : Colors.black87,
             ),
-            Text(
-              "1-3 days ago",
-              style: context.textTheme.bodyMedium,
-            )
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              value: details.lastGasFilledPeriod,
-              groupValue: "4-7 days ago",
-              onChanged: (val) {
-                ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledPeriod: "4-7 days ago");
-              },
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            Text(
-              "4-7 days ago",
-              style: context.textTheme.bodyMedium,
-            )
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              value: details.lastGasFilledPeriod,
-              groupValue: "Over a week ago",
-              onChanged: (val) {
-                ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledPeriod: "Over a week ago");
-              },
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            Text(
-              "Over a week ago",
-              style: context.textTheme.bodyMedium,
-            )
-          ],
+          ),
         ),
         SizedBox(height: 20.h),
         Text(

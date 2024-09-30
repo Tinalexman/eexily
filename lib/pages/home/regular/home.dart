@@ -1,12 +1,10 @@
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
-import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
-import 'package:eexily/tools/widgets/user.dart';
+import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:video_player/video_player.dart';
 
 class Home extends ConsumerStatefulWidget {
   const Home({super.key});
@@ -15,87 +13,59 @@ class Home extends ConsumerStatefulWidget {
   ConsumerState<Home> createState() => _HomeState();
 }
 
-class _HomeState extends ConsumerState<Home>
-    with SingleTickerProviderStateMixin {
-  late VideoPlayerController videoController;
-  late AnimationController animationController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 26),
-    );
-
-    animationController.addListener(() {
-      if (!ref.watch(shownGasToast) &&
-          animationController.value >= 0.92 &&
-          animationController.value <= 0.94) {
-        ref.watch(shownGasToast.notifier).state = true;
-        showToast(
-          "WARNING: Gas Level Low!",
-          context,
-          backgroundColor: Colors.red,
-        );
-      }
-    });
-
-    videoController = VideoPlayerController.asset("assets/videos/gas.mov")
-      ..initialize().then(
-        (_) => setState(() {}),
-      );
-  }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    videoController.dispose();
-    super.dispose();
-  }
-
-  String convertProgress(double value) {
-    int difference = 98 - 15;
-    double val = value * difference;
-    val = 98 - val;
-    return val.toStringAsFixed(0);
-  }
-
-  Color gasColor(double value) {
-    if (value < 0.28) {
-      return secondary2;
-    } else if (value >= 0.28 && value <= 0.92) {
-      return secondary;
-    }
-    return Colors.red;
-  }
-
+class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
+    User user = ref.watch(userProvider) as User;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const UserGasUsageGraph(),
+            SizedBox(height: 10.h),
+            Text(
+              "Hello,",
+              style: context.textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            Text(
+              "${user.firstName} ${user.lastName}!",
+              style: context.textTheme.headlineMedium!.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             SizedBox(height: 20.h),
-            RichText(
-              text: TextSpan(
+            const UserGasStatistics(),
+            SizedBox(height: 20.h),
+            const Center(child: GasContainer()),
+            SizedBox(height: 20.h),
+            Tooltip(
+              message:
+                  "You're using the first version of our gas tracking feature. It might not always be perfect for now, but don’t worry—it gets better the more you use it. Over time, you'll see more accurate tracking and reminders. Thanks for being one of our early users and helping us make things better!",
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextSpan(
-                    text: "Likely running out on ",
-                    style: context.textTheme.bodySmall,
+                  Icon(
+                    Icons.info_outline,
+                    color: primary,
+                    size: 14.r,
                   ),
-                  TextSpan(
-                    text: "May 31st, 2002",
-                    style: context.textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w600,
+                  SizedBox(width: 5.w),
+                  Text(
+                    "Beta version",
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      color: primary,
+                      fontWeight: FontWeight.w500,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
+            SizedBox(height: 10.h),
           ],
         ),
       ),

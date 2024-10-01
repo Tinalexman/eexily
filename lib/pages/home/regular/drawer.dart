@@ -85,7 +85,7 @@ class EexilyUserDrawer extends ConsumerWidget {
                 size: 26.r,
               ),
               title: Text(
-                "My AI",
+                "Ask Cheffy",
                 style: context.textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.w600,
                 ),

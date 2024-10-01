@@ -15,6 +15,9 @@ class User extends UserBase {
     this.image = "",
   });
 
+
+  String get fullName => "$firstName $lastName";
+
   @override
   List<Object?> get props => [id];
 }

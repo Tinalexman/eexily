@@ -18,6 +18,7 @@ import 'package:eexily/pages/home/driver/view_order.dart';
 import 'package:eexily/pages/home/home.dart';
 import 'package:eexily/pages/home/inbox.dart';
 import 'package:eexily/pages/home/regular/activation/activation.dart';
+import 'package:eexily/pages/home/regular/gas_usage.dart';
 import 'package:eexily/pages/home/support/order_history.dart';
 import 'package:eexily/pages/home/support/view_order.dart';
 import 'package:eexily/pages/onboard/intro.dart';
@@ -50,6 +51,11 @@ final List<GoRoute> routes = [
     path: Pages.inbox.path,
     name: Pages.inbox,
     builder: (_, state) => Inbox(conversation: state.extra as Conversation),
+  ),
+  GoRoute(
+    path: Pages.gasUsage.path,
+    name: Pages.gasUsage,
+    builder: (_, __) => const GasUsagePage(),
   ),
   GoRoute(
     path: Pages.register.path,
@@ -126,7 +132,7 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.scheduleRefill.path,
     name: Pages.scheduleRefill,
-    builder: (_, __) => const ScheduleRefillPage(),
+    builder: (_, state) => ScheduleRefillPage(scheduledTime: state.extra as String),
   ),
   GoRoute(
     path: Pages.refill.path,

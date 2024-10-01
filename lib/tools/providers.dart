@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:eexily/components/gas_questions.dart';
 import 'package:eexily/components/notification.dart';
 import 'package:eexily/components/order.dart';
-import 'package:eexily/components/points.dart';
 import 'package:eexily/components/sale_report.dart';
 import 'package:eexily/components/transaction.dart';
 import 'package:eexily/components/usage.dart';
@@ -132,49 +131,8 @@ StateProvider((ref) {
     ),
   ];
 });
-final StateProvider<List<PointsSaved>> leaderPointsProvider = StateProvider(
-      (ref) =>
-      List.generate(
-        15,
-            (_) =>
-        const PointsSaved(
-          image: "assets/images/user.png",
-          name: "John Doe",
-          gas: 256,
-          belly: 226,
-        ),
-      ),
-);
 
-final StateProvider<PointType> pointTypeProvider =
-StateProvider((ref) => PointType.gas);
 
-final StateProvider<List<PointsTransaction>> pointsTransaction = StateProvider(
-      (ref) =>
-  [
-    PointsTransaction(
-      timestamp: DateTime.now(),
-      transactionType: PointTransactionType.earned,
-      pointType: ref.watch(pointTypeProvider),
-      amount: 25,
-      total: 45,
-    ),
-    PointsTransaction(
-      timestamp: DateTime.now(),
-      transactionType: PointTransactionType.earned,
-      pointType: ref.watch(pointTypeProvider),
-      amount: 20,
-      total: 20,
-    ),
-    PointsTransaction(
-      timestamp: DateTime.now(),
-      transactionType: PointTransactionType.expired,
-      pointType: ref.watch(pointTypeProvider),
-      amount: -25,
-      total: 0,
-    ),
-  ],
-);
 
 final StateProvider<List<Order>> pendingOrdersProvider = StateProvider(
       (ref) =>
@@ -309,15 +267,19 @@ final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider(
       ),
 );
 
-final StateProvider<int> gasLevelProvider = StateProvider((ref) => 38);
-final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
+final StateProvider<UserOrder?> currentUserOrderProvider = StateProvider((ref) => null);
 
+final StateProvider<int> gasLevelProvider = StateProvider((ref) => 65);
+final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
+final StateProvider<bool> playGasAnimationProvider = StateProvider((ref) => false);
 final StateProvider<
     IndividualGasQuestionsData> individualGasQuestionsProvider = StateProvider((
     ref) => const IndividualGasQuestionsData());
 
 
 void logout(WidgetRef ref) {
+  ref.invalidate(currentUserOrderProvider);
+  ref.invalidate(playGasAnimationProvider);
   ref.invalidate(gasLevelProvider);
   ref.invalidate(individualGasQuestionsProvider);
   ref.invalidate(driverOrdersProvider);
@@ -334,7 +296,4 @@ void logout(WidgetRef ref) {
   ref.invalidate(monthlyUsages);
   ref.invalidate(notificationsProvider);
   ref.invalidate(saverPointsProvider);
-  ref.invalidate(leaderPointsProvider);
-  ref.invalidate(pointsTransaction);
-  ref.invalidate(pointTypeProvider);
 }

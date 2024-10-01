@@ -51,6 +51,7 @@ class Pages
   static String get refillNow => "refill-now";
   static String get refill => "refill";
   static String get individualProfile => "individual-profile";
+  static String get gasUsage => 'gas-usage';
   static String get notification => "notification";
   static String get inbox => "inbox";
   static String get filter => "filter";

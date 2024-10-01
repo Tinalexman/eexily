@@ -1,3 +1,4 @@
+import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 import 'drawer.dart';
-import 'home.dart';
 
 class RegularHome extends ConsumerStatefulWidget {
   const RegularHome({super.key});
@@ -25,6 +25,7 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
   @override
   Widget build(BuildContext context) {
     int index = ref.watch(pageIndexProvider);
+    bool isPlayingAnimation = ref.watch(playGasAnimationProvider);
     User user = ref.watch(userProvider) as User;
 
     return Scaffold(
@@ -80,9 +81,23 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
                 ),
                 SizedBox(height: 20.h),
                 const UserGasStatistics(),
+                SizedBox(height: 5.h),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () => context.router.pushNamed(Pages.gasUsage),
+                    child: Text(
+                      "View Usage",
+                      style: context.textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: primary,
+                      ),
+                    ),
+                  ),
+                ),
                 SizedBox(height: 20.h),
                 const Center(child: GasContainer()),
-                SizedBox(height: 20.h),
+                SizedBox(height: 10.h),
                 Tooltip(
                   message:
                   "You're using the first version of our gas tracking feature. It might not always be perfect for now, but don’t worry—it gets better the more you use it. Over time, you'll see more accurate tracking and reminders. Thanks for being one of our early users and helping us make things better!",
@@ -115,13 +130,19 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
       floatingActionButton: index == 0
           ? FloatingActionButton(
               backgroundColor: primary,
-              child: Icon(
-                IconsaxPlusBroken.play,
-                color: Colors.white,
-                size: 32.r,
-              ),
               elevation: 1.0,
-              onPressed: () {},
+              onPressed: () {
+                ref.watch(playGasAnimationProvider.notifier).state = !isPlayingAnimation;
+              },
+              child: AnimatedSwitcherTranslation.right(
+                duration: const Duration(milliseconds: 300),
+                child: Icon(
+                  isPlayingAnimation ? IconsaxPlusBroken.pause : IconsaxPlusBroken.play,
+                  key: ValueKey<bool>(isPlayingAnimation),
+                  color: Colors.white,
+                  size: 32.r,
+                ),
+              ),
             )
           : null,
     );

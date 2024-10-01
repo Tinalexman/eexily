@@ -45,21 +45,15 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool darkTheme = context.isDark;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
         elevation: 0.0,
-        leading: IconButton(
-          iconSize: 26.r,
-          splashRadius: 20.r,
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.router.pop(),
-        ),
         title: Text(
-          "OTP Verification",
-          style: context.textTheme.titleMedium,
+          "Verification",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       body: SafeArea(
@@ -71,16 +65,15 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
               children: [
                 SizedBox(height: 20.h),
                 Image.asset(
-                  "assets/images/${verified ? "Confirmation" : "OTP"}.png",
+                  "assets/images/${verified ? "success" : "OTP"}.png",
                   width: 150.r,
                   height: 150.r,
                 ),
                 SizedBox(height: 20.h),
                 if (verified)
                   Text(
-                    "Verification Successful",
+                    "Your account has been verified",
                     style: context.textTheme.bodyLarge!.copyWith(
-                      color: darkTheme ? Colors.white : primary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -134,7 +127,7 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
                       ],
                     ),
                   ),
-                SizedBox(height: 100.h),
+                SizedBox(height: verified ? 380.h : 280.h),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primary,
@@ -147,13 +140,13 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
                   onPressed: () {
                     if (!verified) {
                       setState(() => verified = true);
-                      showToast("Your account has been created", context);
+                      showToast("Verification Successful", context);
                     } else {
                       context.router.pushReplacementNamed(Pages.login);
                     }
                   },
                   child: Text(
-                    verified ? "Close" : "Verify",
+                    verified ? "Back to login" : "Verify",
                     style: context.textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,

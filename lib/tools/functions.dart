@@ -14,22 +14,25 @@ void showToast(String message, BuildContext context, {Color? backgroundColor}) {
       constraints: BoxConstraints(
         minWidth: 10.w,
         maxWidth: 220.w,
-        minHeight: 40.h,
       ),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: backgroundColor ?? primary,
           borderRadius: BorderRadius.circular(5.r),
         ),
-        alignment: Alignment.center,
-        child: Text(
-          message,
-          style: context.textTheme.bodySmall!.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 10.w,
+            vertical: 8.h,
           ),
-          textAlign: TextAlign.center,
+          child: Text(
+            message,
+            style: context.textTheme.bodySmall!.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     ),
@@ -263,6 +266,10 @@ class DateUtilities {
 
   static DateTime getDaysAhead(int day) {
     return DateTime.now().add(Duration(days: day));
+  }
+
+  static DateTime getMinutesBefore(int minutes) {
+    return DateTime.now().subtract(Duration(minutes: minutes));
   }
 
   static DateTime getCurrentWeekStart() {

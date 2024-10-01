@@ -126,6 +126,7 @@ class _ActivationPagesState extends State<ActivationPages> {
                         "Back",
                         style: context.textTheme.titleMedium!.copyWith(
                           color: primary,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -148,6 +149,7 @@ class _ActivationPagesState extends State<ActivationPages> {
                         activeStep == 6 ? "Complete" : "Next",
                         style: context.textTheme.titleMedium!.copyWith(
                           color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),

@@ -3,9 +3,13 @@ import 'package:eexily/components/order.dart';
 import 'package:eexily/components/transaction.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
+import 'package:eexily/tools/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 
 const SpinKitThreeBounce loader = SpinKitThreeBounce(
   color: primary,
@@ -60,6 +64,29 @@ class CenteredPopup extends StatelessWidget {
   Widget build(BuildContext context) => const Center(child: loader);
 }
 
+class DigitGroupFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text == '') {
+      return newValue;
+    }
+
+    String newText = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    final formatter = NumberFormat('#,###');
+    String formattedText = formatter.format(int.parse(newText));
+
+    int selectionIndex =
+        formattedText.length - (newValue.text.length - newValue.selection.end);
+
+    return TextEditingValue(
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: selectionIndex),
+    );
+  }
+}
+
 class SpecialForm extends StatelessWidget {
   final Widget? prefix;
   final Widget? suffix;
@@ -86,12 +113,14 @@ class SpecialForm extends StatelessWidget {
   final int? maxLines;
   final bool allowHeightExpand;
   final double width;
+  final List<TextInputFormatter>? formatters;
 
   const SpecialForm({
     super.key,
     required this.controller,
     required this.width,
     this.fillColor,
+    this.formatters,
     this.borderColor,
     this.textColor,
     this.padding,
@@ -130,6 +159,7 @@ class SpecialForm extends StatelessWidget {
         controller: controller,
         obscureText: obscure,
         keyboardType: type,
+        inputFormatters: formatters,
         textInputAction: action,
         readOnly: readOnly,
         onEditingComplete: () {
@@ -773,6 +803,218 @@ class RiderOrderDetail extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class UserGasStatistics extends ConsumerStatefulWidget {
+  const UserGasStatistics({super.key});
+
+  @override
+  ConsumerState<UserGasStatistics> createState() => _UserGasStatisticsState();
+}
+
+class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
+  late DateTime likelyRunningOutDate;
+
+  int cylinderSize = 12;
+
+  @override
+  void initState() {
+    super.initState();
+    likelyRunningOutDate = DateTime(2024, 5, 31);
+  }
+
+  Color gasColor(double value) {
+    if (value >= 0.65) {
+      return secondary2;
+    } else if (value >= 0.2 && value < 0.65) {
+      return secondary;
+    }
+    return Colors.red;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    int level = ref.watch(gasLevelProvider);
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: primary,
+        borderRadius: BorderRadius.circular(15.r),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 10.h,
+        ),
+        child: SizedBox(
+          width: 375.w,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Gas Statistics",
+                style: context.textTheme.titleMedium!.copyWith(
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text:
+                              (level * 0.01 * cylinderSize).toStringAsFixed(1),
+                          style: context.textTheme.displaySmall!.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "/${cylinderSize}kg",
+                          style: context.textTheme.titleLarge!.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Gas level",
+                        style: context.textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        "$level%",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(height: 5.h),
+              SizedBox(
+                width: 375.w,
+                child: LinearProgressIndicator(
+                  value: level * 0.01,
+                  color: gasColor(level * 0.01),
+                  backgroundColor: primary50.withOpacity(0.25),
+                  minHeight: 25.h,
+                  borderRadius: BorderRadius.circular(7.5.h),
+                ),
+              ),
+              SizedBox(height: 10.h),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Likely running out on ",
+                      style: context.textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
+                    ),
+                    TextSpan(
+                      text: formatDateRaw(likelyRunningOutDate, shorten: true),
+                      style: context.textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 5.h),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SuccessModal extends StatelessWidget {
+  final String text;
+  final VoidCallback onDismiss;
+
+  const SuccessModal({
+    super.key,
+    required this.text,
+    required this.onDismiss,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.r),
+      ),
+      elevation: 0.0,
+      child: Container(
+        width: 220.w,
+        height: 250.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.r),
+          color: Colors.white,
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: 10.w,
+          vertical: 5.h,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/images/success.png",
+              fit: BoxFit.cover,
+              width: 120.w,
+            ),
+            Text(
+              text,
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            ElevatedButton(
+              onPressed: onDismiss,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primary,
+                minimumSize: Size(220.w, 40.h),
+                fixedSize: Size(220.w, 40.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7.5.r),
+                ),
+              ),
+              child: Text(
+                "Continue",
+                style: context.textTheme.bodySmall!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

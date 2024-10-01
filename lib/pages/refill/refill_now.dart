@@ -1,5 +1,7 @@
+import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
+import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets/common.dart';
 import 'package:flutter/material.dart';
@@ -15,82 +17,102 @@ class RefillNowPage extends ConsumerStatefulWidget {
 
 class _RefillNowPageState extends ConsumerState<RefillNowPage> {
   final TextEditingController quantityController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController feeController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+
+  bool loading = true;
+  bool shouldMakeAddressEditable = false;
+
+  int currentPriceOfGas = 1, deliveryFee = 0;
+  int totalAmountToPay = 0, priceMarkup = -1, nightOrderFee = 100;
+  int fakePriceToPayForGas = 0, fakeDiscount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    setCurrentUserAddress();
+    Future.delayed(Duration.zero, getCurrentPrices);
+  }
+
+  void setCurrentUserAddress() {
+    String address = ref.read(userProvider.select((u) => (u as User).address));
+    addressController.text = address;
+  }
+
+  Future<void> getCurrentPrices() async {
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      currentPriceOfGas = 1100;
+      deliveryFee = 200;
+      priceMarkup = 100;
+      loading = false;
+    });
+  }
 
   @override
   void dispose() {
-    feeController.dispose();
+    addressController.dispose();
     quantityController.dispose();
-    priceController.dispose();
     super.dispose();
   }
 
+  void calculateNewTotalAmount(String value) {
+    int? targetQuantity = int.tryParse(value);
+    if (targetQuantity != null) {
+      bool isLate = DateTime.now().hour >= 21;
+      fakeDiscount = priceMarkup * targetQuantity;
+      fakePriceToPayForGas = (currentPriceOfGas + priceMarkup) * targetQuantity;
+      totalAmountToPay = (currentPriceOfGas * targetQuantity) + deliveryFee;
+      totalAmountToPay += isLate ? nightOrderFee : 0;
+    } else {
+      fakeDiscount = 0;
+      fakePriceToPayForGas = 0;
+      totalAmountToPay = 0;
+    }
+    setState(() {});
+  }
+
   void showSuccessModal() {
+    String code = randomGCode;
+    String name = (ref.watch(userProvider) as User).fullName;
+
+    ref.watch(currentUserOrderProvider.notifier).state = UserOrder(
+      code: code,
+      username: name,
+      states: [
+        OrderDeliveryData(
+          state: OrderState.pickedUp,
+          timestamp: DateUtilities.getMinutesBefore(5),
+        ),
+        OrderDeliveryData(
+          state: OrderState.refilled,
+          timestamp: DateUtilities.getMinutesBefore(2),
+        ),
+      ],
+    );
+
     showDialog(
       context: context,
-      builder: (_) => Dialog(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        child: Container(
-          width: 220.w,
-          height: 200.h,
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 5.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                "assets/images/success.png",
-                fit: BoxFit.cover,
-              ),
-              Text(
-                "You have successfully booked a refill",
-                style: context.textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  context.router.pop();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primary,
-                  minimumSize: Size(60.w, 30.h),
-                  fixedSize: Size(60.w, 30.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7.5.r),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                ),
-                child: Text(
-                  "Close",
-                  style: context.textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      barrierDismissible: false,
+      builder: (_) => SuccessModal(
+        text: "You have successfully booked a refill",
+        onDismiss: () {
+          Navigator.of(context).pop();
+          context.router.pop();
+        },
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    String address = ref.watch(userProvider.select((u) => (u as User).address));
+    bool isLate = DateTime.now().hour >= 21;
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
         title: Text(
-          "Refill now",
-          style: context.textTheme.bodyLarge!.copyWith(
+          "Refill Now",
+          style: context.textTheme.titleLarge!.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -102,9 +124,35 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 50.h),
                 Text(
-                  "Quantity of required gas (kg)?",
+                  "Price of gas per kg:",
+                  style: context.textTheme.bodyLarge,
+                ),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "₦${formatAmount("${currentPriceOfGas - 1}")} ",
+                        style: context.textTheme.titleLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      TextSpan(
+                        text:
+                            "₦${formatAmount("${currentPriceOfGas + priceMarkup}")}",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          decoration: TextDecoration.lineThrough,
+                          decorationColor: neutral2,
+                          fontWeight: FontWeight.w500,
+                          color: neutral2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 40.h),
+                Text(
+                  "Quantity of gas (kg)?",
                   style: context.textTheme.bodyMedium,
                 ),
                 SizedBox(height: 4.h),
@@ -113,94 +161,121 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                   width: 375.w,
                   type: TextInputType.number,
                   hint: "e.g 10",
+                  readOnly: loading,
+                  onChange: calculateNewTotalAmount,
                 ),
                 SizedBox(height: 10.h),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Address",
-                        style: context.textTheme.bodySmall,
-                      ),
-                      TextSpan(
-                        text: " change",
-                        style: context.textTheme.bodySmall!.copyWith(
-                          color: primary,
-                          fontSize: 11.sp,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Address",
+                      style: context.textTheme.bodyMedium,
+                    ),
+                    if (!shouldMakeAddressEditable)
+                      GestureDetector(
+                        onTap: () =>
+                            setState(() => shouldMakeAddressEditable = true),
+                        child: Text(
+                          "Change",
+                          style: context.textTheme.bodySmall!.copyWith(
+                            color: primary,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
                 SizedBox(height: 4.h),
-                Container(
+                SpecialForm(
+                  controller: addressController,
                   width: 375.w,
-                  height: 50.h,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(
-                      7.5.r,
-                    ),
+                  maxLines: 4,
+                  readOnly: !shouldMakeAddressEditable,
+                  fillColor: shouldMakeAddressEditable ? null : neutral,
+                  hint: "e.g House 12, Camp Junction, Abeokuta",
+                ),
+                SizedBox(height: 160.h),
+                Text(
+                  "Analysis",
+                  style: context.textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.w600,
                   ),
-                  child: Row(
+                ),
+                SizedBox(height: 10.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Price",
+                      style: context.textTheme.bodyLarge,
+                    ),
+                    Text(
+                      "₦${formatAmount("$fakePriceToPayForGas")}",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Delivery Fee",
+                      style: context.textTheme.bodyLarge,
+                    ),
+                    Text(
+                      "₦${formatAmount("${totalAmountToPay == 0 ? 0 : deliveryFee}")}",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                if (isLate)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Radio(
-                        value: 0,
-                        groupValue: 0,
-                        onChanged: (val) {},
-                        activeColor: neutral3,
+                      Text(
+                        "Night Order Fee",
+                        style: context.textTheme.bodyLarge,
                       ),
                       Text(
-                        address,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: neutral3,
+                        "₦${formatAmount("$nightOrderFee")}",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
                         ),
-                      )
+                      ),
                     ],
                   ),
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  "Price (NGN)",
-                  style: context.textTheme.bodyMedium,
-                ),
-                SizedBox(height: 4.h),
-                SpecialForm(
-                  controller: priceController,
-                  width: 375.w,
-                  type: TextInputType.number,
-                  hint: "0.00",
-                  textColor: primary,
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  "Delivery fee (NGN)",
-                  style: context.textTheme.bodyMedium,
-                ),
-                SizedBox(height: 4.h),
-                SpecialForm(
-                  controller: feeController,
-                  width: 375.w,
-                  type: TextInputType.number,
-                  hint: "0.00",
-                  textColor: primary,
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      ">>> Pay Online",
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        color: primary,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "We saved you",
+                      style: context.textTheme.bodyLarge,
+                    ),
+                    Text(
+                      "${totalAmountToPay != 0 ? "-" : ""}₦${formatAmount("$fakeDiscount")}",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: totalAmountToPay == 0 ? null : Colors.redAccent,
                       ),
                     ),
-                  ),
+                  ],
                 ),
-                SizedBox(height: 150.h),
+                SizedBox(height: 50.h),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: primary,
+                    backgroundColor: totalAmountToPay == 0
+                        ? primary.withOpacity(0.6)
+                        : primary,
                     elevation: 1.0,
                     fixedSize: Size(375.w, 50.h),
                     shape: RoundedRectangleBorder(
@@ -208,14 +283,17 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                     ),
                   ),
                   onPressed: showSuccessModal,
-                  child: Text(
-                    "Confirm",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: loading
+                      ? whiteLoader
+                      : Text(
+                          "Pay ₦${formatAmount("$totalAmountToPay")} now",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
+                SizedBox(height: 20.h),
               ],
             ),
           ),

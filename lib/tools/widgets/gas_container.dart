@@ -16,18 +16,20 @@ class _GasContainerState extends ConsumerState<GasContainer> {
 
   int startPlaybackInMilliseconds = 0;
   final int startPlaybackOffset = 1600;
+  final int animationPlaybackDuration = 2000;
+  final int gasIncreaseSteps = 5;
 
   @override
   void initState() {
     super.initState();
     int currentGasLevel = ref.read(gasLevelProvider);
-    startPlaybackInMilliseconds = (currentGasLevel ~/ 5) * 2000;
+    startPlaybackInMilliseconds =
+        (currentGasLevel ~/ gasIncreaseSteps) * animationPlaybackDuration;
 
     controller = VideoPlayerController.asset("assets/videos/gas.mp4")
       ..initialize().then((_) {
         setState(() {});
         controller.seekTo(Duration(milliseconds: startPlaybackInMilliseconds));
-        // controller.play();
       });
 
     controller.addListener(() {
@@ -46,8 +48,18 @@ class _GasContainerState extends ConsumerState<GasContainer> {
 
   void listenForChanges() {
     ref.listen(gasLevelProvider, (previous, next) {
-      int targetStartInMilliseconds = (next ~/ 5) * 2000;
+      int targetStartInMilliseconds =
+          (next ~/ gasIncreaseSteps) * animationPlaybackDuration;
       setState(() => startPlaybackInMilliseconds = targetStartInMilliseconds);
+    });
+
+
+    ref.listen(playGasAnimationProvider, (previous, next) {
+      if(next) {
+        controller.play();
+      } else {
+        controller.pause();
+      }
     });
   }
 

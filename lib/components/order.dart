@@ -19,7 +19,6 @@ class Order {
 
   final double price;
 
-
   const Order({
     this.id = "",
     this.code = "",
@@ -34,5 +33,28 @@ class Order {
     this.riderBike = "",
     this.price = 0.0,
   });
+}
 
+enum OrderState { pickedUp, refilled, dispatched, delivered }
+
+class OrderDeliveryData {
+  final DateTime timestamp;
+  final OrderState state;
+
+  const OrderDeliveryData({
+    required this.state,
+    required this.timestamp,
+  });
+}
+
+class UserOrder {
+  final List<OrderDeliveryData> states;
+  final String username;
+  final String code;
+
+  const UserOrder({
+    this.states = const [],
+    this.username = "",
+    this.code = "",
+  });
 }

@@ -1,3 +1,4 @@
+import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
@@ -32,7 +33,7 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
 
   int currentPriceOfGas = 1, deliveryFee = 0;
   int totalAmountToPay = 0, priceMarkup = -1;
-  int fakePriceToPayForGas = 0, fakeDiscount = 0;
+  int fakePriceToPayForGas = 0, fakeDiscount = 0, actualGasAmount = 0;
 
   @override
   void initState() {
@@ -50,9 +51,8 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
   void determineAppropriateDeliveryDateAndTime() {
     deliveryDate = DateTime.now();
     nextDeliveryTime = widget.scheduledTime;
-    if (widget.scheduledTime == "5pm" && deliveryDate.hour > 17) {
+    if (deliveryDate.hour > 17) {
       deliveryDate = DateUtilities.getDaysAhead(1);
-      nextDeliveryTime = "12pm";
     } else if (widget.scheduledTime == "12pm" && deliveryDate.hour > 12) {
       nextDeliveryTime = "5pm";
     }
@@ -79,10 +79,13 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
     int? targetQuantity = int.tryParse(value);
     if (targetQuantity != null) {
       fakeDiscount = priceMarkup * targetQuantity;
+      actualGasAmount = currentPriceOfGas * targetQuantity;
       fakePriceToPayForGas = (currentPriceOfGas + priceMarkup) * targetQuantity;
-      totalAmountToPay = (currentPriceOfGas * targetQuantity) + deliveryFee;
+      totalAmountToPay =
+          (currentPriceOfGas * targetQuantity) + (deliveryFee * 0.4).toInt();
     } else {
       fakeDiscount = 0;
+      actualGasAmount = 0;
       fakePriceToPayForGas = 0;
       totalAmountToPay = 0;
     }
@@ -90,6 +93,24 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
   }
 
   void showSuccessModal() {
+    String code = randomGCode;
+    String name = (ref.watch(userProvider) as User).fullName;
+
+    ref.watch(currentUserOrderProvider.notifier).state = UserOrder(
+      code: code,
+      username: name,
+      states: [
+        OrderDeliveryData(
+          state: OrderState.pickedUp,
+          timestamp: DateUtilities.getMinutesBefore(5),
+        ),
+        OrderDeliveryData(
+          state: OrderState.refilled,
+          timestamp: DateUtilities.getMinutesBefore(2),
+        ),
+      ],
+    );
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -137,7 +158,7 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
                       ),
                       TextSpan(
                         text:
-                        "₦${formatAmount("${currentPriceOfGas + priceMarkup}")}",
+                            "₦${formatAmount("${currentPriceOfGas + priceMarkup}")}",
                         style: context.textTheme.bodyMedium!.copyWith(
                           decoration: TextDecoration.lineThrough,
                           decorationColor: neutral2,
@@ -279,10 +300,34 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
                       "Price",
                       style: context.textTheme.bodyLarge,
                     ),
-                    Text(
-                      "₦${formatAmount("$fakePriceToPayForGas")}",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          if (totalAmountToPay == 0)
+                            TextSpan(
+                              text: "₦0",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          if (totalAmountToPay != 0)
+                            TextSpan(
+                              text: "₦${formatAmount("$actualGasAmount")} ",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          if (totalAmountToPay != 0)
+                            TextSpan(
+                              text: "₦${formatAmount("$fakePriceToPayForGas")}",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.lineThrough,
+                                decorationColor: neutral2,
+                                color: neutral2,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   ],
@@ -295,10 +340,35 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
                       "Delivery Fee",
                       style: context.textTheme.bodyLarge,
                     ),
-                    Text(
-                      "₦${formatAmount("${totalAmountToPay == 0 ? 0 : deliveryFee}")}",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          if (totalAmountToPay == 0)
+                            TextSpan(
+                              text: "₦0",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          if (totalAmountToPay != 0)
+                            TextSpan(
+                              text:
+                                  "₦${formatAmount((deliveryFee * 0.4).toStringAsFixed(0))} ",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          if (totalAmountToPay != 0)
+                            TextSpan(
+                              text: "₦${formatAmount("$deliveryFee")}",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.lineThrough,
+                                decorationColor: neutral2,
+                                color: neutral2,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   ],
@@ -311,13 +381,22 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
                       "We saved you",
                       style: context.textTheme.bodyLarge,
                     ),
-                    Text(
-                      "${totalAmountToPay != 0 ? "-" : ""}₦${formatAmount("$fakeDiscount")}",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: totalAmountToPay == 0 ? null : Colors.redAccent,
+                    if (totalAmountToPay == 0)
+                      Text(
+                        "₦0",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: primary,
+                        ),
                       ),
-                    ),
+                    if (totalAmountToPay != 0)
+                      Text(
+                        "₦${formatAmount(((fakePriceToPayForGas - actualGasAmount) + (deliveryFee * 0.6)).toInt().toStringAsFixed(0))}",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: primary,
+                        ),
+                      ),
                   ],
                 ),
                 Row(

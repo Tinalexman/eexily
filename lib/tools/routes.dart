@@ -24,6 +24,7 @@ import 'package:eexily/pages/home/support/view_order.dart';
 import 'package:eexily/pages/onboard/intro.dart';
 import 'package:eexily/pages/onboard/onboard.dart';
 import 'package:eexily/pages/onboard/splash.dart';
+import 'package:eexily/pages/refill/history.dart';
 import 'package:eexily/pages/refill/refill.dart';
 import 'package:eexily/pages/refill/refill_now.dart';
 import 'package:eexily/pages/refill/schedule_refill.dart';
@@ -148,6 +149,11 @@ final List<GoRoute> routes = [
     path: Pages.orderHistory.path,
     name: Pages.orderHistory,
     builder: (_, __) => const OrderHistory(),
+  ),
+  GoRoute(
+    path: Pages.individualOrderHistory.path,
+    name: Pages.individualOrderHistory,
+    builder: (_, __) => const IndividualOrderHistory(),
   ),
   GoRoute(
     path: Pages.viewSupportOrder.path,

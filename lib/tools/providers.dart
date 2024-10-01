@@ -268,6 +268,8 @@ final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider(
 );
 
 final StateProvider<UserOrder?> currentUserOrderProvider = StateProvider((ref) => null);
+final StateProvider<List<UserOrder>> previousUserOrdersProvider = StateProvider((ref) => []);
+
 
 final StateProvider<int> gasLevelProvider = StateProvider((ref) => 65);
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
@@ -278,6 +280,7 @@ final StateProvider<
 
 
 void logout(WidgetRef ref) {
+  ref.invalidate(previousUserOrdersProvider);
   ref.invalidate(currentUserOrderProvider);
   ref.invalidate(playGasAnimationProvider);
   ref.invalidate(gasLevelProvider);

@@ -22,7 +22,7 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
   bool loading = true;
   bool shouldMakeAddressEditable = false;
 
-  int currentPriceOfGas = 1, deliveryFee = 0;
+  int currentPriceOfGas = 1, deliveryFee = 0, actualGasAmount = 0;
   int totalAmountToPay = 0, priceMarkup = -1, nightOrderFee = 100;
   int fakePriceToPayForGas = 0, fakeDiscount = 0;
 
@@ -61,10 +61,12 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
       bool isLate = DateTime.now().hour >= 21;
       fakeDiscount = priceMarkup * targetQuantity;
       fakePriceToPayForGas = (currentPriceOfGas + priceMarkup) * targetQuantity;
-      totalAmountToPay = (currentPriceOfGas * targetQuantity) + deliveryFee;
+      actualGasAmount = (currentPriceOfGas * targetQuantity);
+      totalAmountToPay = actualGasAmount + deliveryFee;
       totalAmountToPay += isLate ? nightOrderFee : 0;
     } else {
       fakeDiscount = 0;
+      actualGasAmount = 0;
       fakePriceToPayForGas = 0;
       totalAmountToPay = 0;
     }
@@ -212,12 +214,26 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                       "Price",
                       style: context.textTheme.bodyLarge,
                     ),
-                    Text(
-                      "₦${formatAmount("$fakePriceToPayForGas")}",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    RichText(text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "₦${formatAmount("$actualGasAmount")} ",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "₦${formatAmount("$fakePriceToPayForGas")}",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: neutral2,
+                            color: neutral2,
+                          ),
+                        ),
+                      ]
+                    ),),
+
                   ],
                 ),
                 Row(
@@ -262,10 +278,10 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                       style: context.textTheme.bodyLarge,
                     ),
                     Text(
-                      "${totalAmountToPay != 0 ? "-" : ""}₦${formatAmount("$fakeDiscount")}",
+                      "₦${formatAmount("$fakeDiscount")}",
                       style: context.textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: totalAmountToPay == 0 ? null : Colors.redAccent,
+                        color: primary,
                       ),
                     ),
                   ],

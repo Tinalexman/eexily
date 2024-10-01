@@ -24,30 +24,42 @@ class _GasUsagePageState extends State<GasUsagePage> {
 
   int currentFilterIndex = 0;
 
-  late List<List<FlSpot>> lineChartData = [];
+  late List<List<BarChartGroupData>> barData;
+  double maxYValue = 12.0;
 
   @override
   void initState() {
     super.initState();
-    getData();
+    barData = getData();
   }
 
-  void getData() {
-    List<List<FlSpot>> newData = List.generate(
+  List<List<BarChartGroupData>> getData() {
+    Random random = Random();
+    return List.generate(
       filterOptions.length,
-      (i) {
-        Random random = Random(DateTime.now().millisecondsSinceEpoch + i);
-        int min = 50, max = random.nextInt(250);
-        return List.generate(
-          maxLength(i),
-          (index) => FlSpot(
-            (index + 1).toDouble(),
-            (max + min).toDouble(),
-          ),
-        );
-      },
+      (i) => List.generate(
+        maxLength(i),
+        (index) {
+          double toY = random.nextInt(12).toDouble();
+          // if (toY > maxYValue) {
+          //   maxYValue = toY;
+          // }
+
+          return BarChartGroupData(
+            x: (index + 1),
+            barRods: [
+              BarChartRodData(
+                toY: toY,
+                fromY: 0,
+                width: 25.w,
+                color: primary,
+                borderRadius: BorderRadius.circular(7.5.r),
+              ),
+            ],
+          );
+        },
+      ),
     );
-    lineChartData.addAll(newData);
   }
 
   int maxLength(int index) {
@@ -73,16 +85,6 @@ class _GasUsagePageState extends State<GasUsagePage> {
     return length;
   }
 
-  double get maxValue {
-    double max = 0.0;
-    for (var spot in lineChartData[currentFilterIndex]) {
-      if (spot.y >= max) {
-        max = spot.y;
-      }
-    }
-    return max + 20;
-  }
-
   String convertIndexName(int index) {
     if (currentFilterIndex <= 1) {
       return getWeekDay(index, shorten: true);
@@ -93,18 +95,27 @@ class _GasUsagePageState extends State<GasUsagePage> {
     return month("${threeMonthsAgo.month + index - 1}", true);
   }
 
+  String get bottomAxisTitle {
+    if (currentFilterIndex <= 1) {
+      return "Days";
+    } else if (currentFilterIndex <= 3) {
+      return "Weeks";
+    }
+    return "Months";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0.0,
-        title: Text(
-          "Gas Usage",
-          style: context.textTheme.titleLarge!.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+      elevation: 0.0,
+      title: Text(
+        "Gas Usage",
+        style: context.textTheme.titleLarge!.copyWith(
+          fontWeight: FontWeight.w600,
         ),
       ),
+    ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -141,24 +152,15 @@ class _GasUsagePageState extends State<GasUsagePage> {
                   physics: const BouncingScrollPhysics(),
                 ),
               ),
+              SizedBox(height: 50.h),
               SizedBox(
                 width: 375.w,
-                height: 230.h,
-                child: LineChart(
-                  LineChartData(
+                height: 300.h,
+                child: BarChart(
+                  BarChartData(
                     minY: 0,
-                    maxY: maxValue,
-                    minX: 1,
-                    maxX: maxLength(currentFilterIndex).toDouble(),
-                    clipData: const FlClipData.horizontal(),
-                    backgroundColor: Colors.transparent,
-                    gridData: const FlGridData(
-                      drawHorizontalLine: true,
-                      drawVerticalLine: false,
-                    ),
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
+                    maxY: maxYValue,
+                    alignment: BarChartAlignment.spaceBetween,
                     titlesData: FlTitlesData(
                       topTitles: const AxisTitles(
                         sideTitles: SideTitles(showTitles: false),
@@ -166,13 +168,21 @@ class _GasUsagePageState extends State<GasUsagePage> {
                       rightTitles: const AxisTitles(
                         sideTitles: SideTitles(showTitles: false),
                       ),
-                      leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
+                      leftTitles: AxisTitles(
+                        sideTitles: const SideTitles(
+                          showTitles: true,
+                          interval: 2.0,
+                          minIncluded: false,
+                          maxIncluded: true,
+                        ),
+                        axisNameWidget: Text(
+                          "Amount of gas used (kg)",
+                          style: context.textTheme.bodyMedium,
+                        ),
                       ),
                       bottomTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
-                          interval: 1.0,
                           getTitlesWidget: (index, meta) {
                             return Text(
                               convertIndexName(index.toInt()),
@@ -180,40 +190,22 @@ class _GasUsagePageState extends State<GasUsagePage> {
                             );
                           },
                         ),
+                        axisNameSize: 40,
+                        axisNameWidget: Text(
+                          bottomAxisTitle,
+                          style: context.textTheme.bodyMedium,
+                        ),
                       ),
                     ),
-                    lineBarsData: [
-                      LineChartBarData(
-                        color: primary,
-                        gradient: const LinearGradient(
-                          colors: [
-                            primary,
-                            primary,
-                          ],
-                          begin: Alignment.topRight,
-                          end: Alignment.bottomLeft,
-                        ),
-                        belowBarData: BarAreaData(
-                          color: primary,
-                          show: true,
-                          gradient: const LinearGradient(
-                            colors: [primary50, primary50],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                        ),
-                        shadow: const Shadow(
-                          color: primary50,
-                        ),
-                        isCurved: true,
-                        isStrokeCapRound: true,
-                        curveSmoothness: 0.75,
-                        spots: lineChartData[currentFilterIndex],
-                      ),
-                    ],
+                    gridData: const FlGridData(
+                      drawHorizontalLine: true,
+                      drawVerticalLine: false,
+                    ),
+                    borderData: FlBorderData(
+                      show: false,
+                    ),
+                    barGroups: barData[currentFilterIndex],
                   ),
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
                 ),
               )
             ],

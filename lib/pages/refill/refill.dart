@@ -7,7 +7,6 @@ import 'package:eexily/tools/widgets/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RefillPage extends ConsumerStatefulWidget {
   const RefillPage({super.key});
@@ -34,7 +33,7 @@ class _RefillPageState extends ConsumerState<RefillPage> {
           Padding(
             padding: EdgeInsets.only(right: 15.w),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () => context.router.pushNamed(Pages.individualOrderHistory),
               child: Text(
                 "History",
                 style: context.textTheme.bodyLarge!.copyWith(
@@ -58,13 +57,166 @@ class _RefillPageState extends ConsumerState<RefillPage> {
   }
 }
 
-class _HasOrder extends ConsumerWidget {
+class _HasOrder extends ConsumerStatefulWidget {
   final UserOrder order;
 
   const _HasOrder({
     super.key,
     required this.order,
   });
+
+  @override
+  ConsumerState<_HasOrder> createState() => _HasOrderState();
+}
+
+class _HasOrderState extends ConsumerState<_HasOrder> {
+  final TextEditingController controller = TextEditingController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    User user = ref.watch(userProvider) as User;
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 10.h),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 40.r,
+                height: 40.r,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: monokai),
+                ),
+                child: Icon(
+                  Icons.done_rounded,
+                  size: 28.r,
+                ),
+              ),
+              SizedBox(width: 10.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "G-Code: ${widget.order.code}",
+                    style: context.textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    "Thank you ${user.firstName}!",
+                    style: context.textTheme.headlineSmall!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 20.h),
+          SizedBox(
+            height: 350.h,
+            width: 375.w,
+            child: _CustomOrderStepper(data: widget.order.states),
+          ),
+          SizedBox(height: 40.h),
+          Text(
+            "Feedback and comments",
+            style: context.textTheme.bodyLarge,
+          ),
+          SizedBox(height: 4.h),
+          SpecialForm(
+            controller: controller,
+            width: 375.w,
+            maxLines: 4,
+            hint: "e.g I had a very good experience",
+          ),
+          SizedBox(height: 20.h),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primary,
+              minimumSize: Size(375.w, 50.h),
+              fixedSize: Size(375.w, 50.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(7.5.r),
+              ),
+            ),
+            child: Text(
+              "Submit",
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CustomOrderStepper extends StatefulWidget {
+  final List<OrderDeliveryData> data;
+
+  const _CustomOrderStepper({
+    super.key,
+    required this.data,
+  });
+
+  @override
+  State<_CustomOrderStepper> createState() => _CustomOrderStepperState();
+}
+
+class _CustomOrderStepperState extends State<_CustomOrderStepper> {
+  late int total;
+
+  late Widget completedStepIcon,
+      nextStepToBeCompletedIcon,
+      notCompletedStepIcon;
+
+  @override
+  void initState() {
+    super.initState();
+    total = OrderState.values.length;
+    completedStepIcon = Center(
+      child: Icon(
+        Icons.done,
+        size: 26.r,
+        color: Colors.white,
+      ),
+    );
+
+    nextStepToBeCompletedIcon = Center(
+      child: CircleAvatar(
+        radius: 18.r,
+        backgroundColor: Colors.white,
+        child: Center(
+          child: CircleAvatar(
+            radius: 5.r,
+            backgroundColor: primary,
+          ),
+        ),
+      ),
+    );
+
+    notCompletedStepIcon = Center(
+      child: CircleAvatar(
+        radius: 18.r,
+        backgroundColor: Colors.white,
+      ),
+    );
+  }
 
   String getOrderTitle(int index) {
     switch (index) {
@@ -97,97 +249,70 @@ class _HasOrder extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    User user = ref.watch(userProvider) as User;
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: total,
+      itemBuilder: (_, index) {
+        bool hasStepBeingCompleted = index < widget.data.length;
+        bool isNextToBeCompleted = index == widget.data.length;
+        bool isLastStep = index == total - 1;
+        DateTime? stepTimestamp;
+        if (index < widget.data.length) {
+          stepTimestamp = widget.data[index].timestamp;
+        }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 10.h),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 40.r,
-              height: 40.r,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: monokai),
-              ),
-              child: Icon(
-                Icons.done_rounded,
-                size: 28.r,
-              ),
-            ),
-            SizedBox(width: 10.w),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "G-Code: ${order.code}",
-                  style: context.textTheme.titleMedium!.copyWith(
-                    fontWeight: FontWeight.w400,
+        return SizedBox(
+          width: 375.w,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 20.r,
+                    backgroundColor: primary,
+                    child: hasStepBeingCompleted
+                        ? completedStepIcon
+                        : isNextToBeCompleted
+                            ? nextStepToBeCompletedIcon
+                            : notCompletedStepIcon,
                   ),
-                ),
-                Text(
-                  "Thank you ${user.firstName}!",
-                  style: context.textTheme.headlineSmall!.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        SizedBox(height: 20.h),
-        SizedBox(
-          height: 400.h,
-          child: Stepper(
-            elevation: 1.0,
-            physics: const BouncingScrollPhysics(),
-            currentStep: order.states.length - 1,
-            type: StepperType.vertical,
-
-            steps: List.generate(
-              OrderState.values.length,
-              (index) {
-                bool isActive = index < order.states.length;
-                OrderDeliveryData? data;
-
-                if (index < order.states.length) {
-                  data = order.states[index];
-                }
-
-                return Step(
-                  title: Text(
+                  if (!isLastStep)
+                    Container(
+                      width: 2.w,
+                      height: 60.r,
+                      color: primary50,
+                    )
+                ],
+              ),
+              SizedBox(width: 10.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
                     getOrderTitle(index),
                     style: context.textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  content: const SizedBox(),
-                  isActive: isActive,
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        getOrderSubtitle(index),
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      if (data != null)
-                        Text(
-                          formatDateRawWithTime(data.timestamp),
-                          style: context.textTheme.bodySmall,
-                        ),
-                    ],
+                  Text(
+                    getOrderSubtitle(index),
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                );
-              },
-            ),
+                  if (stepTimestamp != null)
+                    Text(
+                      formatDateRawWithTime(stepTimestamp),
+                      style: context.textTheme.bodySmall,
+                    ),
+                ],
+              ),
+            ],
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 }
@@ -233,7 +358,7 @@ class _ScheduleRefill extends StatefulWidget {
 }
 
 class _ScheduleRefillState extends State<_ScheduleRefill> {
-  String? currentSlot;
+  String currentSlot = "";
 
   @override
   Widget build(BuildContext context) {
@@ -264,20 +389,52 @@ class _ScheduleRefillState extends State<_ScheduleRefill> {
             style: context.textTheme.bodyMedium,
           ),
           SizedBox(height: 4.h),
-          ComboBox(
-            onChanged: (val) => setState(() => currentSlot = val),
-            value: currentSlot,
-            dropdownItems: const ['12pm', '5pm'],
-            hint: "Select",
-            dropdownWidth: 100.w,
-            buttonWidth: 100.w,
-            icon: const Icon(
-              IconsaxPlusLinear.arrow_down,
-              color: monokai,
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Radio(
+                    value: currentSlot,
+                    groupValue: "12pm",
+                    onChanged: (val) {
+                      setState(() => currentSlot = "12pm");
+                    },
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  Text(
+                    "12pm",
+                    style: context.textTheme.bodyMedium,
+                  )
+                ],
+              ),
+              SizedBox(width: 20.w),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Radio(
+                    value: currentSlot,
+                    groupValue: "5pm",
+                    onChanged: (val) {
+                      setState(() => currentSlot = "5pm");
+                    },
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  Text(
+                    "5pm",
+                    style: context.textTheme.bodyMedium,
+                  )
+                ],
+              ),
+            ],
           ),
           SizedBox(height: 110.h),
-          if (currentSlot != null)
+          if (currentSlot.isNotEmpty)
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 elevation: 0.0,

@@ -94,22 +94,6 @@ class EexilyUserDrawer extends ConsumerWidget {
             ListTile(
               onTap: () {
                 onCloseDrawer();
-              },
-              contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
-              leading: Icon(
-                IconsaxPlusBroken.devices,
-                size: 26.r,
-              ),
-              title: Text(
-                "Device",
-                style: context.textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            ListTile(
-              onTap: () {
-                onCloseDrawer();
                 context.router.pushNamed(Pages.individualProfile);
               },
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -119,23 +103,6 @@ class EexilyUserDrawer extends ConsumerWidget {
               ),
               title: Text(
                 "Profile",
-                style: context.textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            ListTile(
-              onTap: () {
-                onCloseDrawer();
-                context.router.pushNamed(Pages.individualGasActivation);
-              },
-              contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
-              leading: Icon(
-                IconsaxPlusBroken.setting,
-                size: 26.r,
-              ),
-              title: Text(
-                "Gas Activation",
                 style: context.textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.w600,
                 ),

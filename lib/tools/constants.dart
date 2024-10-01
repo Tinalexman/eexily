@@ -56,6 +56,7 @@ class Pages
   static String get inbox => "inbox";
   static String get filter => "filter";
   static String get individualGasActivation => "individual-gas-activation";
+  static String get individualOrderHistory => "individual-order-history";
   static String get orderHistory => "order-history";
   static String get viewSupportOrder => "view-support-order";
   static String get viewAttendantOrder => "view-attendant-order";

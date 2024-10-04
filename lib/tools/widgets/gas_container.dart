@@ -15,14 +15,14 @@ class _GasContainerState extends ConsumerState<GasContainer> {
   late VideoPlayerController controller;
 
   int startPlaybackInMilliseconds = 0;
-  final int startPlaybackOffset = 1600;
-  final int animationPlaybackDuration = 2000;
+  final int startPlaybackOffset = 3500;
+  final int animationPlaybackDuration = 4000;
   final int gasIncreaseSteps = 5;
 
   @override
   void initState() {
     super.initState();
-    int currentGasLevel = ref.read(gasLevelProvider);
+    int currentGasLevel = 100 - ref.read(gasLevelProvider); // I am subtracting 100 cause the video is played as starting from 100 to 0 instead of 0 to 100
     startPlaybackInMilliseconds =
         (currentGasLevel ~/ gasIncreaseSteps) * animationPlaybackDuration;
 
@@ -48,8 +48,9 @@ class _GasContainerState extends ConsumerState<GasContainer> {
 
   void listenForChanges() {
     ref.listen(gasLevelProvider, (previous, next) {
+      int invertedGasLevel = 100 - next;
       int targetStartInMilliseconds =
-          (next ~/ gasIncreaseSteps) * animationPlaybackDuration;
+          (invertedGasLevel ~/ gasIncreaseSteps) * animationPlaybackDuration;
       setState(() => startPlaybackInMilliseconds = targetStartInMilliseconds);
     });
 
@@ -71,11 +72,17 @@ class _GasContainerState extends ConsumerState<GasContainer> {
       return const SizedBox();
     }
 
-    return SizedBox(
-      width: 220.w,
-      child: AspectRatio(
-        aspectRatio: controller.value.aspectRatio,
-        child: VideoPlayer(controller),
+    return GestureDetector(
+      onTap: () {
+        bool initialState = ref.watch(playGasAnimationProvider);
+        ref.watch(playGasAnimationProvider.notifier).state = !initialState;
+      },
+      child: SizedBox(
+        width: 220.w,
+        child: AspectRatio(
+          aspectRatio: controller.value.aspectRatio,
+          child: VideoPlayer(controller),
+        ),
       ),
     );
   }

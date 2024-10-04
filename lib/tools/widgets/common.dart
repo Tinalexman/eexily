@@ -827,9 +827,9 @@ class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
   }
 
   Color gasColor(double value) {
-    if (value >= 0.65) {
+    if (value > 0.55) {
       return secondary2;
-    } else if (value >= 0.2 && value < 0.65) {
+    } else if (value >= 0.16 && value <= 0.55) {
       return secondary;
     }
     return Colors.red;

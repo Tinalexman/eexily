@@ -374,7 +374,7 @@ class _ScheduleRefillState extends State<_ScheduleRefill> {
           ),
           SizedBox(height: 50.h),
           Text(
-            "Plan ahead and save with our batch delivery! Choose a convenient "
+            "Plan ahead and save cash with our batch delivery! Choose a convenient "
             "time slot for your gas refill. We do deliveries every day at 12noon and 5pm.",
             style: context.textTheme.bodyMedium,
           ),

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:eexily/components/usage.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -26,6 +27,8 @@ class _GasUsagePageState extends State<GasUsagePage> {
 
   late List<List<BarChartGroupData>> barData;
   double maxYValue = 12.0;
+
+  final List<UsageData> usages = [];
 
   @override
   void initState() {
@@ -107,109 +110,139 @@ class _GasUsagePageState extends State<GasUsagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      elevation: 0.0,
-      title: Text(
-        "Gas Usage",
-        style: context.textTheme.titleLarge!.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 50.h,
-                child: ListView.separated(
-                  itemBuilder: (_, index) {
-                    bool selected = currentFilterIndex == index;
-                    return GestureDetector(
-                      onTap: () => setState(() => currentFilterIndex = index),
-                      child: Chip(
-                        label: Text(
-                          filterOptions[index],
-                          style: context.textTheme.bodySmall!.copyWith(
-                            fontWeight:
-                                selected ? FontWeight.w500 : FontWeight.w400,
-                          ),
-                        ),
-                        backgroundColor:
-                            selected ? secondary : primary50.withOpacity(0.2),
-                        elevation: selected ? 1.0 : 0.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.5.r),
-                        ),
-                        side: const BorderSide(color: Colors.transparent),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, __) => SizedBox(width: 15.w),
-                  itemCount: filterOptions.length,
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              elevation: 0.0,
+              title: Text(
+                "Gas Usage",
+                style: context.textTheme.titleLarge!.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: 50.h),
-              SizedBox(
-                width: 375.w,
-                height: 300.h,
-                child: BarChart(
-                  BarChartData(
-                    minY: 0,
-                    maxY: maxYValue,
-                    alignment: BarChartAlignment.spaceBetween,
-                    titlesData: FlTitlesData(
-                      topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
+              pinned: true,
+              floating: true,
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 50.h,
+                      child: ListView.separated(
+                        itemBuilder: (_, index) {
+                          bool selected = currentFilterIndex == index;
+                          return GestureDetector(
+                            onTap: () =>
+                                setState(() => currentFilterIndex = index),
+                            child: Chip(
+                              label: Text(
+                                filterOptions[index],
+                                style: context.textTheme.bodySmall!.copyWith(
+                                  fontWeight: selected
+                                      ? FontWeight.w500
+                                      : FontWeight.w400,
+                                ),
+                              ),
+                              backgroundColor: selected
+                                  ? secondary
+                                  : primary50.withOpacity(0.2),
+                              elevation: selected ? 1.0 : 0.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7.5.r),
+                              ),
+                              side: const BorderSide(color: Colors.transparent),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (_, __) => SizedBox(width: 15.w),
+                        itemCount: filterOptions.length,
+                        scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
                       ),
-                      rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      leftTitles: AxisTitles(
-                        sideTitles: const SideTitles(
-                          showTitles: true,
-                          interval: 2.0,
-                          minIncluded: false,
-                          maxIncluded: true,
-                        ),
-                        axisNameWidget: Text(
-                          "Amount of gas used (kg)",
-                          style: context.textTheme.bodyMedium,
-                        ),
-                      ),
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          getTitlesWidget: (index, meta) {
-                            return Text(
-                              convertIndexName(index.toInt()),
-                              style: context.textTheme.bodySmall,
-                            );
-                          },
-                        ),
-                        axisNameSize: 40,
-                        axisNameWidget: Text(
-                          bottomAxisTitle,
-                          style: context.textTheme.bodyMedium,
+                    ),
+                    SizedBox(height: 50.h),
+                    SizedBox(
+                      width: 375.w,
+                      height: 300.h,
+                      child: BarChart(
+                        BarChartData(
+                          minY: 0,
+                          maxY: maxYValue,
+                          alignment: BarChartAlignment.spaceBetween,
+                          titlesData: FlTitlesData(
+                            topTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            rightTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            leftTitles: AxisTitles(
+                              sideTitles: const SideTitles(
+                                showTitles: true,
+                                interval: 2.0,
+                                minIncluded: false,
+                                maxIncluded: true,
+                              ),
+                              axisNameWidget: Text(
+                                "Amount of gas used (kg)",
+                                style: context.textTheme.bodyMedium,
+                              ),
+                            ),
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                getTitlesWidget: (index, meta) {
+                                  return Text(
+                                    convertIndexName(index.toInt()),
+                                    style: context.textTheme.bodySmall,
+                                  );
+                                },
+                              ),
+                              axisNameSize: 40,
+                              axisNameWidget: Text(
+                                bottomAxisTitle,
+                                style: context.textTheme.bodyMedium,
+                              ),
+                            ),
+                          ),
+                          gridData: const FlGridData(
+                            drawHorizontalLine: true,
+                            drawVerticalLine: false,
+                          ),
+                          borderData: FlBorderData(
+                            show: false,
+                          ),
+                          barGroups: barData[currentFilterIndex],
                         ),
                       ),
                     ),
-                    gridData: const FlGridData(
-                      drawHorizontalLine: true,
-                      drawVerticalLine: false,
+                    SizedBox(height: 20.h),
+                    Text(
+                      "History",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    barGroups: barData[currentFilterIndex],
-                  ),
+                    SizedBox(height: 10.h),
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              sliver: SliverList.separated(
+                itemBuilder: (_, __) => SizedBox(
+
+                ),
+                itemCount: usages.length,
+                separatorBuilder: (_, __) => SizedBox(height: 10.h),
+              ),
+            ),
+          ],
         ),
       ),
     );

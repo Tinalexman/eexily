@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,10 +29,15 @@ class _GasContainerState extends ConsumerState<GasContainer> {
     startPlaybackInMilliseconds =
         (currentGasLevel ~/ gasIncreaseSteps) * animationPlaybackDuration;
 
+    bool shouldPlayGasAnimation = ref.read(playGasAnimationProvider);
+
     controller = VideoPlayerController.asset("assets/videos/gas.mp4")
       ..initialize().then((_) {
         setState(() {});
         controller.seekTo(Duration(milliseconds: startPlaybackInMilliseconds));
+        if(shouldPlayGasAnimation) {
+          controller.play();
+        }
       });
 
     controller.addListener(() {
@@ -48,6 +56,11 @@ class _GasContainerState extends ConsumerState<GasContainer> {
 
   void listenForChanges() {
     ref.listen(gasLevelProvider, (previous, next) {
+      if(next <= 15 && !ref.watch(shownGasToast)) {
+        showToast("Your gas is getting low. Please refill as soon as possible.", context);
+        ref.watch(shownGasToast.notifier).state = true;
+      }
+
       int invertedGasLevel = 100 - next;
       int targetStartInMilliseconds =
           (invertedGasLevel ~/ gasIncreaseSteps) * animationPlaybackDuration;
@@ -72,17 +85,11 @@ class _GasContainerState extends ConsumerState<GasContainer> {
       return const SizedBox();
     }
 
-    return GestureDetector(
-      onTap: () {
-        bool initialState = ref.watch(playGasAnimationProvider);
-        ref.watch(playGasAnimationProvider.notifier).state = !initialState;
-      },
-      child: SizedBox(
-        width: 220.w,
-        child: AspectRatio(
-          aspectRatio: controller.value.aspectRatio,
-          child: VideoPlayer(controller),
-        ),
+    return SizedBox(
+      width: 220.w,
+      child: AspectRatio(
+        aspectRatio: controller.value.aspectRatio,
+        child: VideoPlayer(controller),
       ),
     );
   }

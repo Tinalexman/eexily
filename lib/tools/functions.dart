@@ -241,6 +241,15 @@ double calculateLuminance(Color color) {
   return lumR * r + lumG * g + lumB * b;
 }
 
+Color gasColor(double value) {
+  if (value > 0.55) {
+    return secondary2;
+  } else if (value >= 0.16 && value <= 0.55) {
+    return secondary;
+  }
+  return Colors.red;
+}
+
 Color chooseTextColor(Color backgroundColor) {
   final luminance = calculateLuminance(backgroundColor);
   return luminance > 0.5 ? Colors.black : Colors.white;

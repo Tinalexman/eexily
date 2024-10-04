@@ -45,76 +45,8 @@ final StateProvider<UserBase> userProvider =
 StateProvider((ref) => dummyUser);
 
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
-final StateProvider<bool> startGasTimerProvider = StateProvider((ref) => false);
-final StateProvider<List<int>> saverPointsProvider =
-StateProvider((ref) => [25, 30]);
-final StateProvider<List<UsageData>> dailyUsages = StateProvider(
-      (ref) =>
-  [
-    UsageData(
-      initialVolume: 12.0,
-      finalVolume: 11.5,
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-    ),
-    UsageData(
-      initialVolume: 11.5,
-      finalVolume: 10.6,
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-    ),
-    UsageData(
-      initialVolume: 10.6,
-      finalVolume: 9.0,
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-    ),
-    UsageData(
-      initialVolume: 9.0,
-      finalVolume: 5.1,
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-    ),
-  ],
-);
-final StateProvider<List<UsageData>> weeklyUsages = StateProvider(
-      (ref) =>
-  [
-    UsageData(
-      initialVolume: 12.0,
-      finalVolume: 11.5,
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-    ),
-    UsageData(
-      initialVolume: 11.5,
-      finalVolume: 10.6,
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-    ),
-    UsageData(
-      initialVolume: 10.6,
-      finalVolume: 9.0,
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-    ),
-    UsageData(
-      initialVolume: 9.0,
-      finalVolume: 5.1,
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-    ),
-  ],
-);
-final StateProvider<UsageData> monthlyUsages = StateProvider(
-      (ref) =>
-      UsageData(
-        initialVolume: 12.0,
-        finalVolume: 11.5,
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-      ),
-);
+
+
 final StateProvider<List<Notification>> notificationsProvider =
 StateProvider((ref) {
   String name = ref.watch(userProvider.select((u) => u.firstName));
@@ -131,8 +63,6 @@ StateProvider((ref) {
     ),
   ];
 });
-
-
 
 final StateProvider<List<Order>> pendingOrdersProvider = StateProvider(
       (ref) =>
@@ -268,18 +198,24 @@ final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider(
 );
 
 final StateProvider<UserOrder?> currentUserOrderProvider = StateProvider((ref) => null);
+
 final StateProvider<List<UserOrder>> previousUserOrdersProvider = StateProvider((ref) => []);
 
+final StateProvider<int> gasCylinderSizeProvider = StateProvider((ref) => 12);
 
 final StateProvider<int> gasLevelProvider = StateProvider((ref) => 65);
+
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
+
 final StateProvider<bool> playGasAnimationProvider = StateProvider((ref) => false);
+
 final StateProvider<
     IndividualGasQuestionsData> individualGasQuestionsProvider = StateProvider((
     ref) => const IndividualGasQuestionsData());
 
 
 void logout(WidgetRef ref) {
+  ref.invalidate(gasCylinderSizeProvider);
   ref.invalidate(previousUserOrdersProvider);
   ref.invalidate(currentUserOrderProvider);
   ref.invalidate(playGasAnimationProvider);
@@ -292,11 +228,6 @@ void logout(WidgetRef ref) {
   ref.invalidate(orderHistoryProvider);
   ref.invalidate(pageIndexProvider);
   ref.invalidate(shownGasToast);
-  ref.invalidate(startGasTimerProvider);
   ref.invalidate(userProvider);
-  ref.invalidate(dailyUsages);
-  ref.invalidate(weeklyUsages);
-  ref.invalidate(monthlyUsages);
   ref.invalidate(notificationsProvider);
-  ref.invalidate(saverPointsProvider);
 }

@@ -28,7 +28,34 @@ class _GasUsagePageState extends State<GasUsagePage> {
   late List<List<BarChartGroupData>> barData;
   double maxYValue = 12.0;
 
-  final List<UsageData> usages = [];
+  final List<UsageData> usages =
+    [
+      UsageData(
+        initialVolume: 12.0,
+        finalVolume: 11.5,
+        startTime: DateTime.now(),
+        endTime: DateTime.now(),
+      ),
+      UsageData(
+        initialVolume: 11.5,
+        finalVolume: 10.6,
+        startTime: DateTime.now(),
+        endTime: DateTime.now(),
+      ),
+      UsageData(
+        initialVolume: 10.6,
+        finalVolume: 9.0,
+        startTime: DateTime.now(),
+        endTime: DateTime.now(),
+      ),
+      UsageData(
+        initialVolume: 9.0,
+        finalVolume: 5.1,
+        startTime: DateTime.now(),
+        endTime: DateTime.now(),
+      ),
+
+  ];
 
   @override
   void initState() {
@@ -235,8 +262,13 @@ class _GasUsagePageState extends State<GasUsagePage> {
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               sliver: SliverList.separated(
-                itemBuilder: (_, __) => SizedBox(
+                itemBuilder: (_, __) => Card(
+                  elevation: 1.0,
+                  child: Column(
+                    children: [
 
+                    ],
+                  ),
                 ),
                 itemCount: usages.length,
                 separatorBuilder: (_, __) => SizedBox(height: 10.h),

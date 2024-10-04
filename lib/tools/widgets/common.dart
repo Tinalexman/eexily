@@ -545,7 +545,7 @@ Widget heroShuttleBuilder(
       return ScaleTransition(
         scale: animation.drive(
           Tween<double>(
-            begin: 0.0,
+            begin: 1.0,
             end: 1.0,
           ).chain(
             CurveTween(curve: Curves.fastOutSlowIn),
@@ -818,26 +818,18 @@ class UserGasStatistics extends ConsumerStatefulWidget {
 class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
   late DateTime likelyRunningOutDate;
 
-  int cylinderSize = 12;
-
   @override
   void initState() {
     super.initState();
     likelyRunningOutDate = DateTime(2024, 5, 31);
   }
 
-  Color gasColor(double value) {
-    if (value > 0.55) {
-      return secondary2;
-    } else if (value >= 0.16 && value <= 0.55) {
-      return secondary;
-    }
-    return Colors.red;
-  }
+
 
   @override
   Widget build(BuildContext context) {
     int level = ref.watch(gasLevelProvider);
+    int cylinderSize = ref.watch(gasCylinderSizeProvider);
 
     return DecoratedBox(
       decoration: BoxDecoration(

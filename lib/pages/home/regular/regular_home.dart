@@ -1,4 +1,3 @@
-import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
@@ -18,14 +17,11 @@ class RegularHome extends ConsumerStatefulWidget {
 }
 
 class _RegularHomeState extends ConsumerState<RegularHome> {
-
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
 
   @override
   Widget build(BuildContext context) {
     int index = ref.watch(pageIndexProvider);
-    bool isPlayingAnimation = ref.watch(playGasAnimationProvider);
     User user = ref.watch(userProvider) as User;
 
     return Scaffold(
@@ -82,25 +78,37 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
                 SizedBox(height: 20.h),
                 const UserGasStatistics(),
                 SizedBox(height: 5.h),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: () => context.router.pushNamed(Pages.gasUsage),
-                    child: Text(
-                      "View Usage",
-                      style: context.textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: primary,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      IconsaxPlusBroken.chart_1,
+                      size: 16.r,
+                      color: primary,
+                    ),
+                    SizedBox(width: 5.w),
+                    GestureDetector(
+                      onTap: () => context.router.pushNamed(Pages.gasUsage),
+                      child: Text(
+                        "View Gas Usage",
+                        style: context.textTheme.titleMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: primary,
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
                 SizedBox(height: 20.h),
-                const Center(child: GasContainer()),
+                GestureDetector(
+                  onTap: () => context.router.pushNamed(Pages.gasDetails),
+                  child: const Center(child: GasContainer()),
+                ),
                 SizedBox(height: 5.h),
                 Tooltip(
                   message:
-                  "You're using the first version of our gas tracking feature. It might not always be perfect for now, but don’t worry—it gets better the more you use it. Over time, you'll see more accurate tracking and reminders. Thanks for being one of our early users and helping us make things better!",
+                      "You're using the first version of our gas tracking feature. It might not always be perfect for now, but don’t worry—it gets better the more you use it. Over time, you'll see more accurate tracking and reminders. Thanks for being one of our early users and helping us make things better!",
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,

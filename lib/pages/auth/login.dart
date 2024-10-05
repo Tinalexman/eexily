@@ -104,16 +104,18 @@ class _LoginPageState extends State<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 40.h),
+                Image.asset(
+                  "assets/images/logo blue.png",
+                  width: 40.w,
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(height: 10.h),
                 Text(
-                  "Eexily",
-                  style: context.textTheme.headlineLarge!.copyWith(
+                  "Sign In",
+                  style: context.textTheme.headlineMedium!.copyWith(
                     fontWeight: FontWeight.w600,
                     color: primary,
                   ),
-                ),
-                Text(
-                  "We are happy to see you again",
-                  style: context.textTheme.bodyLarge,
                 ),
                 SizedBox(height: 50.h),
                 Form(

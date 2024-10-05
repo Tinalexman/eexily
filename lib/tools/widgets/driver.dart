@@ -35,7 +35,7 @@ class _OrderContainerState extends State<OrderContainer> {
       ),
       child: Container(
         width: 375.w,
-        height: 70.h,
+        height: 100.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.r),
           color: Colors.white,
@@ -51,62 +51,88 @@ class _OrderContainerState extends State<OrderContainer> {
           horizontal: 10.w,
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 22.r,
-              backgroundColor: background,
-              child: Center(
-                child: Text(
-                  widget.order.name.substring(0, 1),
-                  style: context.textTheme.titleLarge!.copyWith(
-                    color: text,
-                    fontWeight: FontWeight.w500,
-                  ),
+            Container(
+              width: 80.h,
+              height: 80.h,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: background,
+                borderRadius: BorderRadius.circular(7.5.r),
+              ),
+              child: Text(
+                widget.order.name.substring(0, 1),
+                style: context.textTheme.headlineMedium!.copyWith(
+                  color: text,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
+            SizedBox(width: 10.w),
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.order.name,
+                  "Order #${widget.order.id}",
                   style: context.textTheme.titleMedium!.copyWith(
                     color: monokai,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                Text(
-                  "G-Code: ${widget.order.code}",
-                  style: context.textTheme.titleSmall!.copyWith(
-                    color: primary,
-                    fontWeight: FontWeight.w500,
+                SizedBox(height: 5.h),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "User Code: ",
+                        style: context.textTheme.bodySmall,
+                      ),
+                      TextSpan(
+                        text: widget.order.code,
+                        style: context.textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: primary,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Gas Quantity: ",
+                        style: context.textTheme.bodySmall,
+                      ),
+                      TextSpan(
+                        text: "${widget.order.gasQuantity}kg",
+                        style: context.textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Delivery Time: ",
+                        style: context.textTheme.bodySmall,
+                      ),
+                      TextSpan(
+                        text: convertTime(widget.order.deliveryDate),
+                        style: context.textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  "Delivery Time",
-                  style: context.textTheme.bodySmall!.copyWith(
-                    color: monokai,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                Text(
-                  convertTime(widget.order.deliveryDate),
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    color: monokai,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            )
           ],
         ),
       ),

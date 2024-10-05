@@ -20,6 +20,27 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
+  void initState() {
+    super.initState();
+    // Future.delayed(Duration.zero, simulateDecreasingGasLevel);
+  }
+
+
+  Future<void> simulateDecreasingGasLevel() async {
+    await Future.delayed(const Duration(seconds: 4), () => ref.watch(gasLevelProvider.notifier).state = 60);
+    await Future.delayed(const Duration(seconds: 4), () => ref.watch(gasLevelProvider.notifier).state = 55);
+    await Future.delayed(const Duration(seconds: 4), () => ref.watch(gasLevelProvider.notifier).state = 50);
+    await Future.delayed(const Duration(seconds: 4), () => ref.watch(gasLevelProvider.notifier).state = 45);
+    await Future.delayed(const Duration(seconds: 4), () => ref.watch(gasLevelProvider.notifier).state = 40);
+    await Future.delayed(const Duration(seconds: 4), () => ref.watch(gasLevelProvider.notifier).state = 35);
+    await Future.delayed(const Duration(seconds: 4), () => ref.watch(gasLevelProvider.notifier).state = 30);
+    await Future.delayed(const Duration(seconds: 4), () => ref.watch(gasLevelProvider.notifier).state = 25);
+    await Future.delayed(const Duration(seconds: 4), () => ref.watch(gasLevelProvider.notifier).state = 20);
+    await Future.delayed(const Duration(seconds: 4), () => ref.watch(gasLevelProvider.notifier).state = 15);
+    await Future.delayed(const Duration(seconds: 4), () => ref.watch(gasLevelProvider.notifier).state = 10);
+  }
+
+  @override
   Widget build(BuildContext context) {
     int index = ref.watch(pageIndexProvider);
     User user = ref.watch(userProvider) as User;
@@ -41,9 +62,12 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
           ),
         ),
         actions: [
-          CircleAvatar(
-            radius: 20.r,
-            backgroundImage: AssetImage(user.image),
+          GestureDetector(
+            onTap: () => context.router.pushNamed(Pages.individualProfile),
+            child: CircleAvatar(
+              radius: 20.r,
+              backgroundImage: AssetImage(user.image),
+            ),
           ),
           IconButton(
             onPressed: () => context.router.pushNamed(Pages.notification),

@@ -95,6 +95,7 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
   void showSuccessModal() {
     String code = randomGCode;
     String name = (ref.watch(userProvider) as User).fullName;
+    int quantity = int.parse(quantityController.text);
 
     ref.watch(currentUserOrderProvider.notifier).state = UserOrder(
       code: code,
@@ -109,6 +110,8 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
           timestamp: DateUtilities.getMinutesBefore(2),
         ),
       ],
+      price: actualGasAmount,
+      gasAmount: quantity,
     );
 
     showDialog(

@@ -84,16 +84,18 @@ class _RegisterSupportPageState extends State<RegisterSupportPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 40.h),
+                Image.asset(
+                  "assets/images/logo blue.png",
+                  width: 40.w,
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(height: 10.h),
                 Text(
-                  "Eexily",
-                  style: context.textTheme.headlineLarge!.copyWith(
+                  "Customer Support Details",
+                  style: context.textTheme.headlineMedium!.copyWith(
                     fontWeight: FontWeight.w600,
                     color: primary,
                   ),
-                ),
-                Text(
-                  "Create a new account with us",
-                  style: context.textTheme.bodyLarge,
                 ),
                 SizedBox(height: 50.h),
                 Form(

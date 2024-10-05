@@ -20,6 +20,7 @@ import 'package:eexily/pages/home/inbox.dart';
 import 'package:eexily/pages/home/regular/activation/activation.dart';
 import 'package:eexily/pages/home/regular/gas_details.dart';
 import 'package:eexily/pages/home/regular/gas_usage.dart';
+import 'package:eexily/pages/home/regular/profile.dart';
 import 'package:eexily/pages/home/support/order_history.dart';
 import 'package:eexily/pages/home/support/view_order.dart';
 import 'package:eexily/pages/onboard/intro.dart';
@@ -155,6 +156,11 @@ final List<GoRoute> routes = [
     path: Pages.gasDetails.path,
     name: Pages.gasDetails,
     builder: (_, __) => const GasDetailsPage(),
+  ),
+  GoRoute(
+    path: Pages.individualProfile.path,
+    name: Pages.individualProfile,
+    builder: (_, __) => const IndividualProfilePage(),
   ),
   GoRoute(
     path: Pages.individualOrderHistory.path,

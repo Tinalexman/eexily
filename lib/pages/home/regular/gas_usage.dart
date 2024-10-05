@@ -28,33 +28,31 @@ class _GasUsagePageState extends State<GasUsagePage> {
   late List<List<BarChartGroupData>> barData;
   double maxYValue = 12.0;
 
-  final List<UsageData> usages =
-    [
-      UsageData(
-        initialVolume: 12.0,
-        finalVolume: 11.5,
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-      ),
-      UsageData(
-        initialVolume: 11.5,
-        finalVolume: 10.6,
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-      ),
-      UsageData(
-        initialVolume: 10.6,
-        finalVolume: 9.0,
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-      ),
-      UsageData(
-        initialVolume: 9.0,
-        finalVolume: 5.1,
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-      ),
-
+  final List<UsageData> usages = [
+    UsageData(
+      initialVolume: 12.0,
+      finalVolume: 11.5,
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+    ),
+    UsageData(
+      initialVolume: 11.5,
+      finalVolume: 10.6,
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+    ),
+    UsageData(
+      initialVolume: 10.6,
+      finalVolume: 9.0,
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+    ),
+    UsageData(
+      initialVolume: 9.0,
+      finalVolume: 5.1,
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+    ),
   ];
 
   @override
@@ -262,17 +260,93 @@ class _GasUsagePageState extends State<GasUsagePage> {
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               sliver: SliverList.separated(
-                itemBuilder: (_, __) => Card(
-                  elevation: 1.0,
+                itemBuilder: (_, index) => Container(
+                  width: 375.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.r),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 1,
+                      ),
+                    ],
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 10.h,
+                    horizontal: 10.w,
+                  ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        "Amount of Gas Used",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Final Volume of Gas: ",
+                              style: context.textTheme.bodySmall,
+                            ),
+                            TextSpan(
+                              text:
+                                  "${usages[index].finalVolume.toStringAsFixed(1)}kg",
+                              style: context.textTheme.bodySmall!.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Initial Volume of Gas: ",
+                              style: context.textTheme.bodySmall,
+                            ),
+                            TextSpan(
+                              text:
+                                  "${usages[index].initialVolume.toStringAsFixed(1)}kg",
+                              style: context.textTheme.bodySmall!.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
 
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Total Volume Used: ",
+                              style: context.textTheme.bodySmall,
+                            ),
+                            TextSpan(
+                              text:
+                              "${(usages[index].initialVolume - usages[index].finalVolume).toStringAsFixed(1)}kg",
+                              style: context.textTheme.bodySmall!.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 itemCount: usages.length,
                 separatorBuilder: (_, __) => SizedBox(height: 10.h),
               ),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(height: 50.h),
             ),
           ],
         ),

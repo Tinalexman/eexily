@@ -18,9 +18,11 @@ class Order {
   final String riderBike;
 
   final double price;
+  final int gasQuantity;
 
   const Order({
     this.id = "",
+    this.gasQuantity = 0,
     this.code = "",
     this.address = "",
     this.deliveryIssue = "",
@@ -51,10 +53,16 @@ class UserOrder {
   final List<OrderDeliveryData> states;
   final String username;
   final String code;
+  final String id;
+  final int price;
+  final int gasAmount;
 
   const UserOrder({
     this.states = const [],
     this.username = "",
     this.code = "",
+    this.id = "",
+    this.price = 0,
+    this.gasAmount = 0,
   });
 }

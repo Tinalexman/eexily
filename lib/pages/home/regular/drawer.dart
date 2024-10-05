@@ -15,7 +15,6 @@ class EexilyUserDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return Drawer(
       width: 270.w,
       elevation: 1.0,
@@ -26,24 +25,39 @@ class EexilyUserDrawer extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 60.h),
+            SizedBox(height: 80.h),
             Padding(
               padding: EdgeInsets.only(left: 20.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    "Eexily",
-                    style: context.textTheme.displayMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: primary,
-                    ),
+                  Image.asset(
+                    "assets/images/logo blue.png",
+                    width: 50.w,
+                    fit: BoxFit.cover,
                   ),
-
+                  SizedBox(width: 20.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Eexily",
+                        style: context.textTheme.titleLarge!.copyWith(
+                          color: primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "Life made easier",
+                        style: context.textTheme.bodyLarge,
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
-            SizedBox(height: 40.h),
+            SizedBox(height: 80.h),
             ListTile(
               onTap: onCloseDrawer,
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),

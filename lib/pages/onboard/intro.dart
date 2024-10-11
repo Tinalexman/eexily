@@ -28,7 +28,7 @@ class _CarouselPageState extends State<CarouselPage> {
   final List<_Item> items = const [
     _Item(
         image: "assets/images/Rider.png",
-        name: "Welcome to Eexily!",
+        name: "Welcome to GasFeel!",
         description:
             "Hi there! Ready to simplify your gas management? We’re here to save you time,money and effort. Let’s dive in!"),
     _Item(

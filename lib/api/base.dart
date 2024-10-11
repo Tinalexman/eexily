@@ -6,7 +6,7 @@ export 'package:dio/dio.dart';
 
 const String baseURL = "https://eexily-backend.onrender.com";
 
-const String accessToken = "";
+String accessToken = "";
 
 const String imgPrefix = "data:image/jpeg;base64,";
 const String vidPrefix = "data:image/mp4;base64,";

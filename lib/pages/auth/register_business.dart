@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterBusinessPage extends StatefulWidget {
-  final Map<String, dynamic> initialDetails;
 
   const RegisterBusinessPage({
     super.key,
-    required this.initialDetails,
   });
 
   @override

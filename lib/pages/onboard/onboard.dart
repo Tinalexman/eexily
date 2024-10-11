@@ -10,14 +10,16 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-
   late bool animate;
 
   @override
   void initState() {
     super.initState();
     animate = false;
-    Future.delayed(const Duration(milliseconds: 500), () => setState(() => animate = true));
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () => setState(() => animate = true),
+    );
   }
 
   @override
@@ -45,9 +47,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
             top: animate ? 110.h : -50.h,
             left: 132.5.w,
             right: 132.5.w,
-            child: Image.asset(
-              "assets/images/LogoAndText.png",
-              width: 110.w,
+            child: Text(
+              "GasFeel",
+              style: context.textTheme.headlineLarge!.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           AnimatedPositioned(
@@ -56,35 +61,25 @@ class _OnboardingPageState extends State<OnboardingPage> {
             left: 22.5.w,
             right: 22.5.w,
             bottom: animate ? 60.h : -50.h,
-            child: Column(
-              children: [
-                Text(
-                  "Welcome to Eexily",
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    color: Colors.white,
-                  ),
+            child: ElevatedButton(
+              onPressed: () =>
+                  context.router.pushReplacementNamed(Pages.register),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(330.w, 50.h),
+                fixedSize: Size(330.w, 50.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7.5.r),
                 ),
-                SizedBox(height: 8.h),
-                ElevatedButton(
-                  onPressed: () => context.router.pushReplacementNamed(Pages.register),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(330.w, 50.h),
-                    fixedSize: Size(330.w, 50.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(7.5.r),
-                    ),
-                    elevation: 1.0,
-                    backgroundColor: secondary,
-                  ),
-                  child: Text(
-                    "Get Started",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      color: monokai,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                )
-              ],
+                elevation: 1.0,
+                backgroundColor: secondary,
+              ),
+              child: Text(
+                "Get Started",
+                style: context.textTheme.bodyLarge!.copyWith(
+                  color: monokai,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
         ],

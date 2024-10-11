@@ -68,32 +68,27 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.registerUser.path,
     name: Pages.registerUser,
-    builder: (_, state) =>
-        RegisterUserPage(initialDetails: state.extra as Map<String, dynamic>),
+    builder: (_, __) => const RegisterUserPage(),
   ),
   GoRoute(
     path: Pages.registerBusiness.path,
     name: Pages.registerBusiness,
-    builder: (_, state) => RegisterBusinessPage(
-        initialDetails: state.extra as Map<String, dynamic>),
+    builder: (_, __) => const RegisterBusinessPage(),
   ),
   GoRoute(
     path: Pages.registerRider.path,
     name: Pages.registerRider,
-    builder: (_, state) =>
-        RegisterRiderPage(initialDetails: state.extra as Map<String, dynamic>),
+    builder: (_, __) => const RegisterRiderPage(),
   ),
   GoRoute(
     path: Pages.registerSupport.path,
     name: Pages.registerSupport,
-    builder: (_, state) => RegisterSupportPage(
-        initialDetails: state.extra as Map<String, dynamic>),
+    builder: (_, __) => const RegisterSupportPage(),
   ),
   GoRoute(
     path: Pages.registerStation.path,
     name: Pages.registerStation,
-    builder: (_, state) => RegisterGasStationPage(
-        initialDetails: state.extra as Map<String, dynamic>),
+    builder: (_, __) => const RegisterGasStationPage(),
   ),
   GoRoute(
     path: Pages.chooseDriverImage.path,
@@ -115,7 +110,7 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.verification.path,
     name: Pages.verification,
-    builder: (_, state) => VerifyOTPPage(number: state.extra as String),
+    builder: (_, state) => VerifyOTPPage(config: state.extra as Map<String, String>),
   ),
   GoRoute(
     path: Pages.notification.path,
@@ -135,7 +130,8 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.scheduleRefill.path,
     name: Pages.scheduleRefill,
-    builder: (_, state) => ScheduleRefillPage(scheduledTime: state.extra as String),
+    builder: (_, state) =>
+        ScheduleRefillPage(scheduledTime: state.extra as String),
   ),
   GoRoute(
     path: Pages.refill.path,

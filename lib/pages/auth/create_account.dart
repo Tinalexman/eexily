@@ -1,21 +1,24 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:eexily/api/authentication.dart';
+import 'package:eexily/components/user/base.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
+import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
-class CreateAccountPage extends StatefulWidget {
+class CreateAccountPage extends ConsumerStatefulWidget {
   const CreateAccountPage({super.key});
 
   @override
-  State<CreateAccountPage> createState() => _CreateAccountPageState();
+  ConsumerState<CreateAccountPage> createState() => _CreateAccountPageState();
 }
 
-class _CreateAccountPageState extends State<CreateAccountPage> {
+class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final TextEditingController emailController = TextEditingController();
@@ -60,17 +63,19 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   void showMessage(String message) => showToast(message, context);
 
   Future<void> createAccount() async {
-    var response = await authenticate(Pages.register, authDetails);
+    var response = await register(authDetails);
     setState(() => loading = false);
     if (!response.status) {
       showMessage(response.message);
       return;
     }
 
-    navigate({});
+    ref.watch(userProvider.notifier).state = response.payload!;
+    navigate();
   }
 
-  void navigate(Map<String, dynamic> response) {
+  void navigate() {
+    String email = emailController.text.trim();
     String destination = "";
     if (type == optionKeys[0]) {
       destination = Pages.registerBusiness;
@@ -80,12 +85,15 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       destination = Pages.registerRider;
     } else if (type == optionKeys[3]) {
       destination = Pages.registerStation;
-    } else if(type == optionKeys[4]) {
+    } else if (type == optionKeys[4]) {
       destination = Pages.registerSupport;
     }
-    context.router.pushNamed(
-      destination,
-      extra: response,
+    context.router.goNamed(
+      Pages.verification,
+      extra: {
+        "email": email,
+        "destination": destination,
+      },
     );
   }
 
@@ -245,7 +253,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     ),
                   ),
                   onPressed: () {
-                    // if (!validateForm(formKey)) return;
+                    if (!validateForm(formKey)) return;
 
                     if (type == null) {
                       showToast("Please choose a user type", context);
@@ -254,10 +262,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       authDetails["type"] = options[type!]!;
                     }
 
-                    // if(loading) return;
-                    // setState(() => loading = true);
-                    // createAccount();
-                    navigate({});
+                    if (loading) return;
+                    setState(() => loading = true);
+                    createAccount();
                   },
                   child: loading
                       ? whiteLoader

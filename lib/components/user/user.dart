@@ -9,6 +9,7 @@ class User extends UserBase {
   const User({
     super.id,
     super.role,
+    super.email,
     super.firstName,
     super.lastName,
     this.address = "",

@@ -1,13 +1,18 @@
+import 'package:eexily/api/authentication.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
+import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VerifyOTPPage extends StatefulWidget {
-  final String number;
+  final Map<String, String> config;
 
-  const VerifyOTPPage({super.key, required this.number});
+  const VerifyOTPPage({
+    super.key,
+    required this.config,
+  });
 
   @override
   State<VerifyOTPPage> createState() => _VerifyOTPPageState();
@@ -24,6 +29,7 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
   static const Color accentYellowColor = Color(0xFFFFB612);
   static const Color accentOrangeColor = Color(0xFFEA7A3B);
 
+  bool loading = false;
   bool verified = false;
 
   @override
@@ -41,11 +47,23 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
   TextStyle? createStyle(Color color) =>
       context.textTheme.displaySmall?.copyWith(color: color);
 
-  Future<void> verify(String verificationCode) async {}
+  Future<void> verifyAccount() async {
+    var response = await verify({
+      "otp": otp,
+      "email": widget.config["email"]!,
+    });
+
+    setState(() => loading = false);
+    showMessage(response.message);
+    if (!response.status) return;
+
+    setState(() => verified = true);
+  }
+
+  void showMessage(String message) => showToast(message, context);
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -87,7 +105,7 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
                           style: context.textTheme.bodyMedium,
                         ),
                         TextSpan(
-                          text: widget.number,
+                          text: widget.config["email"],
                           style: context.textTheme.bodyMedium!.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -105,8 +123,10 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
                     fieldHeight: 50.h,
                     contentPadding: EdgeInsets.symmetric(horizontal: 5.w),
                     keyboardType: TextInputType.number,
+                    onCodeChanged: (verificationCode) =>
+                        setState(() => otp = verificationCode),
                     onSubmit: (verificationCode) =>
-                        verify(verificationCode), // end onSubmit
+                        setState(() => otp = verificationCode),
                   ),
                 SizedBox(height: 10.h),
                 if (!verified)
@@ -138,20 +158,24 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
                     ),
                   ),
                   onPressed: () {
-                    if (!verified) {
-                      setState(() => verified = true);
-                      showToast("Verification Successful", context);
-                    } else {
-                      context.router.pushReplacementNamed(Pages.login);
+                    if (otp.length == 5) {
+                      setState(() => loading = true);
+                      verifyAccount();
+                      return;
                     }
+
+                    if (!verified) return;
+                    context.router.goNamed(widget.config["destination"]!);
                   },
-                  child: Text(
-                    verified ? "Back to login" : "Verify",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: loading
+                      ? whiteLoader
+                      : Text(
+                          verified ? "Proceed" : "Verify",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ],
             ),

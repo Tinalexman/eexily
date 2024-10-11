@@ -9,8 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RegisterSupportPage extends StatefulWidget {
-  final Map<String, dynamic> initialDetails;
-  const RegisterSupportPage({super.key, required this.initialDetails,});
+  const RegisterSupportPage({super.key});
 
   @override
   State<RegisterSupportPage> createState() => _RegisterSupportPageState();
@@ -61,12 +60,12 @@ class _RegisterSupportPageState extends State<RegisterSupportPage> {
   void showMessage(String message) => showToast(message, context);
 
   Future<void> createAccount() async {
-    var response = await authenticate(Pages.register, authDetails);
-    setState(() => loading = false);
-    if(!response.status) {
-      showMessage(response.message);
-      return;
-    }
+    // var response = await authenticate(Pages.register, authDetails);
+    // setState(() => loading = false);
+    // if(!response.status) {
+    //   showMessage(response.message);
+    //   return;
+    // }
   }
 
   @override

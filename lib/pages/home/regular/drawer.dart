@@ -42,14 +42,14 @@ class EexilyUserDrawer extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Eexily",
+                        "GasFeel",
                         style: context.textTheme.titleLarge!.copyWith(
                           color: primary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       Text(
-                        "Life made easier",
+                        "Feel the difference",
                         style: context.textTheme.bodyLarge,
                       ),
                     ],
@@ -63,7 +63,7 @@ class EexilyUserDrawer extends ConsumerWidget {
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
               leading: Icon(
                 IconsaxPlusBroken.home,
-                size: 26.r,
+                size: 30.r,
               ),
               title: Text(
                 "Home",
@@ -80,7 +80,7 @@ class EexilyUserDrawer extends ConsumerWidget {
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
               leading: Icon(
                 IconsaxPlusBroken.gas_station,
-                size: 26.r,
+                size: 30.r,
               ),
               title: Text(
                 "Refill",
@@ -94,9 +94,10 @@ class EexilyUserDrawer extends ConsumerWidget {
                 onCloseDrawer();
               },
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
-              leading: Icon(
-                IconsaxPlusBroken.cup,
-                size: 26.r,
+              leading: Image.asset(
+                "assets/images/Cheffy.gif",
+                width: 30.r,
+                fit: BoxFit.cover,
               ),
               title: Text(
                 "Ask Cheffy",
@@ -113,7 +114,7 @@ class EexilyUserDrawer extends ConsumerWidget {
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
               leading: Icon(
                 IconsaxPlusBroken.profile,
-                size: 26.r,
+                size: 30.r,
               ),
               title: Text(
                 "Profile",
@@ -132,7 +133,7 @@ class EexilyUserDrawer extends ConsumerWidget {
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
               leading: Icon(
                 IconsaxPlusLinear.logout,
-                size: 26.r,
+                size: 30.r,
               ),
               title: Text(
                 "Logout",

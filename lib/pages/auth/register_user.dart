@@ -1,19 +1,12 @@
-import 'package:animated_switcher_plus/animated_switcher_plus.dart';
-import 'package:eexily/api/authentication.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/widgets.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RegisterUserPage extends StatefulWidget {
-  final Map<String, dynamic> initialDetails;
-
   const RegisterUserPage({
     super.key,
-    required this.initialDetails,
   });
 
   @override
@@ -167,7 +160,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                                   return null;
                                 },
                                 onSave: (value) =>
-                                authDetails["cylinderSize"] = value!.trim(),
+                                    authDetails["cylinderSize"] = value!.trim(),
                               ),
                             ],
                           ),
@@ -192,13 +185,12 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                                   return null;
                                 },
                                 onSave: (value) =>
-                                authDetails["houseSize"] = value!.trim(),
+                                    authDetails["houseSize"] = value!.trim(),
                               ),
                             ],
                           )
                         ],
                       ),
-
                       SizedBox(height: 10.h),
                       Text(
                         "Primary Cooking Appliance",
@@ -239,7 +231,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                           return null;
                         },
                         onSave: (value) =>
-                        authDetails["address"] = value!.trim(),
+                            authDetails["address"] = value!.trim(),
                       ),
                     ],
                   ),
@@ -271,7 +263,6 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                           ),
                         ),
                 ),
-
                 SizedBox(height: 40.h),
               ],
             ),

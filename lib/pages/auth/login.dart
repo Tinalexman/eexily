@@ -49,8 +49,8 @@ class _LoginPageState extends State<LoginPage> {
 
   void showMessage(String message) => showToast(message, context);
 
-  Future<void> login() async {
-    var response = await authenticate(Pages.login, authDetails);
+  Future<void> logIn() async {
+    var response = await login(authDetails);
     setState(() => loading = false);
     if(!response.status) {
       showMessage(response.message);
@@ -60,6 +60,8 @@ class _LoginPageState extends State<LoginPage> {
     if(remember) {
       FileHandler.saveAuthDetails(authDetails);
     }
+
+
   }
 
 
@@ -77,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
     authDetails["email"] = savedEmail;
     authDetails["password"] = savedPassword;
 
-    var response = await authenticate(Pages.login, authDetails);
+    var response = await login(authDetails);
     setState(() => loading = false);
     if(!response.status) {
       showMessage(response.message);
@@ -223,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     if(loading) return;
                     setState(() => loading = true);
-                    login();
+                    logIn();
                   },
                   child: loading ? whiteLoader : Text(
                     "Sign in",
@@ -233,56 +235,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                // SizedBox(height: 15.h),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   children: [
-                //     SizedBox(
-                //       width: 140.w,
-                //       child: Divider(
-                //         color: neutral2,
-                //         thickness: 1.h,
-                //       ),
-                //     ),
-                //     Text(
-                //       "OR",
-                //       style: context.textTheme.bodyLarge,
-                //     ),
-                //     SizedBox(
-                //       width: 140.w,
-                //       child: Divider(
-                //         color: neutral2,
-                //         thickness: 1.h,
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                // SizedBox(height: 15.h),
-                // Container(
-                //   width: 375.w,
-                //   height: 50.h,
-                //   decoration: BoxDecoration(
-                //     color: darkTheme ? neutral : Colors.white,
-                //     border: Border.all(color: primary50),
-                //     borderRadius: BorderRadius.circular(7.5.r),
-                //   ),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     crossAxisAlignment: CrossAxisAlignment.center,
-                //     children: [
-                //       Image.asset(
-                //         "assets/images/Google.png",
-                //         width: 40.w,
-                //       ),
-                //       SizedBox(width: 10.w),
-                //       Text(
-                //         "Continue with Google",
-                //         style: context.textTheme.bodyLarge,
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 SizedBox(height: 30.h),
                 RichText(
                   text: TextSpan(

@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterGasStationPage extends StatefulWidget {
-  final Map<String, dynamic> initialDetails;
+
 
   const RegisterGasStationPage({
     super.key,
-    required this.initialDetails,
   });
 
   @override

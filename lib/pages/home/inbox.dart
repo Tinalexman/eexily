@@ -324,7 +324,7 @@ class _InboxState extends ConsumerState<Inbox>
                               ? 1.20
                               : 1.0),
                     ),
-                    swapCategoryAndBottomBar: false,
+                    // swapCategoryAndBottomBar: false,
                     skinToneConfig: const SkinToneConfig(),
                     categoryViewConfig: const CategoryViewConfig(),
                     bottomActionBarConfig: const BottomActionBarConfig(

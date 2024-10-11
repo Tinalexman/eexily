@@ -6,11 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RegisterRiderPage extends StatefulWidget {
-  final Map<String, dynamic> initialDetails;
 
   const RegisterRiderPage({
     super.key,
-    required this.initialDetails,
   });
 
   @override
@@ -262,7 +260,7 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
 
                     context.router.pushNamed(
                       Pages.chooseDriverImage,
-                      extra: widget.initialDetails,
+                      extra: {},
                     );
                   },
                   child: Text(

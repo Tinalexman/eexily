@@ -34,7 +34,7 @@ class _EexilyState extends State<Eexily> {
     super.initState();
 
     _router = GoRouter(
-      initialLocation: Pages.login.path,
+      initialLocation: Pages.splash.path,
       routes: routes,
     );
     time.setDefaultLocale('en_short');
@@ -46,7 +46,7 @@ class _EexilyState extends State<Eexily> {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       builder: (context, widget) => MaterialApp.router(
-        title: 'Eexily',
+        title: 'Gas Feel',
         themeMode: ThemeMode.light,
         debugShowCheckedModeBanner: false,
         theme: FlexThemeData.light(

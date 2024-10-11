@@ -12,6 +12,11 @@ import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+const UserBase dummyBase = UserBase(
+  email: "test@mail.com",
+  role: UserRole.individual,
+);
+
 const User dummyUser = User(
   firstName: "John",
   lastName: "Doe",
@@ -227,7 +232,7 @@ final StateProvider<int> gasLevelProvider = StateProvider((ref) => 65);
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
 
 final StateProvider<bool> playGasAnimationProvider =
-    StateProvider((ref) => true);
+    StateProvider((ref) => false);
 
 final StateProvider<IndividualGasQuestionsData> individualGasQuestionsProvider =
     StateProvider((ref) => const IndividualGasQuestionsData());

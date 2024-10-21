@@ -1,35 +1,34 @@
+import 'package:eexily/api/individual.dart';
+import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
+import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class RegisterUserPage extends StatefulWidget {
+class RegisterUserPage extends ConsumerStatefulWidget {
   const RegisterUserPage({
     super.key,
   });
 
   @override
-  State<RegisterUserPage> createState() => _RegisterUserPageState();
+  ConsumerState<RegisterUserPage> createState() => _RegisterUserPageState();
 }
 
-class _RegisterUserPageState extends State<RegisterUserPage> {
+class _RegisterUserPageState extends ConsumerState<RegisterUserPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  final TextEditingController fullNameController = TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
-  final TextEditingController cylinderSizeController = TextEditingController();
-  final TextEditingController houseSizeController = TextEditingController();
-  final TextEditingController applianceController = TextEditingController();
 
   final Map<String, dynamic> authDetails = {
     "firstName": "",
     "lastName": "",
     "address": "",
-    "cylinderSize": "",
-    "houseSize": "",
-    "cookingAppliance": "",
+    "user": "",
   };
 
   bool loading = false;
@@ -37,22 +36,31 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
   @override
   void initState() {
     super.initState();
+    authDetails["user"] = ref.read(userProvider).id;
   }
 
   @override
   void dispose() {
-    fullNameController.dispose();
-    phoneNumberController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     addressController.dispose();
-    cylinderSizeController.dispose();
-    houseSizeController.dispose();
-    applianceController.dispose();
     super.dispose();
   }
 
   void showMessage(String message) => showToast(message, context);
 
-  Future<void> createUser() async {}
+  Future<void> createUser() async {
+    var response = await createIndividualUser(authDetails);
+    setState(() => loading = false);
+    if (!response.status) {
+      showMessage(response.message);
+      return;
+    }
+
+    navigate();
+  }
+
+  void navigate() => context.router.goNamed(Pages.login);
 
   @override
   Widget build(BuildContext context) {
@@ -89,128 +97,44 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Full Name",
+                        "First Name",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: fullNameController,
+                        controller: firstNameController,
                         width: 375.w,
-                        hint: "e.g John Doe",
+                        hint: "e.g Doe",
                         onValidate: (value) {
                           value = value.trim();
                           if (value!.isEmpty) {
-                            return 'Invalid Full Name';
-                          } else if (value.split(" ").length < 2) {
-                            return 'Full name must contain both first and last names';
+                            return 'Invalid First Name';
                           }
 
                           return null;
                         },
-                        onSave: (value) {
-                          List<String> names = value!.trim().split(" ");
-                          authDetails["firstName"] = names[0];
-                          authDetails["lastName"] = names[1];
-                        },
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        "Phone Number (Whatsapp)",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      SizedBox(height: 4.h),
-                      SpecialForm(
-                        controller: phoneNumberController,
-                        type: TextInputType.phone,
-                        width: 375.w,
-                        hint: "e.g 080 1234 5678",
-                        onValidate: (value) {
-                          value = value.trim();
-                          if (value!.isEmpty || value.length != 11) {
-                            return 'Invalid Phone Number';
-                          }
-                          return null;
-                        },
                         onSave: (value) =>
-                            authDetails["phoneNumber"] = value!.trim(),
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Cylinder Size",
-                                style: context.textTheme.bodyMedium,
-                              ),
-                              SizedBox(height: 4.h),
-                              SpecialForm(
-                                controller: cylinderSizeController,
-                                type: TextInputType.number,
-                                width: 150.w,
-                                hint: "e.g 5",
-                                onValidate: (value) {
-                                  value = value.trim();
-                                  if (value!.isEmpty) {
-                                    return 'Invalid Cylinder Size';
-                                  }
-                                  return null;
-                                },
-                                onSave: (value) =>
-                                    authDetails["cylinderSize"] = value!.trim(),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "House Size",
-                                style: context.textTheme.bodyMedium,
-                              ),
-                              SizedBox(height: 4.h),
-                              SpecialForm(
-                                controller: houseSizeController,
-                                type: TextInputType.number,
-                                width: 150.w,
-                                hint: "e.g 2",
-                                onValidate: (value) {
-                                  value = value.trim();
-                                  if (value!.isEmpty) {
-                                    return 'Invalid House Size';
-                                  }
-                                  return null;
-                                },
-                                onSave: (value) =>
-                                    authDetails["houseSize"] = value!.trim(),
-                              ),
-                            ],
-                          )
-                        ],
+                            authDetails["firstName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        "Primary Cooking Appliance",
+                        "Last Name",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: applianceController,
-                        type: TextInputType.text,
+                        controller: lastNameController,
                         width: 375.w,
-                        hint: "e.g Double faced gas cooker",
+                        hint: "e.g John",
                         onValidate: (value) {
                           value = value.trim();
                           if (value!.isEmpty) {
-                            return 'Invalid Cooking Applicance';
+                            return 'Invalid Last Name';
                           }
                           return null;
                         },
                         onSave: (value) =>
-                            authDetails["primaryApplicance"] = value!.trim(),
+                            authDetails["lastName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(

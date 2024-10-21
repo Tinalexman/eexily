@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/transaction.dart';
@@ -84,6 +86,43 @@ class DigitGroupFormatter extends TextInputFormatter {
       text: formattedText,
       selection: TextSelection.collapsed(offset: selectionIndex),
     );
+  }
+}
+
+class CustomDigitGroupFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text == '') {
+      return newValue;
+    }
+
+    String newText = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    String formattedText = _groupDigits(newText);
+
+    int selectionIndex =
+        formattedText.length - (newValue.text.length - newValue.selection.end);
+
+    return TextEditingValue(
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: selectionIndex),
+    );
+  }
+
+  String _groupDigits(String text) {
+    if (text.length <= 3) {
+      return text;
+    }
+
+    String firstGroup = text.substring(0, 3);
+
+    List<String> groups = [];
+    for (var i = 3; i < text.length; i += 4) {
+      groups.add(text.substring(i, min(i + 4, text.length)));
+    }
+
+    return '$firstGroup ${groups.join(' ')}';
   }
 }
 
@@ -179,7 +218,7 @@ class SpecialForm extends StatelessWidget {
             color: Colors.red,
             fontWeight: FontWeight.w300,
           ),
-          fillColor: fillColor ?? (darkTheme ? monokai : Colors.white),
+          fillColor: Colors.white,
           filled: true,
           contentPadding: padding ??
               EdgeInsets.symmetric(
@@ -823,8 +862,6 @@ class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
     super.initState();
     likelyRunningOutDate = DateTime(2024, 5, 31);
   }
-
-
 
   @override
   Widget build(BuildContext context) {

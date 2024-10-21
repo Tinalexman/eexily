@@ -17,6 +17,7 @@ final Dio dio = Dio(
     receiveTimeout: const Duration(seconds: 120),
     connectTimeout: const Duration(seconds: 120),
     sendTimeout: const Duration(seconds: 120),
+
   ),
 );
 
@@ -25,18 +26,15 @@ void initializeAPIServices() {
     responseBody: true,
     requestBody: true,
   ));
-  dio.options.headers["Authorization"] = "Bearer $accessToken";
-  dio.options.headers["Content-Type"] = "application/json";
-  dio.options.headers["Accept"] = "application/json";
 }
 
-// Options configuration = Options(
-//   headers: {
-//     "Content-Type": "application/json",
-//     "Accept": "application/json",
-//     "Authorization": "Bearer $accessToken"
-//   },
-// );
+Options get configuration => Options(
+  headers: {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Authorization": "Bearer $accessToken"
+  },
+);
 
 class EexilyResponse<T> {
   final String message;

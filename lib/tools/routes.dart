@@ -105,7 +105,7 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.login.path,
     name: Pages.login,
-    builder: (_, __) => const LoginPage(),
+    builder: (_, state) => LoginPage(savedDetails: state.extra as Map<String, String>?),
   ),
   GoRoute(
     path: Pages.verification.path,

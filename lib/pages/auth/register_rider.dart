@@ -18,8 +18,8 @@ class RegisterRiderPage extends StatefulWidget {
 class _RegisterRiderPageState extends State<RegisterRiderPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  final TextEditingController fullNameController = TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController licenseController = TextEditingController();
   final TextEditingController licenseExpiryController = TextEditingController();
@@ -44,8 +44,8 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
 
   @override
   void dispose() {
-    fullNameController.dispose();
-    phoneNumberController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     addressController.dispose();
     licenseController.dispose();
     licenseExpiryController.dispose();
@@ -92,50 +92,44 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Full name",
+                        "First Name",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: fullNameController,
+                        controller: firstNameController,
                         width: 375.w,
-                        hint: "e.g John Doe",
+                        hint: "e.g Doe",
                         onValidate: (value) {
                           value = value.trim();
                           if (value!.isEmpty) {
-                            return 'Invalid Full Name';
-                          } else if (value.split(" ").length < 2) {
-                            return 'Full name must contain both first and last names';
+                            return 'Invalid First Name';
                           }
 
                           return null;
                         },
-                        onSave: (value) {
-                          List<String> names = value!.trim().split(" ");
-                          authDetails["firstName"] = names[0];
-                          authDetails["lastName"] = names[1];
-                        },
+                        onSave: (value) =>
+                        authDetails["firstName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        "Phone Number (Whatsapp)",
+                        "Last Name",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: phoneNumberController,
-                        type: TextInputType.phone,
+                        controller: lastNameController,
                         width: 375.w,
-                        hint: "e.g 080 1234 5678",
+                        hint: "e.g John",
                         onValidate: (value) {
                           value = value.trim();
-                          if (value!.isEmpty || value.length != 11) {
-                            return 'Invalid Phone Number';
+                          if (value!.isEmpty) {
+                            return 'Invalid Last Name';
                           }
                           return null;
                         },
                         onSave: (value) =>
-                            authDetails["phoneNumber"] = value!.trim(),
+                        authDetails["lastName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
@@ -144,7 +138,7 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: fullNameController,
+                        controller: licenseController,
                         width: 375.w,
                         hint: "e.g A1A1 B2B2 C3C3 D4D4",
                         onValidate: (value) {
@@ -207,7 +201,7 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: fullNameController,
+                        controller: stationCodeController,
                         width: 375.w,
                         hint: "e.g XXXXXX",
                         onValidate: (value) {

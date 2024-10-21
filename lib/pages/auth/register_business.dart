@@ -1,20 +1,24 @@
+import 'package:eexily/api/business.dart';
+import 'package:eexily/components/user/business.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
+import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class RegisterBusinessPage extends StatefulWidget {
+class RegisterBusinessPage extends ConsumerStatefulWidget {
 
   const RegisterBusinessPage({
     super.key,
   });
 
   @override
-  State<RegisterBusinessPage> createState() => _RegisterBusinessPageState();
+  ConsumerState<RegisterBusinessPage> createState() => _RegisterBusinessPageState();
 }
 
-class _RegisterBusinessPageState extends State<RegisterBusinessPage> {
+class _RegisterBusinessPageState extends ConsumerState<RegisterBusinessPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final TextEditingController businessNameController = TextEditingController();
@@ -24,7 +28,6 @@ class _RegisterBusinessPageState extends State<RegisterBusinessPage> {
 
   final Map<String, String> authDetails = {
     "businessName": "",
-    "phoneNumber": "",
     "address": "",
     "category": "",
   };
@@ -40,14 +43,27 @@ class _RegisterBusinessPageState extends State<RegisterBusinessPage> {
   void dispose() {
     categoryController.dispose();
     businessNameController.dispose();
-    phoneNumberController.dispose();
     addressController.dispose();
     super.dispose();
   }
 
   void showMessage(String message) => showToast(message, context);
 
-  Future<void> createBusiness() async {}
+  Future<void> createBusiness() async {
+    var response = await createBusinessUser(authDetails);
+    setState(() => loading = false);
+    if (!response.status) {
+      showMessage(response.message);
+      return;
+    }
+
+    Business business = ref.watch(userProvider) as Business;
+    business.copyWith(response.payload!);
+    ref.watch(userProvider.notifier).state = business;
+    navigate();
+  }
+
+  void navigate() => context.router.goNamed(Pages.home);
 
   @override
   Widget build(BuildContext context) {
@@ -105,27 +121,6 @@ class _RegisterBusinessPageState extends State<RegisterBusinessPage> {
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        "Phone Number (Whatsapp)",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      SizedBox(height: 4.h),
-                      SpecialForm(
-                        controller: phoneNumberController,
-                        type: TextInputType.phone,
-                        width: 375.w,
-                        hint: "e.g 080 1234 5678",
-                        onValidate: (value) {
-                          value = value.trim();
-                          if (value!.isEmpty || value.length != 11) {
-                            return 'Invalid Phone Number';
-                          }
-                          return null;
-                        },
-                        onSave: (value) =>
-                            authDetails["phoneNumber"] = value!.trim(),
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
                         "Category",
                         style: context.textTheme.bodyMedium,
                       ),
@@ -146,6 +141,15 @@ class _RegisterBusinessPageState extends State<RegisterBusinessPage> {
                                   () => categoryController.text = response);
                             }
                           }),
+                        onValidate: (value) {
+                          value = value.trim();
+                          if (value!.isEmpty) {
+                            return 'Invalid Business Category';
+                          }
+                          return null;
+                        },
+                        onSave: (value) =>
+                        authDetails["category"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(

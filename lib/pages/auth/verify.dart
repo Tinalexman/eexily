@@ -2,6 +2,7 @@ import 'package:eexily/api/authentication.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/widgets.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,6 +59,12 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
     if (!response.status) return;
 
     setState(() => verified = true);
+  }
+
+  Future<void> resend() async {
+    var response = await resendToken(widget.config["email"]!);
+    showMessage(response.message);
+    setState(() => loading = false);
   }
 
   void showMessage(String message) => showToast(message, context);
@@ -143,6 +150,11 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
                             color: primary,
                             fontWeight: FontWeight.w500,
                           ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              setState(() => loading = true);
+                              resend();
+                            },
                         )
                       ],
                     ),

@@ -35,10 +35,13 @@ class UserFactory {
           role: UserRole.attendant,
         );
       case "INDIVIDUAL":
-        return Business(
-          email: map["email"],
-          id: map["_id"],
-          dateJoined: map["createdAt"],
+        return User(
+          email: map["email"] ?? "",
+          id: map["_id"] ?? "",
+          firstName: map["firstName"] ?? "",
+          lastName: map["lastName"] ?? "",
+          address: map["address"] ?? "",
+          dateJoined: map["createdAt"] ?? "",
           role: UserRole.individual,
         );
       default:

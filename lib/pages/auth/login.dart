@@ -3,20 +3,22 @@ import 'package:eexily/api/authentication.dart';
 import 'package:eexily/api/file_handler.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
+import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   final Map<String, String>? savedDetails;
   const LoginPage({super.key, this.savedDetails,});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final TextEditingController emailController = TextEditingController();
@@ -61,9 +63,11 @@ class _LoginPageState extends State<LoginPage> {
       FileHandler.saveAuthDetails(authDetails);
     }
 
-
+    ref.watch(userProvider.notifier).state = response.payload!;
+    // navigate();
   }
 
+  void navigate() => context.router.goNamed(Pages.home);
 
   Future<void> autoLogin() async {
     String savedEmail = widget.savedDetails!["email"]!;
@@ -86,7 +90,8 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-
+    ref.watch(userProvider.notifier).state = response.payload!;
+    // navigate();
   }
 
   @override
@@ -221,6 +226,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   onPressed: () {
+                    // context.router.pushNamed(Pages.registerUser);
+
                     if (!validateForm(formKey)) return;
 
                     if(loading) return;

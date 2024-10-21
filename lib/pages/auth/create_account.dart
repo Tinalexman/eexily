@@ -7,6 +7,7 @@ import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
@@ -22,6 +23,7 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
@@ -54,6 +56,7 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
 
   @override
   void dispose() {
+    phoneController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -70,7 +73,6 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
       return;
     }
 
-    ref.watch(userProvider.notifier).state = response.payload!;
     navigate();
   }
 
@@ -89,11 +91,12 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
       destination = Pages.registerSupport;
     }
     context.router.goNamed(
-      Pages.verification,
-      extra: {
-        "email": email,
-        "destination": destination,
-      },
+      // Pages.verification,
+      // extra: {
+      //   "email": email,
+      //   "destination": destination,
+      // },
+      destination
     );
   }
 
@@ -149,6 +152,35 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
                           return null;
                         },
                         onSave: (value) => authDetails["email"] = value!.trim(),
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Phone Number (WhatsApp)",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      SpecialForm(
+                        controller: phoneController,
+                        width: 375.w,
+                        type: TextInputType.phone,
+                        formatters: [
+                          CustomDigitGroupFormatter(),
+                          LengthLimitingTextInputFormatter(13),
+                        ],
+                        hint: "e.g 080 1234 5678",
+                        onValidate: (String value) {
+                          value = value.trim();
+                          value = value.replaceAll(" ", "");
+                          if (value.isEmpty || value.length != 11) {
+                            return 'Invalid Phone Number';
+                          }
+                          return null;
+                        },
+                        onSave: (String value) {
+                          value = value.trim();
+                          value = value.replaceAll(" ", "");
+                          authDetails["phoneNumber"] = value;
+                        },
                       ),
                       SizedBox(height: 10.h),
                       Text(

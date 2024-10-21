@@ -74,6 +74,7 @@ class _ChooseBusinessCategoryPageState
                 return SizedBox(height: 20.h);
               }
               return ListTile(
+                key: ValueKey<int>(index),
                 onTap: () => context.router.pop(categories[index]),
                 tileColor: Colors.white,
                 shape: RoundedRectangleBorder(

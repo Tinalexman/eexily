@@ -1,6 +1,6 @@
+import 'package:eexily/api/file_handler.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -28,16 +28,30 @@ class _SplashPageState extends State<SplashPage>
         reverseCurve: Curves.easeOut,
       ),
     );
-    
+
     runAnimation();
   }
-  
-  void goToOnboard() => context.router.pushReplacementNamed(Pages.onboard);
-  
+
+  void navigate(Map<String, String>? data) {
+    if (data != null) {
+      context.router.pushReplacementNamed(
+        Pages.login,
+        extra: data,
+      );
+    } else {
+      context.router.pushReplacementNamed(Pages.onboard);
+    }
+  }
+
+  Future<void> loadAuthData() async {
+    Map<String, String>? data = await FileHandler.loadAuthDetails();
+    navigate(data);
+  }
+
   Future<void> runAnimation() async {
     await controller.forward();
     await controller.reverse();
-    goToOnboard();
+    loadAuthData();
   }
 
   @override

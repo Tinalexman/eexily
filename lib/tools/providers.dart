@@ -225,9 +225,9 @@ final StateProvider<List<UserOrder>> previousUserOrdersProvider = StateProvider(
   ),
 );
 
-final StateProvider<int> gasCylinderSizeProvider = StateProvider((ref) => 12);
+final StateProvider<int> gasCylinderSizeProvider = StateProvider((ref) => 0);
 
-final StateProvider<int> gasLevelProvider = StateProvider((ref) => 65);
+final StateProvider<int> gasLevelProvider = StateProvider((ref) => 0);
 
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
 

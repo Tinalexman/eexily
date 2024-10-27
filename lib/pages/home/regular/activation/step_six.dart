@@ -39,10 +39,10 @@ class _StepSixState extends ConsumerState<StepSix> {
           children: [
             Radio(
               value: details.gasMonthlyRefill,
-              groupValue: "Once",
+              groupValue: "1",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(gasMonthlyRefill: "Once");
+                    details.copyWith(gasMonthlyRefill: "1");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -57,10 +57,10 @@ class _StepSixState extends ConsumerState<StepSix> {
           children: [
             Radio(
               value: details.gasMonthlyRefill,
-              groupValue: "2-3 times",
+              groupValue: "2-3",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(gasMonthlyRefill: "2-3 times");
+                    details.copyWith(gasMonthlyRefill: "2-3");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),

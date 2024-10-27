@@ -1,4 +1,6 @@
 import 'package:easy_stepper/easy_stepper.dart';
+import 'package:eexily/api/individual.dart';
+import 'package:eexily/components/gas_questions.dart';
 import 'package:eexily/pages/home/regular/activation/step_five.dart';
 import 'package:eexily/pages/home/regular/activation/step_four.dart';
 import 'package:eexily/pages/home/regular/activation/step_one.dart';
@@ -7,19 +9,24 @@ import 'package:eexily/pages/home/regular/activation/step_six.dart';
 import 'package:eexily/pages/home/regular/activation/step_three.dart';
 import 'package:eexily/pages/home/regular/activation/step_two.dart';
 import 'package:eexily/tools/constants.dart';
+import 'package:eexily/tools/functions.dart';
+import 'package:eexily/tools/providers.dart';
+import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ActivationPages extends StatefulWidget {
+class ActivationPages extends ConsumerStatefulWidget {
   const ActivationPages({super.key});
 
   @override
-  State<ActivationPages> createState() => _ActivationPagesState();
+  ConsumerState<ActivationPages> createState() => _ActivationPagesState();
 }
 
-class _ActivationPagesState extends State<ActivationPages> {
+class _ActivationPagesState extends ConsumerState<ActivationPages> {
   int activeStep = 0;
   late List<Widget> children;
+  bool loading = false;
 
   @override
   void initState() {
@@ -36,14 +43,39 @@ class _ActivationPagesState extends State<ActivationPages> {
   }
 
   double get bottomSpace {
-    switch(activeStep) {
-      case 0: return 250.h;
-      case 1: return 290.h;
-      case 4: return 240.h;
-      case 5: return 310.h;
-      case 6: return 60.h;
-      default: return 40.h;
+    switch (activeStep) {
+      case 0:
+        return 250.h;
+      case 1:
+        return 290.h;
+      case 4:
+        return 240.h;
+      case 5:
+        return 310.h;
+      case 6:
+        return 60.h;
+      default:
+        return 40.h;
     }
+  }
+
+  void showMessage(String message) => showToast(message, context);
+
+  void pop() => context.router.pop();
+
+  Future<void> createGasQuestions() async {
+    IndividualGasQuestionsData details =
+        ref.watch(individualGasQuestionsProvider);
+    String id = ref.watch(userProvider).id;
+    var response = await createIndividualGasQuestions(details.toJson(), id);
+    setState(() => loading = false);
+    if (!response.status) {
+      showMessage(response.message);
+      return;
+    }
+
+    // ref.watch(userProvider.notifier).state = response.payload!;
+    // pop();
   }
 
   @override
@@ -105,31 +137,31 @@ class _ActivationPagesState extends State<ActivationPages> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if(activeStep != 0)
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0.0,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.5.r),
+                    if (activeStep != 0)
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0.0,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7.5.r),
+                          ),
+                          side: const BorderSide(color: primary),
+                          minimumSize: Size(150.w, 50.h),
+                          fixedSize: Size(150.w, 50.h),
                         ),
-                        side: const BorderSide(color: primary),
-                        minimumSize: Size(150.w, 50.h),
-                        fixedSize: Size(150.w, 50.h),
-                      ),
-                      onPressed: () {
-                        if (activeStep != 0) {
-                          setState(() => --activeStep);
-                        }
-                      },
-                      child: Text(
-                        "Back",
-                        style: context.textTheme.titleMedium!.copyWith(
-                          color: primary,
-                          fontWeight: FontWeight.w600,
+                        onPressed: () {
+                          if (activeStep != 0) {
+                            setState(() => --activeStep);
+                          }
+                        },
+                        child: Text(
+                          "Back",
+                          style: context.textTheme.titleMedium!.copyWith(
+                            color: primary,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         elevation: 0.0,
@@ -137,21 +169,28 @@ class _ActivationPagesState extends State<ActivationPages> {
                           borderRadius: BorderRadius.circular(7.5.r),
                         ),
                         backgroundColor: primary,
-                        minimumSize: Size((activeStep == 0 ? 335.w : 150.w), 50.h),
-                        fixedSize: Size((activeStep == 0 ? 335.w : 150.w), 50.h),
+                        minimumSize:
+                            Size((activeStep == 0 ? 335.w : 150.w), 50.h),
+                        fixedSize:
+                            Size((activeStep == 0 ? 335.w : 150.w), 50.h),
                       ),
                       onPressed: () {
                         if (activeStep != 6) {
                           setState(() => ++activeStep);
+                        } else {
+                          setState(() => loading = true);
+                          createGasQuestions();
                         }
                       },
-                      child: Text(
-                        activeStep == 6 ? "Complete" : "Next",
-                        style: context.textTheme.titleMedium!.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      child: loading
+                          ? whiteLoader
+                          : Text(
+                              activeStep == 6 ? "Complete" : "Next",
+                              style: context.textTheme.titleMedium!.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                     ),
                   ],
                 ),

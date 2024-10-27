@@ -82,7 +82,7 @@ class _StepSevenState extends ConsumerState<StepSeven> {
             child: Icon(
               IconsaxPlusBroken.calendar,
               size: 18.r,
-              color: darkTheme ? Colors.white70 : Colors.black87,
+              color: Colors.black87,
             ),
           ),
         ),
@@ -97,10 +97,10 @@ class _StepSevenState extends ConsumerState<StepSeven> {
           children: [
             Radio(
               value: details.lastGasFilledQuantity,
-              groupValue: "3kg",
+              groupValue: "3",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledQuantity: "3kg");
+                    details.copyWith(lastGasFilledQuantity: "3");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -115,10 +115,10 @@ class _StepSevenState extends ConsumerState<StepSeven> {
           children: [
             Radio(
               value: details.lastGasFilledQuantity,
-              groupValue: "6kg",
+              groupValue: "6",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledQuantity: "6kg");
+                    details.copyWith(lastGasFilledQuantity: "6");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -133,10 +133,10 @@ class _StepSevenState extends ConsumerState<StepSeven> {
           children: [
             Radio(
               value: details.lastGasFilledQuantity,
-              groupValue: "12kg",
+              groupValue: "12",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledQuantity: "12kg");
+                    details.copyWith(lastGasFilledQuantity: "12");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -151,10 +151,10 @@ class _StepSevenState extends ConsumerState<StepSeven> {
           children: [
             Radio(
               value: details.lastGasFilledQuantity,
-              groupValue: "25kg",
+              groupValue: "25",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledQuantity: "25kg");
+                    details.copyWith(lastGasFilledQuantity: "25");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -169,10 +169,10 @@ class _StepSevenState extends ConsumerState<StepSeven> {
           children: [
             Radio(
               value: details.lastGasFilledQuantity,
-              groupValue: "50kg",
+              groupValue: "50",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledQuantity: "50kg");
+                    details.copyWith(lastGasFilledQuantity: "50");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),

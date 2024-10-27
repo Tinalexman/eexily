@@ -73,10 +73,10 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
       return;
     }
 
-    navigate();
+    navigate(response.payload!);
   }
 
-  void navigate() {
+  void navigate(String userId) {
     String email = emailController.text.trim();
     String destination = "";
     if (type == optionKeys[0]) {
@@ -96,7 +96,8 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
       //   "email": email,
       //   "destination": destination,
       // },
-      destination
+      destination,
+      extra: userId,
     );
   }
 
@@ -126,6 +127,13 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
                   style: context.textTheme.headlineMedium!.copyWith(
                     fontWeight: FontWeight.w600,
                     color: primary,
+                  ),
+                ),
+                Text(
+                  "Welcome to GasFeel!",
+                  style: context.textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: monokai.withOpacity(0.7),
                   ),
                 ),
                 SizedBox(height: 50.h),

@@ -5,6 +5,7 @@ class User extends UserBase {
 
   final String image;
   final String address;
+  final bool hasCompletedGasQuestions;
 
   const User({
     super.id,
@@ -13,8 +14,10 @@ class User extends UserBase {
     super.firstName,
     super.lastName,
     super.dateJoined,
+    super.phoneNumber,
     this.address = "",
     this.image = "",
+    this.hasCompletedGasQuestions = false,
   });
 
 
@@ -31,6 +34,7 @@ class User extends UserBase {
     String dateJoined = otherUser.dateJoined.isEmpty ? this.dateJoined : otherUser.dateJoined;
     String address = otherUser.address.isEmpty ? this.address : otherUser.address;
     String image = otherUser.image.isEmpty ? this.image : otherUser.image;
+    bool completed = otherUser.hasCompletedGasQuestions;
 
     return User(
       role: UserRole.individual,
@@ -41,6 +45,7 @@ class User extends UserBase {
       image: image,
       id: id,
       address: address,
+      hasCompletedGasQuestions: completed,
     );
   }
 }

@@ -40,10 +40,10 @@ class _StepFourState extends ConsumerState<StepFour> {
           children: [
             Radio(
               value: details.householdSize,
-              groupValue: "1 person",
+              groupValue: "1",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdSize: "1 person");
+                    details.copyWith(householdSize: "1");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -58,10 +58,10 @@ class _StepFourState extends ConsumerState<StepFour> {
           children: [
             Radio(
               value: details.householdSize,
-              groupValue: "2-3 persons",
+              groupValue: "2-3",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdSize: "2-3 persons");
+                    details.copyWith(householdSize: "2-3");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -76,10 +76,10 @@ class _StepFourState extends ConsumerState<StepFour> {
           children: [
             Radio(
               value: details.householdSize,
-              groupValue: "4-5 persons",
+              groupValue: "4-5",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdSize: "4-5 persons");
+                    details.copyWith(householdSize: "4-5");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -94,10 +94,10 @@ class _StepFourState extends ConsumerState<StepFour> {
           children: [
             Radio(
               value: details.householdSize,
-              groupValue: "More than 5 persons",
+              groupValue: "more than 5",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdSize: "More than 5 persons");
+                    details.copyWith(householdSize: "more than 5");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -118,10 +118,10 @@ class _StepFourState extends ConsumerState<StepFour> {
           children: [
             Radio(
               value: details.householdType,
-              groupValue: "Family House",
+              groupValue: "Family",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdType: "Family House");
+                    details.copyWith(householdType: "Family");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -136,10 +136,10 @@ class _StepFourState extends ConsumerState<StepFour> {
           children: [
             Radio(
               value: details.householdType,
-              groupValue: "Shared House",
+              groupValue: "Shared",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdType: "Shared House");
+                    details.copyWith(householdType: "Shared");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -154,10 +154,10 @@ class _StepFourState extends ConsumerState<StepFour> {
           children: [
             Radio(
               value: details.householdType,
-              groupValue: "Single Person",
+              groupValue: "Single",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdType: "Single Person");
+                    details.copyWith(householdType: "Single");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -179,10 +179,10 @@ class _StepFourState extends ConsumerState<StepFour> {
           children: [
             Radio(
               value: details.householdGender,
-              groupValue: "Males",
+              groupValue: "All Male",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdGender: "Males");
+                    details.copyWith(householdGender: "All Male");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -197,10 +197,10 @@ class _StepFourState extends ConsumerState<StepFour> {
           children: [
             Radio(
               value: details.householdGender,
-              groupValue: "Females",
+              groupValue: "All Female",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdGender: "Females");
+                    details.copyWith(householdGender: "All Female");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),

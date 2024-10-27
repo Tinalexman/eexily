@@ -3,16 +3,18 @@ import "package:eexily/components/user/user_factory.dart";
 
 import "base.dart";
 
-Future<EexilyResponse> register(Map<String, dynamic> data) async {
+Future<EexilyResponse<String?>> register(Map<String, dynamic> data) async {
   try {
     Response response = await dio.post("/auth/sign-up", data: data);
     if (response.statusCode! == 200) {
       String token = response.data["payload"]["token"];
       accessToken = token;
 
-      return const EexilyResponse(
+      String userId = response.data["payload"]["typeObject"]["payload"]["user"]["_id"];
+
+      return EexilyResponse(
         message: "Account created successfully",
-        payload: null,
+        payload: userId,
         status: true,
       );
     }
@@ -38,10 +40,13 @@ Future<EexilyResponse<UserBase?>> login(Map<String, dynamic> data) async {
     Response response = await dio.post("/auth/sign-in", data: data);
     if (response.statusCode! == 200) {
       Map<String, dynamic> data = response.data["payload"]["user"];
+      Map<String, dynamic>? typeData = response.data["payload"]["typeObject"];
       String token = response.data["payload"]["token"];
       accessToken = token;
+      bool hasCompleted = response.data["payload"]["isGas"];
+      data["isGas"] = hasCompleted;
 
-      UserBase base = UserFactory.createUser(data);
+      UserBase base = UserFactory.createUser(data, typeData: typeData);
 
       return EexilyResponse(
         message: "Welcome back to GasFeel",

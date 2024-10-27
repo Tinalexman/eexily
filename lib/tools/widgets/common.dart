@@ -848,7 +848,12 @@ class RiderOrderDetail extends StatelessWidget {
 }
 
 class UserGasStatistics extends ConsumerStatefulWidget {
-  const UserGasStatistics({super.key});
+  final bool hasCompleted;
+
+  const UserGasStatistics({
+    super.key,
+    required this.hasCompleted,
+  });
 
   @override
   ConsumerState<UserGasStatistics> createState() => _UserGasStatisticsState();
@@ -950,26 +955,28 @@ class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
                 ),
               ),
               SizedBox(height: 10.h),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Likely running out on ",
-                      style: context.textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
+              if (widget.hasCompleted)
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Likely running out on ",
+                        style: context.textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    TextSpan(
-                      text: formatDateRaw(likelyRunningOutDate, shorten: true),
-                      style: context.textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                      TextSpan(
+                        text:
+                            formatDateRaw(likelyRunningOutDate, shorten: true),
+                        style: context.textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
               SizedBox(height: 5.h),
             ],
           ),

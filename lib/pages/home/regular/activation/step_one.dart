@@ -40,10 +40,10 @@ class _StepOneState extends ConsumerState<StepOne> {
           children: [
             Radio(
               value: details.gasFilledPerTime,
-              groupValue: "3kg",
+              groupValue: 3,
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(gasFilledPerTime: "3kg");
+                    details.copyWith(gasFilledPerTime: 3);
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -58,10 +58,10 @@ class _StepOneState extends ConsumerState<StepOne> {
           children: [
             Radio(
               value: details.gasFilledPerTime,
-              groupValue: "6kg",
+              groupValue: 6,
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(gasFilledPerTime: "6kg");
+                    details.copyWith(gasFilledPerTime: 6);
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -76,10 +76,10 @@ class _StepOneState extends ConsumerState<StepOne> {
           children: [
             Radio(
               value: details.gasFilledPerTime,
-              groupValue: "12kg",
+              groupValue: 12,
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(gasFilledPerTime: "12kg");
+                    details.copyWith(gasFilledPerTime: 12);
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -94,10 +94,10 @@ class _StepOneState extends ConsumerState<StepOne> {
           children: [
             Radio(
               value: details.gasFilledPerTime,
-              groupValue: "25kg",
+              groupValue: 25,
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(gasFilledPerTime: "25kg");
+                    details.copyWith(gasFilledPerTime: 25);
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -112,10 +112,10 @@ class _StepOneState extends ConsumerState<StepOne> {
           children: [
             Radio(
               value: details.gasFilledPerTime,
-              groupValue: "50kg",
+              groupValue: 50,
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(gasFilledPerTime: "50kg");
+                    details.copyWith(gasFilledPerTime: 50);
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),

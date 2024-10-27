@@ -38,28 +38,10 @@ class _StepThreeState extends ConsumerState<StepThree> {
           children: [
             Radio(
               value: details.gasUsagePeriod,
-              groupValue: "Everyday",
+              groupValue: "4-6",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(gasUsagePeriod: "Everyday");
-              },
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            Text(
-              "Everyday",
-              style: context.textTheme.bodyMedium,
-            )
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              value: details.gasUsagePeriod,
-              groupValue: "4-6 days per week",
-              onChanged: (val) {
-                ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(gasUsagePeriod: "4-6 days per week");
+                    details.copyWith(gasUsagePeriod: "4-6");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -74,10 +56,10 @@ class _StepThreeState extends ConsumerState<StepThree> {
           children: [
             Radio(
               value: details.gasUsagePeriod,
-              groupValue: "1-3 days per week",
+              groupValue: "1-3",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(gasUsagePeriod: "1-3 days per week");
+                    details.copyWith(gasUsagePeriod: "1-3");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -116,10 +98,10 @@ class _StepThreeState extends ConsumerState<StepThree> {
           children: [
             Radio(
               value: details.householdMeals,
-              groupValue: "1 meal per day",
+              groupValue: "1",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdMeals: "1 meal per day");
+                    details.copyWith(householdMeals: "1");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -134,10 +116,10 @@ class _StepThreeState extends ConsumerState<StepThree> {
           children: [
             Radio(
               value: details.householdMeals,
-              groupValue: "2 meals per day",
+              groupValue: "2",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdMeals: "2 meals per day");
+                    details.copyWith(householdMeals: "2");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -152,10 +134,10 @@ class _StepThreeState extends ConsumerState<StepThree> {
           children: [
             Radio(
               value: details.householdMeals,
-              groupValue: "3 meals per day",
+              groupValue: "3",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdMeals: "3 meals per day");
+                    details.copyWith(householdMeals: "3");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -170,11 +152,10 @@ class _StepThreeState extends ConsumerState<StepThree> {
           children: [
             Radio(
               value: details.householdMeals,
-              groupValue: "More than 3 meals per day",
+              groupValue: "more than 3",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(
-                        householdMeals: "More than 3 meals per day");
+                    details.copyWith(householdMeals: "more than 3");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -213,15 +194,15 @@ class _StepThreeState extends ConsumerState<StepThree> {
           children: [
             Radio(
               value: details.cookingType,
-              groupValue: "Medium",
+              groupValue: "Moderate",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(cookingType: "Medium");
+                    details.copyWith(cookingType: "Moderate");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             Text(
-              "Medium (Rice, soups, stews)",
+              "Moderate (Rice, soups, stews)",
               style: context.textTheme.bodyMedium,
             )
           ],

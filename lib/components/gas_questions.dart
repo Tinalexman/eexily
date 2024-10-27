@@ -1,5 +1,5 @@
 class IndividualGasQuestionsData {
-  final String gasFilledPerTime;
+  final int gasFilledPerTime;
   final String consumptionDuration;
   final String gasUsagePeriod;
   final String householdMeals;
@@ -14,7 +14,7 @@ class IndividualGasQuestionsData {
   final String lastGasFilledQuantity;
 
   const IndividualGasQuestionsData({
-    this.gasFilledPerTime = "",
+    this.gasFilledPerTime = -1,
     this.consumptionDuration = "",
     this.gasUsagePeriod = "",
     this.cookingType = "",
@@ -30,7 +30,7 @@ class IndividualGasQuestionsData {
   });
 
   IndividualGasQuestionsData copyWith({
-    String? gasFilledPerTime,
+    int? gasFilledPerTime,
     String? consumptionDuration,
     String? gasUsagePeriod,
     String? householdMeals,
@@ -44,6 +44,7 @@ class IndividualGasQuestionsData {
     String? lastGasFilledPeriod,
     String? lastGasFilledQuantity,
   }) {
+
     return IndividualGasQuestionsData(
       gasFilledPerTime: gasFilledPerTime ?? this.gasFilledPerTime,
       consumptionDuration: consumptionDuration ?? this.consumptionDuration,
@@ -61,5 +62,24 @@ class IndividualGasQuestionsData {
       lastGasFilledQuantity:
           lastGasFilledQuantity ?? this.lastGasFilledQuantity,
     );
+  }
+
+
+  Map<String, dynamic> toJson() {
+    return {
+      "usualAmountValue": gasFilledPerTime,
+      "daysOfUse": consumptionDuration,
+      "frequentUsage": gasUsagePeriod,
+      "dailyMeals": householdMeals,
+      "typeOfCooking": cookingType,
+      "houseHoldSize": householdSize,
+      "typeOfHouseHold": householdType,
+      "genderComposition": householdGender,
+      "usageAsideCooking": bool.parse(gasUsageAsidesCooking),
+      "isOvenUsage": bool.parse(grillOrOvenGasCooker),
+      "frequentRefillPerMonth": gasMonthlyRefill,
+      "lastRefill": lastGasFilledPeriod,
+      "amountValue": lastGasFilledQuantity,
+    };
   }
 }

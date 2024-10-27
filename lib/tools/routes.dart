@@ -68,7 +68,7 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.registerUser.path,
     name: Pages.registerUser,
-    builder: (_, __) => const RegisterUserPage(),
+    builder: (_, state) => RegisterUserPage(userId: state.extra as String),
   ),
   GoRoute(
     path: Pages.registerBusiness.path,

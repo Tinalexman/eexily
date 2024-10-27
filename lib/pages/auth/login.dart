@@ -64,7 +64,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     }
 
     ref.watch(userProvider.notifier).state = response.payload!;
-    // navigate();
+    navigate();
   }
 
   void navigate() => context.router.goNamed(Pages.home);
@@ -91,7 +91,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     }
 
     ref.watch(userProvider.notifier).state = response.payload!;
-    // navigate();
+    navigate();
   }
 
   @override
@@ -122,6 +122,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   style: context.textTheme.headlineMedium!.copyWith(
                     fontWeight: FontWeight.w600,
                     color: primary,
+                  ),
+                ),
+                Text(
+                  "Welcome back!",
+                  style: context.textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: monokai.withOpacity(0.7),
                   ),
                 ),
                 SizedBox(height: 50.h),
@@ -172,8 +179,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   : Icons.visibility_off,
                               size: 18.r,
                               key: ValueKey<bool>(showPassword),
-                              color:
-                                  darkTheme ? Colors.white70 : Colors.black87,
+                              color: Colors.black87,
                             ),
                           ),
                         ),
@@ -201,9 +207,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               borderRadius: BorderRadius.circular(2.r),
                             ),
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            side: BorderSide(
-                              color: darkTheme ? Colors.white : monokai,
-                              width: 1.0,
+                            side: const BorderSide(
+                              color: monokai,
+                              width: 1.5,
                             ),
                           ),
                           Text(
@@ -226,8 +232,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   ),
                   onPressed: () {
-                    // context.router.pushNamed(Pages.registerUser);
-
                     if (!validateForm(formKey)) return;
 
                     if(loading) return;

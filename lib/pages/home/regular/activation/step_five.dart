@@ -15,17 +15,7 @@ class StepFive extends ConsumerStatefulWidget {
   ConsumerState<StepFive> createState() => _StepFiveState();
 }
 
-class _StepFiveState extends ConsumerState<StepFive> {
-  final TextEditingController controller = TextEditingController();
-  String otherGasUsage = "";
-
-  @override
-  void initState() {
-    super.initState();
-    otherGasUsage =
-        ref.read(individualGasQuestionsProvider).gasUsageAsidesCooking;
-    controller.text = otherGasUsage;
-  }
+class _StepFiveState extends ConsumerState<StepFive> {final TextEditingController controller = TextEditingController();
 
   @override
   void dispose() {
@@ -57,10 +47,10 @@ class _StepFiveState extends ConsumerState<StepFive> {
           children: [
             Radio(
               value: details.gasUsageAsidesCooking,
-              groupValue: otherGasUsage.isEmpty ? "Yes" : otherGasUsage,
+              groupValue: "true",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(gasUsageAsidesCooking: "Yes");
+                    details.copyWith(gasUsageAsidesCooking: "true");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -70,28 +60,15 @@ class _StepFiveState extends ConsumerState<StepFive> {
             )
           ],
         ),
-        if (details.gasUsageAsidesCooking != "" &&
-            details.gasUsageAsidesCooking != "No")
-          SpecialForm(
-            controller: controller,
-            width: 375.w,
-            hint: "Please specify",
-            onChange: (val) {
-              setState(() => otherGasUsage = val);
-              ref.watch(individualGasQuestionsProvider.notifier).state =
-                  details.copyWith(gasUsageAsidesCooking: val);
-            },
-          ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Radio(
               value: details.gasUsageAsidesCooking,
-              groupValue: "No",
+              groupValue: "false",
               onChanged: (val) {
-                setState(() => otherGasUsage = "");
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(gasUsageAsidesCooking: "No");
+                    details.copyWith(gasUsageAsidesCooking: "false");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),

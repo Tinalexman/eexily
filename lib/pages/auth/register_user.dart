@@ -9,8 +9,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterUserPage extends ConsumerStatefulWidget {
+  final String userId;
   const RegisterUserPage({
     super.key,
+    required this.userId,
   });
 
   @override
@@ -50,7 +52,7 @@ class _RegisterUserPageState extends ConsumerState<RegisterUserPage> {
   void showMessage(String message) => showToast(message, context);
 
   Future<void> createUser() async {
-    var response = await createIndividualUser(authDetails);
+    var response = await createIndividualUser(authDetails, widget.userId);
     setState(() => loading = false);
     if (!response.status) {
       showMessage(response.message);

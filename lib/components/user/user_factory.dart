@@ -2,7 +2,10 @@ import 'package:eexily/components/user/business.dart';
 import 'package:eexily/components/user/user.dart';
 
 class UserFactory {
-  static UserBase createUser(Map<String, dynamic> map) {
+  static UserBase createUser(
+    Map<String, dynamic> map, {
+    Map<String, dynamic>? typeData,
+  }) {
     String role = map["type"]!;
 
     switch (role) {
@@ -38,11 +41,14 @@ class UserFactory {
         return User(
           email: map["email"] ?? "",
           id: map["_id"] ?? "",
-          firstName: map["firstName"] ?? "",
-          lastName: map["lastName"] ?? "",
-          address: map["address"] ?? "",
+          firstName: typeData?["firstName"] ?? "",
+          lastName: typeData?["lastName"] ?? "",
+          address: typeData?["address"] ?? "",
+          phoneNumber: map["phoneNumber"] ??"",
           dateJoined: map["createdAt"] ?? "",
+          image: map["image"] ?? "https://gravatar.com/avatar/${map["_id"].hashCode.toString()}?s=400&d=robohash&r=x",
           role: UserRole.individual,
+          hasCompletedGasQuestions: map["isGas"],
         );
       default:
         return const UserBase(

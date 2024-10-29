@@ -25,11 +25,13 @@ class _RegisterUserPageState extends ConsumerState<RegisterUserPage> {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
+  final TextEditingController gasSizeController = TextEditingController();
 
   final Map<String, dynamic> authDetails = {
     "firstName": "",
     "lastName": "",
     "address": "",
+    "gasSize": "",
     "user": "",
   };
 
@@ -46,16 +48,18 @@ class _RegisterUserPageState extends ConsumerState<RegisterUserPage> {
     firstNameController.dispose();
     lastNameController.dispose();
     addressController.dispose();
+    gasSizeController.dispose();
     super.dispose();
   }
 
   void showMessage(String message) => showToast(message, context);
 
   Future<void> createUser() async {
-    var response = await createIndividualUser(authDetails, widget.userId);
+    var response = await updateIndividualUser(authDetails, widget.userId);
     setState(() => loading = false);
+    showMessage(response.message);
+
     if (!response.status) {
-      showMessage(response.message);
       return;
     }
 
@@ -137,6 +141,27 @@ class _RegisterUserPageState extends ConsumerState<RegisterUserPage> {
                         },
                         onSave: (value) =>
                             authDetails["lastName"] = value!.trim(),
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Cylinder Size",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      SpecialForm(
+                        controller: gasSizeController,
+                        width: 375.w,
+                        hint: "e.g 5kg",
+                        type: TextInputType.number,
+                        onValidate: (value) {
+                          value = value.trim();
+                          if (value!.isEmpty) {
+                            return 'Invalid Cylinder Size';
+                          }
+                          return null;
+                        },
+                        onSave: (value) =>
+                        authDetails["gasSize"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(

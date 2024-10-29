@@ -1,5 +1,8 @@
 import 'package:eexily/components/user/business.dart';
+import 'package:eexily/components/user/driver.dart';
+import 'package:eexily/components/user/support.dart';
 import 'package:eexily/components/user/user.dart';
+import 'package:eexily/tools/providers.dart';
 
 class UserFactory {
   static UserBase createUser(
@@ -17,25 +20,25 @@ class UserFactory {
           role: UserRole.business,
         );
       case "RIDER":
-        return Business(
+        return Driver(
           email: map["email"],
           id: map["_id"],
           dateJoined: map["createdAt"],
-          role: UserRole.driver,
+          firstName: typeData?["firstName"] ?? "",
+          lastName: typeData?["lastName"] ?? "",
+          address: typeData?["address"] ?? "",
+          image: map["image"] ?? "https://gravatar.com/avatar/${map["_id"].hashCode.toString()}?s=400&d=robohash&r=x",
         );
       case "CUSTOMER_SERVICE":
-        return Business(
+        return Support(
           email: map["email"],
           id: map["_id"],
-          dateJoined: map["createdAt"],
-          role: UserRole.support,
         );
       case "GAS_STATION":
         return Business(
           email: map["email"],
           id: map["_id"],
           dateJoined: map["createdAt"],
-          role: UserRole.attendant,
         );
       case "INDIVIDUAL":
         return User(
@@ -44,16 +47,13 @@ class UserFactory {
           firstName: typeData?["firstName"] ?? "",
           lastName: typeData?["lastName"] ?? "",
           address: typeData?["address"] ?? "",
-          phoneNumber: map["phoneNumber"] ??"",
+          phoneNumber: map["phoneNumber"] ?? "",
           dateJoined: map["createdAt"] ?? "",
           image: map["image"] ?? "https://gravatar.com/avatar/${map["_id"].hashCode.toString()}?s=400&d=robohash&r=x",
-          role: UserRole.individual,
           hasCompletedGasQuestions: map["isGas"],
         );
       default:
-        return const UserBase(
-          role: UserRole.nil,
-        );
+        return dummyBase;
     }
   }
 }

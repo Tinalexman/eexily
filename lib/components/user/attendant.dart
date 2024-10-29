@@ -1,7 +1,7 @@
 import 'base.dart';
 
 class Attendant extends UserBase {
-  final String gasStation;
+  final String gasStationName;
   final double balance;
   final double retailGasPrice;
   final double regularGasPrice;
@@ -10,9 +10,9 @@ class Attendant extends UserBase {
     super.firstName,
     super.lastName,
     super.id,
-    required this.balance,
-    required this.retailGasPrice,
-    required this.regularGasPrice,
-    required this.gasStation,
+    this.balance = 0,
+    this.retailGasPrice = 0,
+    this.regularGasPrice = 0,
+    this.gasStationName = '',
   }) : super(role: UserRole.attendant);
 }

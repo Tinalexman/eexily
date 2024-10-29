@@ -39,7 +39,7 @@ void showToast(String message, BuildContext context, {Color? backgroundColor}) {
     mobileSnackBarPosition: MobileSnackBarPosition.top,
     animationCurve: Curves.ease,
     snackBarStrategy: RemoveSnackBarStrategy(),
-    duration: const Duration(seconds: 4),
+    duration: const Duration(seconds: 1),
     animationDuration: const Duration(milliseconds: 350),
   );
   snackBar.show(context);

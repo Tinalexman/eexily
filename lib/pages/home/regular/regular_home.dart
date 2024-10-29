@@ -93,30 +93,6 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
                 ),
                 SizedBox(height: 20.h),
                 UserGasStatistics(hasCompleted: hasCompletedGasQuestions),
-                SizedBox(height: 5.h),
-                if (hasCompletedGasQuestions)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        IconsaxPlusBroken.chart_1,
-                        size: 16.r,
-                        color: primary,
-                      ),
-                      SizedBox(width: 5.w),
-                      GestureDetector(
-                        onTap: () => context.router.pushNamed(Pages.gasUsage),
-                        child: Text(
-                          "View Gas Usage",
-                          style: context.textTheme.titleMedium!.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: primary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 SizedBox(height: 20.h),
                 if (!hasCompletedGasQuestions)
                   Center(

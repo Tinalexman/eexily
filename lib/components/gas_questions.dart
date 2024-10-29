@@ -64,19 +64,18 @@ class IndividualGasQuestionsData {
     );
   }
 
-
   Map<String, dynamic> toJson() {
     return {
       "usualAmountValue": gasFilledPerTime,
-      "daysOfUse": consumptionDuration,
+      "daysofUse": consumptionDuration,
       "frequentUsage": gasUsagePeriod,
       "dailyMeals": householdMeals,
       "typeOfCooking": cookingType,
       "houseHoldSize": householdSize,
       "typeOfHouseHold": householdType,
       "genderComposition": householdGender,
-      "usageAsideCooking": bool.parse(gasUsageAsidesCooking),
-      "isOvenUsage": bool.parse(grillOrOvenGasCooker),
+      "usageAsideCooking": gasUsageAsidesCooking == "true",
+      "isOvenUsage": grillOrOvenGasCooker == "true",
       "frequentRefillPerMonth": gasMonthlyRefill,
       "lastRefill": lastGasFilledPeriod,
       "amountValue": lastGasFilledQuantity,

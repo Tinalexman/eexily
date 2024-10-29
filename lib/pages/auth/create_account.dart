@@ -143,7 +143,7 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "E-mail address",
+                        "Email address",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),

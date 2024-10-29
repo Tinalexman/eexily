@@ -3,7 +3,7 @@ import "package:eexily/components/user/user_factory.dart";
 
 import "base.dart";
 
-Future<EexilyResponse> createIndividualUser(Map<String, dynamic> data, String userId) async {
+Future<EexilyResponse> updateIndividualUser(Map<String, dynamic> data, String userId) async {
   try {
     Response response = await dio.patch(
       "/individual/$userId",
@@ -13,7 +13,7 @@ Future<EexilyResponse> createIndividualUser(Map<String, dynamic> data, String us
 
     if (response.statusCode! == 200) {
       return const EexilyResponse(
-        message: "Account Created",
+        message: "Account Updated",
         payload: null,
         status: true,
       );
@@ -35,16 +35,15 @@ Future<EexilyResponse> createIndividualUser(Map<String, dynamic> data, String us
   );
 }
 
-
 Future<EexilyResponse> createIndividualGasQuestions(Map<String, dynamic> data, String userId) async {
   try {
     Response response = await dio.post(
-      "/prediction/user/$userId/refill",
+      "/prediction",
       data: data,
       options: configuration,
     );
 
-    if (response.statusCode! == 200) {
+    if (response.statusCode! == 201) {
       return const EexilyResponse(
         message: "Gas Details Completed",
         payload: null,

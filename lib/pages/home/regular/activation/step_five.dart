@@ -89,10 +89,10 @@ class _StepFiveState extends ConsumerState<StepFive> {final TextEditingControlle
           children: [
             Radio(
               value: details.grillOrOvenGasCooker,
-              groupValue: "Yes",
+              groupValue: "true",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(grillOrOvenGasCooker: "Yes");
+                    details.copyWith(grillOrOvenGasCooker: "true");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -107,10 +107,10 @@ class _StepFiveState extends ConsumerState<StepFive> {final TextEditingControlle
           children: [
             Radio(
               value: details.grillOrOvenGasCooker,
-              groupValue: "No",
+              groupValue: "false",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(grillOrOvenGasCooker: "No");
+                    details.copyWith(grillOrOvenGasCooker: "false");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),

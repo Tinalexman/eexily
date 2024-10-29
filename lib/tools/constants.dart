@@ -23,7 +23,7 @@ extension StringPath on String {
   String get capitalize => "${substring(0, 1).toUpperCase()}${substring(1)}";
 }
 
-extension RedionesContext on BuildContext {
+extension EexilyContext on BuildContext {
   ThemeData get theme => Theme.of(this);
   TextTheme get textTheme => theme.textTheme;
   GoRouter get router => GoRouter.of(this);
@@ -51,6 +51,7 @@ class Pages
   static String get refillNow => "refill-now";
   static String get refill => "refill";
   static String get individualProfile => "individual-profile";
+  static String get driverProfile => "driver-profile";
   static String get gasUsage => 'gas-usage';
   static String get gasDetails => 'gas-details';
   static String get notification => "notification";

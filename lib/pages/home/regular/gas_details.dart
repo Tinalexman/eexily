@@ -17,17 +17,12 @@ class GasDetailsPage extends ConsumerStatefulWidget {
 }
 
 class _GasDetailsPageState extends ConsumerState<GasDetailsPage> {
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration(seconds: 5),
-        () => ref.watch(gasLevelProvider.notifier).state = 10);
-  }
+
 
   @override
   Widget build(BuildContext context) {
     bool isGasActive = ref.watch(playGasAnimationProvider);
-    int cylinderSize = ref.watch(gasCylinderSizeProvider);
+    int cylinderSize = 0;// ref.watch(gasCylinderSizeProvider);
     int level = ref.watch(gasLevelProvider);
 
     return Scaffold(

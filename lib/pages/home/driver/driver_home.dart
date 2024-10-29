@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/driver.dart';
 import 'package:eexily/tools/constants.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
+import 'drawer.dart';
+
 class DriverHome extends ConsumerStatefulWidget {
   const DriverHome({super.key});
 
@@ -18,6 +21,7 @@ class DriverHome extends ConsumerStatefulWidget {
 
 class _DriverHomeState extends ConsumerState<DriverHome> {
   final TextEditingController controller = TextEditingController();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
   void dispose() {
@@ -31,34 +35,48 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
     List<Order> driverOrders = ref.watch(driverOrdersProvider);
 
     return Scaffold(
+      key: scaffoldKey,
+      drawer: EexilyUserDrawer(
+        onCloseDrawer: () => scaffoldKey.currentState?.closeDrawer(),
+      ),
       appBar: AppBar(
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: [
-          CircleAvatar(
-            radius: 20.r,
-            backgroundImage: AssetImage(driver.image),
+        automaticallyImplyLeading: false,
+        leading: GestureDetector(
+          onTap: () => scaffoldKey.currentState?.openDrawer(),
+          child: Icon(
+            IconsaxPlusBroken.menu_1,
+            size: 26.r,
           ),
-          SizedBox(width: 10.w),
-          Text(
-            "Hello, ${driver.firstName}",
-            style: context.textTheme.titleMedium!.copyWith(
-              fontWeight: FontWeight.w600,
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () => context.router.pushNamed(Pages.driverProfile),
+            child: CachedNetworkImage(
+              imageUrl: driver.image,
+              errorWidget: (_, __, ___) => CircleAvatar(
+                radius: 20.r,
+                backgroundColor: Colors.redAccent,
+              ),
+              progressIndicatorBuilder: (_, __, ___) => CircleAvatar(
+                radius: 20.r,
+                backgroundColor: primary50,
+              ),
+              imageBuilder: (_, provider) => CircleAvatar(
+                radius: 20.r,
+                backgroundImage: provider,
+              ),
             ),
+          ),
+          IconButton(
+            onPressed: () => context.router.pushNamed(Pages.notification),
+            icon: const Icon(
+              IconsaxPlusBroken.notification_1,
+              color: monokai,
+            ),
+            iconSize: 26.r,
           )
         ],
       ),
-      actions: [
-        IconButton(
-          onPressed: () => context.router.pushNamed(Pages.notification),
-          icon: const Icon(
-            IconsaxPlusBroken.notification_1,
-            color: monokai,
-          ),
-          iconSize: 26.r,
-        )
-      ],
-    ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),

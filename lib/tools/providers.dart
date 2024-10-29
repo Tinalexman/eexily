@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:eexily/api/file_handler.dart';
 import 'package:eexily/components/gas_questions.dart';
 import 'package:eexily/components/notification.dart';
 import 'package:eexily/components/order.dart';
@@ -12,38 +13,15 @@ import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-const UserBase dummyBase = UserBase(
-  email: "test@mail.com",
-  role: UserRole.individual,
-);
+const UserBase dummyBase = UserBase();
 
-const User dummyUser = User(
-  firstName: "John",
-  lastName: "Doe",
-  image: "assets/images/man.png",
-  role: UserRole.individual,
-  address: "House 12, Camp Junction, Abeokuta",
-);
+const User dummyUser = User();
 
-const Attendant dummyAttendant = Attendant(
-  gasStation: "Texxon Gas",
-  balance: 250450,
-  retailGasPrice: 800,
-  regularGasPrice: 900,
-);
+const Attendant dummyAttendant = Attendant();
 
-const Support dummySupport = Support(
-  firstName: "Abigeal",
-  lastName: "Mabinuori",
-  email: "abigail0908@mail.com",
-  supportRole: "Customer Service Rep 1",
-);
+const Support dummySupport = Support();
 
-const Driver dummyDriver = Driver(
-  firstName: "Mide",
-  lastName: "Martins",
-  image: "assets/images/man.png",
-);
+const Driver dummyDriver = Driver();
 
 final StateProvider<UserBase> userProvider = StateProvider((ref) => dummyUser);
 
@@ -227,6 +205,8 @@ final StateProvider<List<UserOrder>> previousUserOrdersProvider = StateProvider(
 
 final StateProvider<int> gasCylinderSizeProvider = StateProvider((ref) => 0);
 
+final StateProvider<String?> gasEndingDateProvider = StateProvider((ref) => null);
+
 final StateProvider<int> gasLevelProvider = StateProvider((ref) => 0);
 
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
@@ -253,4 +233,5 @@ void logout(WidgetRef ref) {
   ref.invalidate(shownGasToast);
   ref.invalidate(userProvider);
   ref.invalidate(notificationsProvider);
+  FileHandler.saveAuthDetails(null);
 }

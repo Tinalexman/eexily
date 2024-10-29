@@ -331,8 +331,8 @@ class _NoOrder extends StatelessWidget {
             dividerColor: Colors.transparent,
             labelStyle: context.textTheme.titleMedium,
             tabs: const [
-              Tab(text: "Schedule a refill"),
-              Tab(text: "Refill now"),
+              Tab(text: "Standard Delivery"),
+              Tab(text: "Express Delivery"),
             ],
           ),
           SizedBox(height: 10.h),
@@ -374,8 +374,8 @@ class _ScheduleRefillState extends State<_ScheduleRefill> {
           ),
           SizedBox(height: 50.h),
           Text(
-            "Plan ahead and save cash with our batch delivery! Choose a convenient "
-            "time slot for your gas refill. We do deliveries every day at 12noon and 5pm.",
+            "Plan ahead and save cash with our standard delivery! Choose a convenient "
+            "time slot for your gas refill. We do deliveries every day at 12pm and 5pm.",
             style: context.textTheme.bodyMedium,
           ),
           SizedBox(height: 10.h),
@@ -478,7 +478,7 @@ class _RefillNow extends StatelessWidget {
           ),
           SizedBox(height: 50.h),
           Text(
-            "Need gas urgently? No problem! With ‘Refill Now,’ get your gas delivered as "
+            "Need gas urgently? No problem! With ‘Express Delivery’, get your gas delivered as "
             "soon as possible. Just let us know where you are, and we’ll take care of the rest. "
             "It’s quick and hassle-free!",
             style: context.textTheme.bodyMedium,

@@ -81,7 +81,7 @@ class _HistoryState extends ConsumerState<History> {
                           balance: attendant.balance,
                           retailGasPrice: retail,
                           regularGasPrice: regular,
-                          gasStation: attendant.gasStation,
+                          gasStationName: attendant.gasStationName,
                         );
                         ref.watch(userProvider.notifier).state = newAttendant;
                       }

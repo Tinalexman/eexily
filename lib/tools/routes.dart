@@ -78,7 +78,7 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.registerRider.path,
     name: Pages.registerRider,
-    builder: (_, __) => const RegisterRiderPage(),
+    builder: (_, state) => RegisterRiderPage(userId: state.extra as String),
   ),
   GoRoute(
     path: Pages.registerSupport.path,

@@ -1,3 +1,4 @@
+import "package:eexily/components/gas_data.dart";
 import "package:eexily/components/user/user.dart";
 import "package:eexily/components/user/user_factory.dart";
 
@@ -10,7 +11,7 @@ Future<EexilyResponse<String?>> register(Map<String, dynamic> data) async {
       String token = response.data["payload"]["token"];
       accessToken = token;
 
-      String userId = response.data["payload"]["typeObject"]["payload"]["user"]["_id"];
+      String userId = response.data["payload"]["user"]["_id"];
 
       return EexilyResponse(
         message: "Account created successfully",
@@ -35,7 +36,7 @@ Future<EexilyResponse<String?>> register(Map<String, dynamic> data) async {
   );
 }
 
-Future<EexilyResponse<UserBase?>> login(Map<String, dynamic> data) async {
+Future<EexilyResponse<List<dynamic>?>> login(Map<String, dynamic> data) async {
   try {
     Response response = await dio.post("/auth/sign-in", data: data);
     if (response.statusCode! == 200) {
@@ -47,10 +48,21 @@ Future<EexilyResponse<UserBase?>> login(Map<String, dynamic> data) async {
       data["isGas"] = hasCompleted;
 
       UserBase base = UserFactory.createUser(data, typeData: typeData);
+      Map<String, dynamic>? gasData = response
+          .data["payload"]["gasPredictionData"];
+
+      GasData gd = GasData(
+          gasSize: typeData != null ? typeData["gasSize"] ?? 0 : 0,
+      );
+
+      if (gasData != null) {
+        gd.completionDate = gasData["completionDate"];
+        gd.gasAmountLeft = gasData["estimatedGasRemaining"] ?? 0.0;
+      }
 
       return EexilyResponse(
         message: "Welcome back to GasFeel",
-        payload: base,
+        payload: [base, gd],
         status: true,
       );
     }
@@ -105,9 +117,9 @@ Future<EexilyResponse<UserBase?>> verify(Map<String, dynamic> data) async {
 
 Future<EexilyResponse> resendToken(String email) async {
   try {
-    Response response = await dio.post("/auth/verify-user", data: {"email": email});
+    Response response = await dio.post(
+        "/auth/verify-user", data: {"email": email});
     if (response.statusCode! == 200) {
-
       return const EexilyResponse(
         message: "Verification Code Sent",
         payload: null,

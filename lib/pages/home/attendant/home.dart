@@ -44,7 +44,7 @@ class _HomeState extends ConsumerState<Home> {
                   SizedBox(
                     width: 220.w,
                     child: Text(
-                      attendant.gasStation,
+                      attendant.gasStationName,
                       style: context.textTheme.titleLarge!.copyWith(
                         color: primary,
                         fontWeight: FontWeight.w600,

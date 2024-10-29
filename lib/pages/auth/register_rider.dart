@@ -1,21 +1,25 @@
+import 'package:eexily/api/rider.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
+import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
-class RegisterRiderPage extends StatefulWidget {
-
+class RegisterRiderPage extends ConsumerStatefulWidget {
+  final String userId;
   const RegisterRiderPage({
     super.key,
+    required this.userId,
   });
 
   @override
-  State<RegisterRiderPage> createState() => _RegisterRiderPageState();
+  ConsumerState<RegisterRiderPage> createState() => _RegisterRiderPageState();
 }
 
-class _RegisterRiderPageState extends State<RegisterRiderPage> {
+class _RegisterRiderPageState extends ConsumerState<RegisterRiderPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final TextEditingController firstNameController = TextEditingController();
@@ -29,17 +33,23 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
     "firstName": "",
     "lastName": "",
     "address": "",
-    "phoneNumber": "",
     "driverLicense": "",
     "expiryDate": "",
-    "gasStation": "",
+    "riderType": "",
   };
 
+  final Map<String, String> options = {"Driver": "DRIVER", "Rider": "RIDER"};
+
+  String? type;
   DateTime? licenseExpiry;
+  late List<String> optionKeys;
+
+  bool loading = false;
 
   @override
   void initState() {
     super.initState();
+    optionKeys = options.keys.toList();
   }
 
   @override
@@ -55,7 +65,21 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
 
   void showMessage(String message) => showToast(message, context);
 
-  Future<void> createRider() async {}
+  Future<void> createRider() async {
+    var response = await updateRiderUser(authDetails, widget.userId);
+    setState(() => loading = false);
+    showMessage(response.message);
+
+    if (!response.status) {
+      return;
+    }
+
+    navigate();
+  }
+
+  void navigate() {
+    context.router.goNamed(Pages.login);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +133,7 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
                           return null;
                         },
                         onSave: (value) =>
-                        authDetails["firstName"] = value!.trim(),
+                            authDetails["firstName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
@@ -129,7 +153,7 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
                           return null;
                         },
                         onSave: (value) =>
-                        authDetails["lastName"] = value!.trim(),
+                            authDetails["lastName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
@@ -140,6 +164,9 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
                       SpecialForm(
                         controller: licenseController,
                         width: 375.w,
+                        formatters: [
+                          // FourDigitGroupFormatter()
+                        ],
                         hint: "e.g A1A1 B2B2 C3C3 D4D4",
                         onValidate: (value) {
                           value = value.trim();
@@ -195,25 +222,42 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
                             licenseExpiry!.toIso8601String(),
                       ),
                       SizedBox(height: 10.h),
+                      // Text(
+                      //   "Gas Station Code (Optional)",
+                      //   style: context.textTheme.bodyMedium,
+                      // ),
+                      // SizedBox(height: 4.h),
+                      // SpecialForm(
+                      //   controller: stationCodeController,
+                      //   width: 375.w,
+                      //   hint: "e.g XXXXXX",
+                      //   onValidate: (value) {
+                      //     value = value.trim();
+                      //     if (value!.isNotEmpty && value!.length != 6) {
+                      //       return 'Invalid Gas Station Code';
+                      //     }
+                      //
+                      //     return null;
+                      //   },
+                      //   onSave: (value) =>
+                      //       authDetails["gasStation"] = value!.trim(),
+                      // ),
+                      // SizedBox(height: 10.h),
                       Text(
-                        "Gas Station Code",
+                        "Type",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),
-                      SpecialForm(
-                        controller: stationCodeController,
-                        width: 375.w,
-                        hint: "e.g XXXXXX",
-                        onValidate: (value) {
-                          value = value.trim();
-                          if (value!.isEmpty || value!.length != 6) {
-                            return 'Invalid Gas Station Code';
-                          }
-
-                          return null;
-                        },
-                        onSave: (value) =>
-                            authDetails["gasStation"] = value!.trim(),
+                      ComboBox(
+                        onChanged: (val) => setState(() => type = val),
+                        value: type,
+                        dropdownItems: optionKeys,
+                        hint: "Select Type",
+                        dropdownWidth: 330.w,
+                        icon: const Icon(
+                          IconsaxPlusLinear.arrow_down,
+                          color: monokai,
+                        ),
                       ),
                       SizedBox(height: 10.h),
                       Text(
@@ -250,20 +294,28 @@ class _RegisterRiderPageState extends State<RegisterRiderPage> {
                     ),
                   ),
                   onPressed: () {
-                    // if (!validateForm(formKey)) return;
+                    if (!validateForm(formKey)) return;
 
-                    context.router.pushNamed(
-                      Pages.chooseDriverImage,
-                      extra: {},
-                    );
+                    if (type == null) {
+                      showToast("Please choose a user type", context);
+                      return;
+                    } else {
+                      authDetails["riderType"] = options[type!]!;
+                    }
+
+                    if (loading) return;
+                    setState(() => loading = true);
+                    createRider();
                   },
-                  child: Text(
-                    "Continue",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: loading
+                      ? whiteLoader
+                      : Text(
+                          "Continue",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
                 SizedBox(height: 30.h),
               ],

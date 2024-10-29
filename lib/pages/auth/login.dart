@@ -1,6 +1,7 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:eexily/api/authentication.dart';
 import 'package:eexily/api/file_handler.dart';
+import 'package:eexily/components/gas_data.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -63,11 +64,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       FileHandler.saveAuthDetails(authDetails);
     }
 
-    ref.watch(userProvider.notifier).state = response.payload!;
-    navigate();
+    _processResponse(response);
   }
 
   void navigate() => context.router.goNamed(Pages.home);
+
+  void _processResponse(response) {
+    ref.watch(userProvider.notifier).state = response.payload![0];
+    GasData data = response.payload![1];
+
+    ref.watch(gasCylinderSizeProvider.notifier).state = data.gasSize;
+    int percentage = data.gasSize == 0 ? 0 : ((data.gasAmountLeft / data.gasSize) * 100).toInt();
+    ref.watch(gasLevelProvider.notifier).state = percentage;
+    ref.watch(gasEndingDateProvider.notifier).state = data.completionDate;
+
+    navigate();
+  }
+
 
   Future<void> autoLogin() async {
     String savedEmail = widget.savedDetails!["email"]!;
@@ -85,13 +98,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     var response = await login(authDetails);
     setState(() => loading = false);
+    showMessage(response.message);
+
     if(!response.status) {
-      showMessage(response.message);
       return;
     }
 
-    ref.watch(userProvider.notifier).state = response.payload!;
-    navigate();
+    _processResponse(response);
   }
 
   @override
@@ -138,7 +151,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "E-mail address",
+                        "Email address",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),

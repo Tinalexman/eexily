@@ -126,6 +126,42 @@ class CustomDigitGroupFormatter extends TextInputFormatter {
   }
 }
 
+class FourDigitGroupFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text == '') {
+      return newValue;
+    }
+
+    String formattedText = _groupDigits(newValue.text);
+
+    int selectionIndex =
+        formattedText.length - (newValue.text.length - newValue.selection.end);
+
+    return TextEditingValue(
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: selectionIndex),
+    );
+  }
+
+  String _groupDigits(String text) {
+    if (text.length <= 4) {
+      return text;
+    }
+
+    String firstGroup = text.substring(0, 4);
+
+    List<String> groups = [];
+    for (var i = 3; i < text.length; i += 4) {
+      groups.add(text.substring(i, min(i + 4, text.length)));
+    }
+
+    return '$firstGroup ${groups.join(' ')}';
+  }
+}
+
+
 class SpecialForm extends StatelessWidget {
   final Widget? prefix;
   final Widget? suffix;
@@ -860,12 +896,15 @@ class UserGasStatistics extends ConsumerStatefulWidget {
 }
 
 class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
-  late DateTime likelyRunningOutDate;
+  late DateTime? likelyRunningOutDate;
 
   @override
   void initState() {
     super.initState();
-    likelyRunningOutDate = DateTime(2024, 5, 31);
+    String? endingDate = ref.read(gasEndingDateProvider);
+    if(endingDate != null){
+      likelyRunningOutDate = DateTime.parse(endingDate);
+    }
   }
 
   @override
@@ -955,7 +994,7 @@ class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
                 ),
               ),
               SizedBox(height: 10.h),
-              if (widget.hasCompleted)
+              if (widget.hasCompleted && likelyRunningOutDate != null)
                 RichText(
                   text: TextSpan(
                     children: [
@@ -968,7 +1007,7 @@ class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
                       ),
                       TextSpan(
                         text:
-                            formatDateRaw(likelyRunningOutDate, shorten: true),
+                            formatDateRaw(likelyRunningOutDate!, shorten: true),
                         style: context.textTheme.bodySmall!.copyWith(
                           fontWeight: FontWeight.w500,
                           color: Colors.white,

@@ -1,6 +1,7 @@
 import 'package:easy_stepper/easy_stepper.dart';
 import 'package:eexily/api/individual.dart';
 import 'package:eexily/components/gas_questions.dart';
+import 'package:eexily/components/user/user.dart';
 import 'package:eexily/pages/home/regular/activation/step_five.dart';
 import 'package:eexily/pages/home/regular/activation/step_four.dart';
 import 'package:eexily/pages/home/regular/activation/step_one.dart';
@@ -69,13 +70,15 @@ class _ActivationPagesState extends ConsumerState<ActivationPages> {
     String id = ref.watch(userProvider).id;
     var response = await createIndividualGasQuestions(details.toJson(), id);
     setState(() => loading = false);
+    showMessage(response.message);
+
     if (!response.status) {
-      showMessage(response.message);
       return;
     }
 
-    // ref.watch(userProvider.notifier).state = response.payload!;
-    // pop();
+    User user = ref.watch(userProvider) as User;
+    ref.watch(userProvider.notifier).state = user.withFields(hasCompletedGas: true);
+    pop();
   }
 
   @override
@@ -150,6 +153,8 @@ class _ActivationPagesState extends ConsumerState<ActivationPages> {
                           fixedSize: Size(150.w, 50.h),
                         ),
                         onPressed: () {
+                          if (loading) return;
+
                           if (activeStep != 0) {
                             setState(() => --activeStep);
                           }
@@ -175,6 +180,8 @@ class _ActivationPagesState extends ConsumerState<ActivationPages> {
                             Size((activeStep == 0 ? 335.w : 150.w), 50.h),
                       ),
                       onPressed: () {
+                        if (loading) return;
+
                         if (activeStep != 6) {
                           setState(() => ++activeStep);
                         } else {

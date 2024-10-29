@@ -23,6 +23,22 @@ const Support dummySupport = Support();
 
 const Driver dummyDriver = Driver();
 
+Order dummyOrder = Order(
+  deliveryDate: DateTime.now(),
+  address: "lorem ipsum",
+  id: "dummy id",
+  code: "random code",
+  deliveryIssue: "nothing",
+  gasQuantity: 0,
+  name: "John Doe",
+  phone: "000000000",
+  price: 0,
+  riderBike: "Rider",
+  riderImage: "",
+  riderName: "",
+  status: OrderStatus.pending,
+);
+
 final StateProvider<UserBase> userProvider = StateProvider((ref) => dummyUser);
 
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
@@ -169,43 +185,17 @@ final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider(
   ),
 );
 
-final StateProvider<UserOrder?> currentUserOrderProvider =
+final StateProvider<String?> currentUserOrderProvider =
     StateProvider((ref) => null);
 
 final StateProvider<List<UserOrder>> previousUserOrdersProvider = StateProvider(
-  (ref) => List.generate(
-    10,
-    (index) => UserOrder(
-      gasAmount: 5,
-      price: 6000,
-      id: "$index",
-      username: "John Doe",
-      code: randomGCode,
-      states: [
-        OrderDeliveryData(
-          state: OrderState.pickedUp,
-          timestamp: DateUtilities.getMinutesBefore(20),
-        ),
-        OrderDeliveryData(
-          state: OrderState.refilled,
-          timestamp: DateUtilities.getMinutesBefore(15),
-        ),
-        OrderDeliveryData(
-          state: OrderState.dispatched,
-          timestamp: DateUtilities.getMinutesBefore(10),
-        ),
-        OrderDeliveryData(
-          state: OrderState.delivered,
-          timestamp: DateUtilities.getMinutesBefore(2),
-        ),
-      ],
-    ),
-  ),
+  (ref) => [],
 );
 
 final StateProvider<int> gasCylinderSizeProvider = StateProvider((ref) => 0);
 
-final StateProvider<String?> gasEndingDateProvider = StateProvider((ref) => null);
+final StateProvider<String?> gasEndingDateProvider =
+    StateProvider((ref) => null);
 
 final StateProvider<int> gasLevelProvider = StateProvider((ref) => 0);
 

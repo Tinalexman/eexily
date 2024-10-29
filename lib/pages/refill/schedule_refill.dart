@@ -1,3 +1,4 @@
+import 'package:eexily/api/individual.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
@@ -53,8 +54,8 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
     nextDeliveryTime = widget.scheduledTime;
     if (deliveryDate.hour > 17) {
       deliveryDate = DateUtilities.getDaysAhead(1);
-    } else if (widget.scheduledTime == "12pm" && deliveryDate.hour > 12) {
-      nextDeliveryTime = "5pm";
+    } else if (widget.scheduledTime == "12PM" && deliveryDate.hour > 12) {
+      nextDeliveryTime = "5PM";
     }
   }
 
@@ -67,6 +68,31 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
       loading = false;
     });
   }
+
+  Future<void> createOrder() async {
+    String id = ref.watch(userProvider.select((u) => u.id));
+    String address = addressController.text.trim();
+    int quantity = int.parse(quantityController.text.trim());
+
+    Map<String, dynamic> data = {
+      "pickedUpTime": widget.scheduledTime,
+      "quantity": quantity,
+      "address": address,
+      "price": (currentPriceOfGas * quantity),
+      "deliveryFee": (deliveryFee * 0.4).toInt(),
+      "paymentMethod": "Paystack",
+      "user": id,
+    };
+
+    var response = await createScheduledOrder(data);
+    setState(() => loading = false);
+    showMessage(response.message);
+    if(!response.status) return;
+
+    showSuccessModal(response.payload!);
+  }
+
+  void showMessage(String message) => showToast(message, context);
 
   @override
   void dispose() {
@@ -92,27 +118,8 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
     setState(() {});
   }
 
-  void showSuccessModal() {
-    String code = randomGCode;
-    String name = (ref.watch(userProvider) as User).fullName;
-    int quantity = int.parse(quantityController.text);
-
-    ref.watch(currentUserOrderProvider.notifier).state = UserOrder(
-      code: code,
-      username: name,
-      states: [
-        OrderDeliveryData(
-          state: OrderState.pickedUp,
-          timestamp: DateUtilities.getMinutesBefore(5),
-        ),
-        OrderDeliveryData(
-          state: OrderState.refilled,
-          timestamp: DateUtilities.getMinutesBefore(2),
-        ),
-      ],
-      price: actualGasAmount,
-      gasAmount: quantity,
-    );
+  void showSuccessModal(String code) {
+    ref.watch(currentUserOrderProvider.notifier).state = code;
 
     showDialog(
       context: context,
@@ -428,7 +435,16 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
                       borderRadius: BorderRadius.circular(7.5.r),
                     ),
                   ),
-                  onPressed: showSuccessModal,
+                  onPressed: () {
+                    String quantity = quantityController.text.trim();
+                    if(quantity.isEmpty) {
+                      showToast("Enter your desired gas quantity", context);
+                      return;
+                    }
+
+                    setState(() => loading = true);
+                    createOrder();
+                  },
                   child: loading
                       ? whiteLoader
                       : Text(

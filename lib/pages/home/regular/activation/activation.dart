@@ -1,5 +1,6 @@
 import 'package:easy_stepper/easy_stepper.dart';
 import 'package:eexily/api/individual.dart';
+import 'package:eexily/components/gas_data.dart';
 import 'package:eexily/components/gas_questions.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/pages/home/regular/activation/step_five.dart';
@@ -72,12 +73,20 @@ class _ActivationPagesState extends ConsumerState<ActivationPages> {
     setState(() => loading = false);
     showMessage(response.message);
 
-    if (!response.status) {
-      return;
-    }
+    if (!response.status) return;
 
     User user = ref.watch(userProvider) as User;
-    ref.watch(userProvider.notifier).state = user.withFields(hasCompletedGas: true);
+    ref.watch(userProvider.notifier).state =
+        user.withFields(hasCompletedGas: true);
+
+    GasData data = response.payload!;
+    int gasSize = ref.watch(gasCylinderSizeProvider);
+    int percentage =
+        gasSize <= 0 ? 0 : ((data.gasAmountLeft / gasSize) * 100).toInt();
+    ref.watch(gasLevelProvider.notifier).state = percentage;
+    ref.watch(gasEndingDateProvider.notifier).state = data.completionDate;
+
+    //ref.watch(playGasAnimationProvider.notifier).state = true;
     pop();
   }
 

@@ -4,12 +4,14 @@ import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RegisterRiderPage extends ConsumerStatefulWidget {
   final String userId;
+
   const RegisterRiderPage({
     super.key,
     required this.userId,
@@ -36,6 +38,7 @@ class _RegisterRiderPageState extends ConsumerState<RegisterRiderPage> {
     "driverLicense": "",
     "expiryDate": "",
     "riderType": "",
+    "gcode": "",
   };
 
   final Map<String, String> options = {"Driver": "DRIVER", "Rider": "RIDER"};
@@ -165,19 +168,22 @@ class _RegisterRiderPageState extends ConsumerState<RegisterRiderPage> {
                         controller: licenseController,
                         width: 375.w,
                         formatters: [
-                          // FourDigitGroupFormatter()
+                          FourDigitGroupFormatter(),
+                          LengthLimitingTextInputFormatter(19),
                         ],
                         hint: "e.g A1A1 B2B2 C3C3 D4D4",
                         onValidate: (value) {
                           value = value.trim();
-                          if (value!.isEmpty || value!.length != 16) {
+                          if (value!.isEmpty || value!.length != 19) {
                             return 'Invalid Driver License Number';
                           }
 
                           return null;
                         },
-                        onSave: (value) =>
-                            authDetails["driverLicense"] = value!.trim(),
+                        onSave: (String value) {
+                          String format = value.trim().replaceAll(" ", "");
+                          authDetails["driverLicense"] = format;
+                        },
                       ),
                       SizedBox(height: 10.h),
                       Text(
@@ -222,27 +228,31 @@ class _RegisterRiderPageState extends ConsumerState<RegisterRiderPage> {
                             licenseExpiry!.toIso8601String(),
                       ),
                       SizedBox(height: 10.h),
-                      // Text(
-                      //   "Gas Station Code (Optional)",
-                      //   style: context.textTheme.bodyMedium,
-                      // ),
-                      // SizedBox(height: 4.h),
-                      // SpecialForm(
-                      //   controller: stationCodeController,
-                      //   width: 375.w,
-                      //   hint: "e.g XXXXXX",
-                      //   onValidate: (value) {
-                      //     value = value.trim();
-                      //     if (value!.isNotEmpty && value!.length != 6) {
-                      //       return 'Invalid Gas Station Code';
-                      //     }
-                      //
-                      //     return null;
-                      //   },
-                      //   onSave: (value) =>
-                      //       authDetails["gasStation"] = value!.trim(),
-                      // ),
-                      // SizedBox(height: 10.h),
+                      Text(
+                        "Gas Station Code (Optional)",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      SpecialForm(
+                        controller: stationCodeController,
+                        width: 375.w,
+                        hint: "e.g XXXXX",
+                        onValidate: (value) {
+                          value = value.trim();
+                          if (value!.isNotEmpty && value!.length != 5) {
+                            return 'Invalid Gas Station Code';
+                          }
+
+                          return null;
+                        },
+                        onSave: (String value) {
+                          value = value.trim();
+                          if(value.isNotEmpty) {
+                            authDetails["gasStationCode"] = value;
+                          }
+                        },
+                      ),
+                      SizedBox(height: 10.h),
                       Text(
                         "Type",
                         style: context.textTheme.bodyMedium,

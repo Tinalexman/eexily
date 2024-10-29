@@ -37,32 +37,19 @@ class Order {
   });
 }
 
-enum OrderState { pickedUp, refilled, dispatched, delivered }
-
-class OrderDeliveryData {
-  final DateTime timestamp;
-  final OrderState state;
-
-  const OrderDeliveryData({
-    required this.state,
-    required this.timestamp,
-  });
-}
 
 class UserOrder {
-  final List<OrderDeliveryData> states;
-  final String username;
-  final String code;
+  final String orderState;
   final String id;
-  final int price;
-  final int gasAmount;
+  final String code;
+  final double price;
+  final int quantity;
 
   const UserOrder({
-    this.states = const [],
-    this.username = "",
-    this.code = "",
+    this.orderState = "PENDING",
     this.id = "",
-    this.price = 0,
-    this.gasAmount = 0,
+    this.code = "",
+    this.price = 0.0,
+    this.quantity = 0,
   });
 }

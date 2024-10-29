@@ -47,7 +47,7 @@ void showToast(String message, BuildContext context, {Color? backgroundColor}) {
 
 void unFocus() => FocusManager.instance.primaryFocus?.unfocus();
 
-String formatRawAmount(int price) => formatAmount(price.toString());
+String formatRawAmount(num price) => formatAmount(price.toString());
 
 String formatAmount(String price) {
   String priceInText = "";
@@ -262,6 +262,15 @@ String get randomGCode {
       suf = String.fromCharCode(random.nextInt(26) + 65);
   return "$pre$randomNumber$suf";
 }
+
+String getRandomIDWithSeed(int seed) {
+  Random random = Random(seed);
+  String randomNumber = random.nextInt(9999).toString().padLeft(4, "0");
+  String pre = String.fromCharCode(random.nextInt(26) + 65),
+      suf = String.fromCharCode(random.nextInt(26) + 65);
+  return "$pre$randomNumber$suf";
+}
+
 
 String get randomOrderID {
   Random random = Random(DateTime.now().millisecondsSinceEpoch);

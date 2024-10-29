@@ -73,8 +73,7 @@ class _IndividualOrderHistoryState extends ConsumerState<IndividualOrderHistory>
                             style: context.textTheme.bodySmall,
                           ),
                           TextSpan(
-                            text:
-                            order.username,
+                            text: "",
                             style: context.textTheme.bodySmall!.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
@@ -91,7 +90,7 @@ class _IndividualOrderHistoryState extends ConsumerState<IndividualOrderHistory>
                           ),
                           TextSpan(
                             text:
-                            "${order.gasAmount}kg",
+                            "${order.quantity}kg",
                             style: context.textTheme.bodySmall!.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
@@ -123,13 +122,13 @@ class _IndividualOrderHistoryState extends ConsumerState<IndividualOrderHistory>
                             text: "Delivered on: ",
                             style: context.textTheme.bodySmall,
                           ),
-                          TextSpan(
-                            text:
-                            formatDateRawWithTime(order.states.last.timestamp),
-                            style: context.textTheme.bodySmall!.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
+                          // TextSpan(
+                          //   text:
+                          //   formatDateRawWithTime(order.states.last.timestamp),
+                          //   style: context.textTheme.bodySmall!.copyWith(
+                          //     fontWeight: FontWeight.w500,
+                          //   ),
+                          // )
                         ],
                       ),
                     ),

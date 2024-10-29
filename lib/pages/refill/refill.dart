@@ -1,3 +1,4 @@
+import 'package:eexily/api/individual.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
@@ -18,7 +19,7 @@ class RefillPage extends ConsumerStatefulWidget {
 class _RefillPageState extends ConsumerState<RefillPage> {
   @override
   Widget build(BuildContext context) {
-    UserOrder? currentOrder = ref.watch(currentUserOrderProvider);
+    String? currentOrderCode = ref.watch(currentUserOrderProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -48,8 +49,8 @@ class _RefillPageState extends ConsumerState<RefillPage> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: currentOrder != null
-              ? _HasOrder(order: currentOrder)
+          child: currentOrderCode != null
+              ? _HasOrder(orderCode: currentOrderCode)
               : const _NoOrder(),
         ),
       ),
@@ -58,11 +59,11 @@ class _RefillPageState extends ConsumerState<RefillPage> {
 }
 
 class _HasOrder extends ConsumerStatefulWidget {
-  final UserOrder order;
+  final String orderCode;
 
   const _HasOrder({
     super.key,
-    required this.order,
+    required this.orderCode,
   });
 
   @override
@@ -70,13 +71,39 @@ class _HasOrder extends ConsumerStatefulWidget {
 }
 
 class _HasOrderState extends ConsumerState<_HasOrder> {
-  final TextEditingController controller = TextEditingController();
+
+  final List<UserOrder> orders = [];
+  bool loading = true;
 
   @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, getOrder);
   }
+
+  void showMessage(String message) => showToast(message, context);
+
+  Future<void> getOrder() async {
+    var response = await getUserOrders();
+    showMessage(response.message);
+    setState(() {
+      loading = false;
+      orders.clear();
+      orders.addAll(response.payload);
+    });
+  }
+
+  Color getOrderColor(String orderState) {
+    switch(orderState) {
+      case "PENDING": return secondary;
+      case "MATCHED": return secondary3;
+      case "REFILL": return secondary2;
+      case "DISPATCHED": return Colors.red;
+      case "DELIVERED": return primary;
+      default: return monokai;
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,215 +131,142 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
                 ),
               ),
               SizedBox(width: 10.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "G-Code: ${widget.order.code}",
-                    style: context.textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  Text(
-                    "Thank you ${user.firstName}!",
-                    style: context.textTheme.headlineSmall!.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+              Text(
+                "Thank you ${user.firstName}!",
+                style: context.textTheme.headlineSmall!.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           ),
-          SizedBox(height: 20.h),
-          SizedBox(
-            height: 350.h,
-            width: 375.w,
-            child: _CustomOrderStepper(data: widget.order.states),
-          ),
-          SizedBox(height: 40.h),
-          Text(
-            "Feedback and comments",
-            style: context.textTheme.bodyLarge,
-          ),
-          SizedBox(height: 4.h),
-          SpecialForm(
-            controller: controller,
-            width: 375.w,
-            maxLines: 4,
-            hint: "e.g I had a very good experience",
-          ),
-          SizedBox(height: 20.h),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primary,
-              minimumSize: Size(375.w, 50.h),
-              fixedSize: Size(375.w, 50.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(7.5.r),
-              ),
+          SizedBox(height: 30.h),
+          if(loading)
+            const Center(
+              child: loader,
             ),
-            child: Text(
-              "Submit",
-              style: context.textTheme.bodyLarge!.copyWith(
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CustomOrderStepper extends StatefulWidget {
-  final List<OrderDeliveryData> data;
-
-  const _CustomOrderStepper({
-    super.key,
-    required this.data,
-  });
-
-  @override
-  State<_CustomOrderStepper> createState() => _CustomOrderStepperState();
-}
-
-class _CustomOrderStepperState extends State<_CustomOrderStepper> {
-  late int total;
-
-  late Widget completedStepIcon,
-      nextStepToBeCompletedIcon,
-      notCompletedStepIcon;
-
-  @override
-  void initState() {
-    super.initState();
-    total = OrderState.values.length;
-    completedStepIcon = Center(
-      child: Icon(
-        Icons.done,
-        size: 26.r,
-        color: Colors.white,
-      ),
-    );
-
-    nextStepToBeCompletedIcon = Center(
-      child: CircleAvatar(
-        radius: 18.r,
-        backgroundColor: Colors.white,
-        child: Center(
-          child: CircleAvatar(
-            radius: 5.r,
-            backgroundColor: primary,
-          ),
-        ),
-      ),
-    );
-
-    notCompletedStepIcon = Center(
-      child: CircleAvatar(
-        radius: 18.r,
-        backgroundColor: Colors.white,
-      ),
-    );
-  }
-
-  String getOrderTitle(int index) {
-    switch (index) {
-      case 0:
-        return "Gas cylinder pick up";
-      case 1:
-        return "Refilled";
-      case 2:
-        return "Dispatched";
-      case 3:
-        return "Delivered";
-      default:
-        return "";
-    }
-  }
-
-  String getOrderSubtitle(int index) {
-    switch (index) {
-      case 0:
-        return "Your gas cylinder has been picked up";
-      case 1:
-        return "Your gas cylinder has been refilled";
-      case 2:
-        return "Your gas cylinder is on its way back";
-      case 3:
-        return "Your gas cylinder has been delivered";
-      default:
-        return "";
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: total,
-      itemBuilder: (_, index) {
-        bool hasStepBeingCompleted = index < widget.data.length;
-        bool isNextToBeCompleted = index == widget.data.length;
-        bool isLastStep = index == total - 1;
-        DateTime? stepTimestamp;
-        if (index < widget.data.length) {
-          stepTimestamp = widget.data[index].timestamp;
-        }
-
-        return SizedBox(
-          width: 375.w,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
+          if(!loading && orders.isEmpty)
+            Center(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CircleAvatar(
-                    radius: 20.r,
-                    backgroundColor: primary,
-                    child: hasStepBeingCompleted
-                        ? completedStepIcon
-                        : isNextToBeCompleted
-                            ? nextStepToBeCompletedIcon
-                            : notCompletedStepIcon,
+                  SizedBox(height: 80.h),
+                  Image.asset(
+                    "assets/images/error.png",
+                    width: 200.w,
+                    fit: BoxFit.cover,
                   ),
-                  if (!isLastStep)
-                    Container(
-                      width: 2.w,
-                      height: 60.r,
-                      color: primary50,
-                    )
+                  SizedBox(height: 30.h),
+                  Text(
+                    "Orders not found",
+                    style: context.textTheme.titleLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10.h),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() => loading = true);
+                      getOrder();
+                    },
+                    child: Text(
+                      "Click here to refresh",
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        color: primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  )
                 ],
               ),
-              SizedBox(width: 10.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+          if(!loading && orders.isNotEmpty)
+            Container(
+              width: 390.w,
+              decoration: BoxDecoration(
+                color: primary50.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(7.5.r),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: 10.w,
+                vertical: 10.h,
+              ),
+              child: Column(
                 children: [
-                  Text(
-                    getOrderTitle(index),
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Order ID:",
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        orders[0].code,
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: monokai,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    getOrderSubtitle(index),
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                  SizedBox(height: 5.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Amount Paid:",
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        "₦${formatAmount(orders[0].price.toStringAsFixed(0))}",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: monokai,
+                        ),
+                      ),
+                    ],
                   ),
-                  if (stepTimestamp != null)
-                    Text(
-                      formatDateRawWithTime(stepTimestamp),
-                      style: context.textTheme.bodySmall,
-                    ),
+                  SizedBox(height: 5.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Gas Quantity:",
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        "${orders[0].quantity}kg",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: monokai,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Status:",
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        orders[0].orderState,
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: getOrderColor(orders[0].orderState),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-            ],
-          ),
-        );
-      },
+            ),
+        ],
+      ),
     );
   }
 }
@@ -398,9 +352,9 @@ class _ScheduleRefillState extends State<_ScheduleRefill> {
                 children: [
                   Radio(
                     value: currentSlot,
-                    groupValue: "12pm",
+                    groupValue: "12PM",
                     onChanged: (val) {
-                      setState(() => currentSlot = "12pm");
+                      setState(() => currentSlot = "12PM");
                     },
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     visualDensity: VisualDensity.compact,
@@ -418,9 +372,9 @@ class _ScheduleRefillState extends State<_ScheduleRefill> {
                 children: [
                   Radio(
                     value: currentSlot,
-                    groupValue: "5pm",
+                    groupValue: "5PM",
                     onChanged: (val) {
-                      setState(() => currentSlot = "5pm");
+                      setState(() => currentSlot = "5PM");
                     },
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     visualDensity: VisualDensity.compact,

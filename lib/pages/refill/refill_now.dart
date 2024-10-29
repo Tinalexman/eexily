@@ -78,23 +78,6 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
     String name = (ref.watch(userProvider) as User).fullName;
     int quantity = int.parse(quantityController.text);
 
-    ref.watch(currentUserOrderProvider.notifier).state = UserOrder(
-      code: code,
-      username: name,
-      states: [
-        OrderDeliveryData(
-          state: OrderState.pickedUp,
-          timestamp: DateUtilities.getMinutesBefore(5),
-        ),
-        OrderDeliveryData(
-          state: OrderState.refilled,
-          timestamp: DateUtilities.getMinutesBefore(2),
-        ),
-      ],
-      price: actualGasAmount,
-      gasAmount: quantity,
-    );
-
     showDialog(
       context: context,
       barrierDismissible: false,

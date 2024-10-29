@@ -128,36 +128,21 @@ class CustomDigitGroupFormatter extends TextInputFormatter {
 
 class FourDigitGroupFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text == '') {
-      return newValue;
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    String newText = newValue.text.replaceAll(' ', '');
+
+    StringBuffer formattedText = StringBuffer();
+    for (int i = 0; i < newText.length; i++) {
+      if (i > 0 && i % 4 == 0) {
+        formattedText.write(' ');
+      }
+      formattedText.write(newText[i]);
     }
-
-    String formattedText = _groupDigits(newValue.text);
-
-    int selectionIndex =
-        formattedText.length - (newValue.text.length - newValue.selection.end);
 
     return TextEditingValue(
-      text: formattedText,
-      selection: TextSelection.collapsed(offset: selectionIndex),
+      text: formattedText.toString(),
+      selection: TextSelection.collapsed(offset: formattedText.length),
     );
-  }
-
-  String _groupDigits(String text) {
-    if (text.length <= 4) {
-      return text;
-    }
-
-    String firstGroup = text.substring(0, 4);
-
-    List<String> groups = [];
-    for (var i = 3; i < text.length; i += 4) {
-      groups.add(text.substring(i, min(i + 4, text.length)));
-    }
-
-    return '$firstGroup ${groups.join(' ')}';
   }
 }
 
@@ -896,7 +881,7 @@ class UserGasStatistics extends ConsumerStatefulWidget {
 }
 
 class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
-  late DateTime? likelyRunningOutDate;
+  DateTime? likelyRunningOutDate;
 
   @override
   void initState() {

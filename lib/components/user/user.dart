@@ -18,8 +18,6 @@ class User extends UserBase {
     this.hasCompletedGasQuestions = false,
   }) : super(role: UserRole.individual);
 
-  String get fullName => "$firstName $lastName";
-
   @override
   List<Object?> get props => [id];
 

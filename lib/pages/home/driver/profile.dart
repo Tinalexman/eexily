@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eexily/components/user/driver.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
@@ -8,21 +9,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
-class IndividualProfilePage extends ConsumerStatefulWidget {
-  const IndividualProfilePage({super.key});
+class DriverProfilePage extends ConsumerStatefulWidget {
+  const DriverProfilePage({super.key});
 
   @override
-  ConsumerState<IndividualProfilePage> createState() =>
-      _IndividualProfilePageState();
+  ConsumerState<DriverProfilePage> createState() =>
+      _DriverProfilePageState();
 }
 
-class _IndividualProfilePageState extends ConsumerState<IndividualProfilePage> {
+class _DriverProfilePageState extends ConsumerState<DriverProfilePage> {
   @override
   Widget build(BuildContext context) {
-    User user = ref.watch(userProvider) as User;
-    int gasSize = ref.watch(gasCylinderSizeProvider);
-    int gasPercentage = ref.watch(gasLevelProvider);
-    bool active = ref.watch(playGasAnimationProvider);
+    Driver driver = ref.watch(userProvider) as Driver;
+
 
     return Scaffold(
       appBar: AppBar(
@@ -37,7 +36,7 @@ class _IndividualProfilePageState extends ConsumerState<IndividualProfilePage> {
           Padding(
             padding: EdgeInsets.only(right: 10.w),
             child: IconButton(
-              onPressed: () => context.router.pushNamed(Pages.editIndividualProfile),
+              onPressed: () => context.router.pushNamed(Pages.editDriverProfile),
               icon: Icon(
                 IconsaxPlusBroken.edit,
                 color: monokai,
@@ -55,7 +54,7 @@ class _IndividualProfilePageState extends ConsumerState<IndividualProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CachedNetworkImage(
-                  imageUrl: user.image,
+                  imageUrl: driver.image,
                   errorWidget: (_, __, ___) => Container(
                     width: 375.w,
                     height: 250.h,
@@ -87,86 +86,28 @@ class _IndividualProfilePageState extends ConsumerState<IndividualProfilePage> {
                 ),
                 SizedBox(height: 20.h),
                 Text(
-                  user.fullName,
+                  driver.fullName,
                   style: context.textTheme.headlineLarge!.copyWith(
                     fontWeight: FontWeight.w600,
                     color: monokai,
                   ),
                 ),
                 Text(
-                  user.email,
+                  driver.email,
                   style: context.textTheme.titleMedium!.copyWith(
                     fontWeight: FontWeight.w500,
                     color: neutral2,
                   ),
                 ),
                 Text(
-                  user.phoneNumber,
+                  driver.phoneNumber,
                   style: context.textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.w500,
                     color: monokai,
                   ),
                 ),
                 SizedBox(height: 30.h),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Cylinder Size",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        color: monokai,
-                      ),
-                    ),
-                    Text(
-                      "${gasSize}kg",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: monokai,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5.h),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Gas Level",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        color: monokai,
-                      ),
-                    ),
-                    Text(
-                      "$gasPercentage%",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: gasColor(gasPercentage * 0.01),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5.h),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Gas Tracking",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        color: monokai,
-                      ),
-                    ),
-                    Text(
-                      active ? "Active" : "Inactive",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: active ? primary : neutral3,
-                      ),
-                    ),
-                  ],
-                ),
+
               ],
             ),
           ),

@@ -51,7 +51,9 @@ class Pages
   static String get refillNow => "refill-now";
   static String get refill => "refill";
   static String get individualProfile => "individual-profile";
+  static String get editIndividualProfile => "edit-individual-profile";
   static String get driverProfile => "driver-profile";
+  static String get editDriverProfile => "edit-driver-profile";
   static String get gasUsage => 'gas-usage';
   static String get gasDetails => 'gas-details';
   static String get notification => "notification";

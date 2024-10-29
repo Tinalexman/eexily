@@ -14,10 +14,13 @@ import 'package:eexily/pages/home/attendant/all_orders.dart';
 import 'package:eexily/pages/home/attendant/view_order.dart';
 import 'package:eexily/pages/home/common/filter.dart';
 import 'package:eexily/pages/home/common/notifications.dart';
+import 'package:eexily/pages/home/driver/edit_profile.dart';
+import 'package:eexily/pages/home/driver/profile.dart';
 import 'package:eexily/pages/home/driver/view_order.dart';
 import 'package:eexily/pages/home/home.dart';
 import 'package:eexily/pages/home/inbox.dart';
 import 'package:eexily/pages/home/regular/activation/activation.dart';
+import 'package:eexily/pages/home/regular/edit_profile.dart';
 import 'package:eexily/pages/home/regular/gas_details.dart';
 import 'package:eexily/pages/home/regular/gas_usage.dart';
 import 'package:eexily/pages/home/regular/profile.dart';
@@ -157,6 +160,21 @@ final List<GoRoute> routes = [
     path: Pages.individualProfile.path,
     name: Pages.individualProfile,
     builder: (_, __) => const IndividualProfilePage(),
+  ),
+  GoRoute(
+    path: Pages.editIndividualProfile.path,
+    name: Pages.editIndividualProfile,
+    builder: (_, __) => const EditIndividualProfilePage(),
+  ),
+  GoRoute(
+    path: Pages.driverProfile.path,
+    name: Pages.driverProfile,
+    builder: (_, __) => const DriverProfilePage(),
+  ),
+  GoRoute(
+    path: Pages.editDriverProfile.path,
+    name: Pages.editDriverProfile,
+    builder: (_, __) => const EditRiderProfilePage(),
   ),
   GoRoute(
     path: Pages.individualOrderHistory.path,

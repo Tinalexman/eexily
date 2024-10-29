@@ -20,6 +20,8 @@ class UserBase extends Equatable {
     this.role = UserRole.nil,
   });
 
+  String get fullName => "$firstName $lastName";
+
   @override
   List<Object?> get props => [id];
 }

@@ -8,6 +8,7 @@ import 'package:eexily/components/sale_report.dart';
 import 'package:eexily/components/transaction.dart';
 import 'package:eexily/components/user/attendant.dart';
 import 'package:eexily/components/user/driver.dart';
+import 'package:eexily/components/user/merchant.dart';
 import 'package:eexily/components/user/support.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/functions.dart';
@@ -15,9 +16,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const UserBase dummyBase = UserBase();
 
-const User dummyUser = User();
+const User dummyUser = User(
+  lastName: "Doe",
+  firstName: "John",
+  email: "johndoe@mail.com"
+);
 
 const Attendant dummyAttendant = Attendant();
+
+const Merchant dummyMerchant = Merchant(
+  firstName: "John",
+  lastName: "Doe",
+);
 
 const Support dummySupport = Support();
 
@@ -39,7 +49,8 @@ Order dummyOrder = Order(
   status: OrderStatus.pending,
 );
 
-final StateProvider<UserBase> userProvider = StateProvider((ref) => dummyUser);
+final StateProvider<UserBase> userProvider =
+    StateProvider((ref) => dummyUser);
 
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
 
@@ -207,7 +218,11 @@ final StateProvider<bool> playGasAnimationProvider =
 final StateProvider<IndividualGasQuestionsData> individualGasQuestionsProvider =
     StateProvider((ref) => const IndividualGasQuestionsData());
 
+final StateProvider<double> revenueProvider = StateProvider((ref) => 0);
+
 void logout(WidgetRef ref) {
+  ref.invalidate(revenueProvider);
+  ref.invalidate(gasEndingDateProvider);
   ref.invalidate(gasCylinderSizeProvider);
   ref.invalidate(previousUserOrdersProvider);
   ref.invalidate(currentUserOrderProvider);

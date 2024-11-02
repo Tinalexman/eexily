@@ -34,7 +34,7 @@ class _EexilyState extends State<Eexily> {
     super.initState();
 
     _router = GoRouter(
-      initialLocation: Pages.splash.path,
+      initialLocation: Pages.home.path,
       routes: routes,
     );
     time.setDefaultLocale('en_short');

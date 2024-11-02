@@ -1,0 +1,84 @@
+import 'package:eexily/tools/constants.dart';
+import 'package:eexily/tools/providers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
+
+import 'home.dart';
+import 'account.dart';
+import 'order_history.dart';
+
+class MerchantHome extends ConsumerStatefulWidget {
+  const MerchantHome({super.key});
+
+  @override
+  ConsumerState<MerchantHome> createState() => _MerchantHomeState();
+}
+
+class _MerchantHomeState extends ConsumerState<MerchantHome> {
+  late List<Widget> children;
+
+  @override
+  void initState() {
+    super.initState();
+    children = const [
+      Home(),
+      History(),
+      Account(),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    int index = ref.watch(pageIndexProvider);
+
+    return Scaffold(
+      body: IndexedStack(
+        index: index,
+        children: children,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: index,
+        selectedItemColor: primary,
+        unselectedItemColor: neutral3,
+        onTap: (val) => ref.watch(pageIndexProvider.notifier).state = val,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              IconsaxPlusBroken.menu,
+              size: 22.r,
+            ),
+            activeIcon: Icon(
+              IconsaxPlusBold.menu,
+              size: 22.r,
+            ),
+            label: "Overview",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              IconsaxPlusBroken.graph,
+              size: 22.r,
+            ),
+            activeIcon: Icon(
+              IconsaxPlusBold.graph,
+              size: 22.r,
+            ),
+            label: "Sales",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              IconsaxPlusBroken.chart_1,
+              size: 22.r,
+            ),
+            activeIcon: Icon(
+              IconsaxPlusBold.chart_1,
+              size: 22.r,
+            ),
+            label: "Account",
+          ),
+        ],
+      ),
+    );
+  }
+}

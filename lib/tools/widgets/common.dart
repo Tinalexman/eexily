@@ -914,7 +914,7 @@ class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Gas Statistics",
+                "Gas Usage",
                 style: context.textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.w400,
                   color: Colors.white,

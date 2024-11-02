@@ -39,6 +39,7 @@ class Pages
   static String get carousel => "carousel";
   static String get register => "sign-up";
   static String get registerUser => "register-user";
+  static String get registerMerchant => "register-merchant";
   static String get registerBusiness => "register-business";
   static String get registerRider => "register-rider";
   static String get registerStation => "register-station";
@@ -50,6 +51,8 @@ class Pages
   static String get scheduleRefill => "schedule-refill";
   static String get refillNow => "refill-now";
   static String get refill => "refill";
+  static String get devices => 'devices';
+  static String get cheffy => "cheffy";
   static String get individualProfile => "individual-profile";
   static String get editIndividualProfile => "edit-individual-profile";
   static String get driverProfile => "driver-profile";
@@ -64,6 +67,7 @@ class Pages
   static String get orderHistory => "order-history";
   static String get viewSupportOrder => "view-support-order";
   static String get viewAttendantOrder => "view-attendant-order";
+  static String get viewMerchantOrder => "view-merchant-order";
   static String get allAttendantOrders => "all-attendant-orders";
   static String get viewDriverOrder => "view-driver-order";
  }

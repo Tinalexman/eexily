@@ -4,6 +4,8 @@ import 'package:eexily/components/user/support.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/providers.dart';
 
+import 'merchant.dart';
+
 class UserFactory {
   static UserBase createUser(
     Map<String, dynamic> map, {
@@ -39,6 +41,11 @@ class UserFactory {
           email: map["email"],
           id: map["_id"],
           dateJoined: map["createdAt"],
+        );
+      case "MERCHANT":
+        return Merchant(
+          id: map["_id"],
+
         );
       case "INDIVIDUAL":
         return User(

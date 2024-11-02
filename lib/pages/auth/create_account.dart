@@ -35,9 +35,10 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
   };
 
   final Map<String, String> options = {
-    "Business": "BUSINESS",
     "Individual/Household": "INDIVIDUAL",
+    "Merchant": "MERCHANT",
     "Driver/Rider": "RIDER",
+    "Business": "BUSINESS",
     "Gas Station Attendant": "GAS_STATION",
     "Customer Support": "CUSTOMER_SERVICE",
   };
@@ -79,15 +80,17 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
   void navigate(String userId) {
     String email = emailController.text.trim();
     String destination = "";
-    if (type == optionKeys[0]) {
+    if (type == optionKeys[3]) {
       destination = Pages.registerBusiness;
-    } else if (type == optionKeys[1]) {
+    } else if (type == optionKeys[0]) {
       destination = Pages.registerUser;
+    } else if (type == optionKeys[1]) {
+      destination = Pages.registerMerchant;
     } else if (type == optionKeys[2]) {
       destination = Pages.registerRider;
-    } else if (type == optionKeys[3]) {
-      destination = Pages.registerStation;
     } else if (type == optionKeys[4]) {
+      destination = Pages.registerStation;
+    } else if (type == optionKeys[5]) {
       destination = Pages.registerSupport;
     }
     context.router.goNamed(
@@ -177,16 +180,14 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
                         ],
                         hint: "e.g 080 1234 5678",
                         onValidate: (String value) {
-                          value = value.trim();
-                          value = value.replaceAll(" ", "");
+                          value = value.trim().replaceAll(" ", "");
                           if (value.isEmpty || value.length != 11) {
                             return 'Invalid Phone Number';
                           }
                           return null;
                         },
                         onSave: (String value) {
-                          value = value.trim();
-                          value = value.replaceAll(" ", "");
+                          value = value.trim().replaceAll(" ", "");
                           authDetails["phoneNumber"] = value;
                         },
                       ),

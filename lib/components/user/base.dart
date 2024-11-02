@@ -33,6 +33,7 @@ UserRole convertToRole(String role) {
     case "CUSTOMER_SERVICE": return UserRole.support;
     case "GAS_STATION": return UserRole.attendant;
     case "INDIVIDUAL": return UserRole.individual;
+    case "MERCHANT": return UserRole.merchant;
     default: return UserRole.nil;
   }
 }
@@ -44,4 +45,5 @@ enum UserRole {
   support,
   driver,
   attendant,
+  merchant,
 }

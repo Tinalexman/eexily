@@ -1,6 +1,7 @@
 import 'package:eexily/components/user/base.dart';
 import 'package:eexily/pages/home/attendant/attendant_home.dart';
 import 'package:eexily/pages/home/driver/driver_home.dart';
+import 'package:eexily/pages/home/merchant/merchant_home.dart';
 import 'package:eexily/pages/home/regular/regular_home.dart';
 import 'package:eexily/pages/home/support/support_home.dart';
 import 'package:eexily/tools/providers.dart';
@@ -22,6 +23,8 @@ class _HomepageState extends ConsumerState<Homepage> {
     switch (role) {
       case UserRole.individual:
         return const RegularHome();
+      case UserRole.merchant:
+        return const MerchantHome();
       case UserRole.attendant:
         return const AttendantHome();
       case UserRole.support:

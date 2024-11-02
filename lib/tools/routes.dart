@@ -5,6 +5,7 @@ import 'package:eexily/pages/auth/choose_driver_image.dart';
 import 'package:eexily/pages/auth/create_account.dart';
 import 'package:eexily/pages/auth/login.dart';
 import 'package:eexily/pages/auth/register_business.dart';
+import 'package:eexily/pages/auth/register_merchant.dart';
 import 'package:eexily/pages/auth/register_rider.dart';
 import 'package:eexily/pages/auth/register_station.dart';
 import 'package:eexily/pages/auth/register_support.dart';
@@ -20,6 +21,8 @@ import 'package:eexily/pages/home/driver/view_order.dart';
 import 'package:eexily/pages/home/home.dart';
 import 'package:eexily/pages/home/inbox.dart';
 import 'package:eexily/pages/home/regular/activation/activation.dart';
+import 'package:eexily/pages/home/regular/cheffy.dart';
+import 'package:eexily/pages/home/regular/devices.dart';
 import 'package:eexily/pages/home/regular/edit_profile.dart';
 import 'package:eexily/pages/home/regular/gas_details.dart';
 import 'package:eexily/pages/home/regular/gas_usage.dart';
@@ -79,6 +82,11 @@ final List<GoRoute> routes = [
     builder: (_, __) => const RegisterBusinessPage(),
   ),
   GoRoute(
+    path: Pages.registerMerchant.path,
+    name: Pages.registerMerchant,
+    builder: (_, __) => const RegisterMerchantPage(),
+  ),
+  GoRoute(
     path: Pages.registerRider.path,
     name: Pages.registerRider,
     builder: (_, state) => RegisterRiderPage(userId: state.extra as String),
@@ -108,12 +116,14 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.login.path,
     name: Pages.login,
-    builder: (_, state) => LoginPage(savedDetails: state.extra as Map<String, String>?),
+    builder: (_, state) =>
+        LoginPage(savedDetails: state.extra as Map<String, String>?),
   ),
   GoRoute(
     path: Pages.verification.path,
     name: Pages.verification,
-    builder: (_, state) => VerifyOTPPage(config: state.extra as Map<String, String>),
+    builder: (_, state) =>
+        VerifyOTPPage(config: state.extra as Map<String, String>),
   ),
   GoRoute(
     path: Pages.notification.path,
@@ -140,6 +150,16 @@ final List<GoRoute> routes = [
     path: Pages.refill.path,
     name: Pages.refill,
     builder: (_, __) => const RefillPage(),
+  ),
+  GoRoute(
+    path: Pages.devices.path,
+    name: Pages.devices,
+    builder: (_, __) => const DevicePage(),
+  ),
+  GoRoute(
+    path: Pages.cheffy.path,
+    name: Pages.cheffy,
+    builder: (_, __) => const CheffyPage(),
   ),
   GoRoute(
     path: Pages.carousel.path,

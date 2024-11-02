@@ -97,7 +97,7 @@ class _RevenueChartState extends ConsumerState<RevenueChart> {
 
   @override
   Widget build(BuildContext context) {
-    double revenue = (ref.watch(userProvider) as Attendant).balance;
+    double revenue = ref.watch(revenueProvider);
 
     return Column(
       children: [
@@ -276,7 +276,7 @@ class _WalletSliderState extends ConsumerState<WalletSlider> {
 
   @override
   Widget build(BuildContext context) {
-    double revenue = (ref.watch(userProvider) as Attendant).balance;
+    double revenue = 0;//(ref.watch(userProvider) as Attendant).balance;
 
     return Container(
       width: 375.w,

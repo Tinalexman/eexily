@@ -7,6 +7,13 @@ export 'package:dio/dio.dart';
 const String baseURL = "https://eexily-backend.onrender.com";
 // const String baseURL = "http://192.168.87.168:3030";
 
+const String nubanUrl = "https://app.nuban.com/api/NUBAN-BUEOFPVS2352/";
+//https://app.nuban.com.ng/api/NUBAN-BUEOFPVS2352?bank_code=058&acc_no=0435172012
+//https://app.nuban.com.ng/bank_codes.json is a list of responses like {
+//        "bank_name": "Covenant Microfinance Bank",
+//        "code": "070006"
+//    },
+
 String accessToken = "";
 
 const String imgPrefix = "data:image/jpeg;base64,";

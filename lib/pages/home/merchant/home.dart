@@ -1,5 +1,4 @@
 import 'package:eexily/components/order.dart';
-import 'package:eexily/components/user/attendant.dart';
 import 'package:eexily/components/user/merchant.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
@@ -25,7 +24,7 @@ class _HomeState extends ConsumerState<Home> {
 
   @override
   Widget build(BuildContext context) {
-    Attendant attendant = ref.watch(userProvider) as Attendant;
+    Merchant merchant = ref.watch(userProvider) as Merchant;
     List<Order> orders = ref.watch(attendantOrdersProvider);
 
     return Scaffold(
@@ -45,7 +44,7 @@ class _HomeState extends ConsumerState<Home> {
                   SizedBox(
                     width: 220.w,
                     child: Text(
-                      attendant.gasStationName,
+                      merchant.fullName,
                       style: context.textTheme.titleLarge!.copyWith(
                         color: primary,
                         fontWeight: FontWeight.w600,
@@ -116,7 +115,7 @@ class _HomeState extends ConsumerState<Home> {
                   ),
                   itemBuilder: (_, index) => OrderContainer(
                     order: orders[index],
-                    link: Pages.viewAttendantOrder,
+                    link: Pages.viewMerchantOrder,
                   ),
                   physics: const BouncingScrollPhysics(),
                   itemCount: orders.length < 2 ? orders.length : 2,

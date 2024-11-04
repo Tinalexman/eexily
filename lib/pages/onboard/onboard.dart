@@ -1,3 +1,4 @@
+import 'package:eexily/api/file_handler.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,12 +48,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
             top: animate ? 110.h : -50.h,
             left: 132.5.w,
             right: 132.5.w,
-            child: Text(
-              "GasFeel",
-              style: context.textTheme.headlineLarge!.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
+            child: Image.asset(
+              "assets/images/GF A.png",
+              width: 180.w,
             ),
           ),
           AnimatedPositioned(
@@ -63,7 +61,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
             bottom: animate ? 60.h : -50.h,
             child: ElevatedButton(
               onPressed: () =>
-                  context.router.pushReplacementNamed(Pages.register),
+                context.router.pushReplacementNamed(Pages.carousel)
+              ,
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(330.w, 50.h),
                 fixedSize: Size(330.w, 50.h),

@@ -10,6 +10,8 @@ import 'package:eexily/pages/auth/register_rider.dart';
 import 'package:eexily/pages/auth/register_station.dart';
 import 'package:eexily/pages/auth/register_support.dart';
 import 'package:eexily/pages/auth/register_user.dart';
+import 'package:eexily/pages/auth/select_bank.dart';
+import 'package:eexily/pages/auth/setup_account.dart';
 import 'package:eexily/pages/auth/verify.dart';
 import 'package:eexily/pages/home/attendant/all_orders.dart';
 import 'package:eexily/pages/home/attendant/view_order.dart';
@@ -147,6 +149,16 @@ final List<GoRoute> routes = [
         ScheduleRefillPage(scheduledTime: state.extra as String),
   ),
   GoRoute(
+    path: Pages.setupAccount.path,
+    name: Pages.setupAccount,
+    builder: (_, state) => SetupAccountPage(userId: state.extra as String),
+  ),
+  GoRoute(
+    path: Pages.selectBank.path,
+    name: Pages.selectBank,
+    builder: (_, state) => SelectBankPage(current: state.extra as String),
+  ),
+  GoRoute(
     path: Pages.refill.path,
     name: Pages.refill,
     builder: (_, __) => const RefillPage(),
@@ -225,5 +237,5 @@ final List<GoRoute> routes = [
     path: Pages.viewDriverOrder.path,
     name: Pages.viewDriverOrder,
     builder: (_, state) => ViewDriverOrder(order: state.extra as Order),
-  )
+  ),
 ];

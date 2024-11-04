@@ -125,21 +125,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               children: [
                 SizedBox(height: 40.h),
                 Image.asset(
-                  "assets/images/logo blue.png",
-                  width: 40.w,
+                  "assets/images/GF B.png",
+                  width: 140.w,
                   fit: BoxFit.cover,
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  "Sign In",
-                  style: context.textTheme.headlineMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: primary,
-                  ),
                 ),
                 Text(
                   "Welcome back!",
-                  style: context.textTheme.bodyLarge!.copyWith(
+                  style: context.textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.w400,
                     color: monokai.withOpacity(0.7),
                   ),
@@ -252,7 +244,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     logIn();
                   },
                   child: loading ? whiteLoader : Text(
-                    "Sign in",
+                    "Login",
                     style: context.textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,

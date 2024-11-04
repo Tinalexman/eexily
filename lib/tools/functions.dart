@@ -1,48 +1,25 @@
 import 'dart:math';
 
-import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 void showToast(String message, BuildContext context, {Color? backgroundColor}) {
-  HapticFeedback.vibrate();
-  AnimatedSnackBar snackBar = AnimatedSnackBar(
-    builder: (context) => ConstrainedBox(
-      constraints: BoxConstraints(
-        minWidth: 10.w,
-        maxWidth: 220.w,
-      ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: backgroundColor ?? primary,
-          borderRadius: BorderRadius.circular(5.r),
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 10.w,
-            vertical: 8.h,
-          ),
-          child: Text(
-            message,
-            style: context.textTheme.bodySmall!.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-            ),
-            textAlign: TextAlign.center,
-          ),
+  HapticFeedback.mediumImpact();
+  context.messenger.showSnackBar(
+    SnackBar(
+      elevation: 1.0,
+      backgroundColor: backgroundColor ?? Colors.redAccent,
+      content: Text(
+        message,
+        style: context.textTheme.bodyMedium!.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
         ),
       ),
     ),
-    mobileSnackBarPosition: MobileSnackBarPosition.top,
-    animationCurve: Curves.ease,
-    snackBarStrategy: RemoveSnackBarStrategy(),
-    duration: const Duration(seconds: 1),
-    animationDuration: const Duration(milliseconds: 350),
   );
-  snackBar.show(context);
 }
 
 void unFocus() => FocusManager.instance.primaryFocus?.unfocus();
@@ -270,7 +247,6 @@ String getRandomIDWithSeed(int seed) {
       suf = String.fromCharCode(random.nextInt(26) + 65);
   return "$pre$randomNumber$suf";
 }
-
 
 String get randomOrderID {
   Random random = Random(DateTime.now().millisecondsSinceEpoch);

@@ -56,27 +56,24 @@ dev_dependencies:
   flutter_lints: ^3.0.1
 
 flutter_launcher_icons:
-  image_path_android: "assets/images/L11A.png"
-  image_path_ios: "assets/images/L11A.png"
+  image_path_android: "assets/images/gas feel.png"
+  image_path_ios: "assets/images/gas feel.png"
   android: true
   ios: true
   adaptive_icon_background: "#0054C2"
-  adaptive_icon_foreground: "assets/images/L11A.png"
+  adaptive_icon_foreground: "assets/images/gas feel.png"
   min_sdk_android: 29
   remove_alpha_ios: true
 
 flutter_native_splash:
   android: true
   ios: true
-  web: false
-  color: "#FFFFFF"
-  image: "assets/images/L11B.png"
-  branding: "assets/images/B11A.png"
+  color: "#0054C2"
+  image: "assets/images/gas feel.png"
 
   android_12:
-    color: "#FFFFFF"
-    image: "assets/images/L12A.png"
-    branding: "assets/images/B12A.png"
+    color: "#0054C2"
+    image: "assets/images/gas feel splash.png"
 
 flutter:
   uses-material-design: true

@@ -239,7 +239,7 @@ class SpecialForm extends StatelessWidget {
             color: Colors.red,
             fontWeight: FontWeight.w300,
           ),
-          fillColor: Colors.white,
+          fillColor: fillColor ?? Colors.white,
           filled: true,
           contentPadding: padding ??
               EdgeInsets.symmetric(

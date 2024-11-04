@@ -1,6 +1,7 @@
 import 'package:eexily/api/file_handler.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -67,7 +68,10 @@ class _SplashPageState extends State<SplashPage>
       body: FadeTransition(
         opacity: animation,
         child: Center(
-          child: Image.asset("assets/images/LogoAndText.png"),
+          child: Image.asset(
+            "assets/images/GF A.png",
+            width: 200.w,
+          ),
         ),
       ),
     );

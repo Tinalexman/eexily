@@ -20,13 +20,9 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController accountNameController = TextEditingController();
-  final TextEditingController accountNumberController = TextEditingController();
-  final TextEditingController bankNameController = TextEditingController();
 
   final Map<String, String> authDetails = {
-    "gasStationName": "",
+    "storeName": "",
     "address": "",
   };
 
@@ -41,9 +37,6 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
   void dispose() {
     nameController.dispose();
     addressController.dispose();
-    bankNameController.dispose();
-    accountNameController.dispose();
-    accountNumberController.dispose();
     super.dispose();
   }
 
@@ -67,16 +60,15 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
               children: [
                 SizedBox(height: 40.h),
                 Image.asset(
-                  "assets/images/logo blue.png",
-                  width: 40.w,
+                  "assets/images/GF B.png",
+                  width: 140.w,
                   fit: BoxFit.cover,
                 ),
-                SizedBox(height: 10.h),
                 Text(
-                  "Gas Station Details",
-                  style: context.textTheme.headlineMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: primary,
+                  "Step 1 of 2",
+                  style: context.textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: monokai.withOpacity(0.7),
                   ),
                 ),
                 SizedBox(height: 50.h),
@@ -86,7 +78,7 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Gas Station Name",
+                        "Store Name",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),
@@ -97,73 +89,12 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
                         onValidate: (value) {
                           value = value.trim();
                           if (value!.isEmpty) {
-                            return 'Invalid Gas Station Name';
+                            return 'Invalid Store Name';
                           }
                           return null;
                         },
                         onSave: (value) =>
-                        authDetails["gasStationName"] = value!.trim(),
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        "Account Name",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      SizedBox(height: 4.h),
-                      SpecialForm(
-                        controller: accountNameController,
-                        width: 375.w,
-                        hint: "e.g John Doe",
-                        onValidate: (value) {
-                          value = value.trim();
-                          if (value!.isEmpty) {
-                            return 'Invalid Bank Account Name';
-                          }
-                          return null;
-                        },
-                        onSave: (value) =>
-                        authDetails["accountName"] = value!.trim(),
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        "Account Number",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      SizedBox(height: 4.h),
-                      SpecialForm(
-                        controller: accountNumberController,
-                        width: 375.w,
-                        hint: "e.g 1234567890",
-                        type: TextInputType.number,
-                        onValidate: (value) {
-                          value = value.trim();
-                          if (value!.isEmpty) {
-                            return 'Invalid Account Number';
-                          }
-                          return null;
-                        },
-                        onSave: (value) =>
-                        authDetails["accountNumber"] = value!.trim(),
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        "Bank Name",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      SizedBox(height: 4.h),
-                      SpecialForm(
-                        controller: bankNameController,
-                        width: 375.w,
-                        hint: "e.g First Bank",
-                        onValidate: (value) {
-                          value = value.trim();
-                          if (value!.isEmpty) {
-                            return 'Invalid Bank Name';
-                          }
-                          return null;
-                        },
-                        onSave: (value) =>
-                        authDetails["bankName"] = value!.trim(),
+                        authDetails["storeName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(

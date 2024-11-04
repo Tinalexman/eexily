@@ -24,10 +24,9 @@ class RevenueChart extends ConsumerStatefulWidget {
 class _RevenueChartState extends ConsumerState<RevenueChart> {
   final List<String> filterOptions = [
     "This week",
-    "Last week",
-    "This month",
-    "Last month",
-    "Last 3 months",
+    "Last Week",
+    "This Month",
+    "Last Month",
   ];
 
   int currentFilterIndex = 0;

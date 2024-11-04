@@ -154,7 +154,7 @@ class _CarouselPageState extends State<CarouselPage> {
                         curve: Curves.easeOut,
                       );
                     } else {
-                      context.router.pushReplacementNamed(Pages.onboard);
+                      context.router.pushReplacementNamed(Pages.login);
                     }
                   },
                   child: Text(

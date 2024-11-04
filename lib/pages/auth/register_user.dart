@@ -84,16 +84,15 @@ class _RegisterUserPageState extends ConsumerState<RegisterUserPage> {
               children: [
                 SizedBox(height: 40.h),
                 Image.asset(
-                  "assets/images/logo blue.png",
-                  width: 40.w,
+                  "assets/images/GF B.png",
+                  width: 140.w,
                   fit: BoxFit.cover,
                 ),
-                SizedBox(height: 10.h),
                 Text(
-                  "User Details",
-                  style: context.textTheme.headlineMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: primary,
+                  "Step 1 of 2",
+                  style: context.textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: monokai.withOpacity(0.7),
                   ),
                 ),
                 SizedBox(height: 50.h),
@@ -207,7 +206,7 @@ class _RegisterUserPageState extends ConsumerState<RegisterUserPage> {
                   child: loading
                       ? whiteLoader
                       : Text(
-                          "Continue",
+                          "Complete",
                           style: context.textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Colors.white,

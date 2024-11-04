@@ -120,26 +120,11 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
               children: [
                 SizedBox(height: 40.h),
                 Image.asset(
-                  "assets/images/logo blue.png",
-                  width: 40.w,
+                  "assets/images/GF B.png",
+                  width: 140.w,
                   fit: BoxFit.cover,
                 ),
-                SizedBox(height: 10.h),
-                Text(
-                  "Sign Up",
-                  style: context.textTheme.headlineMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: primary,
-                  ),
-                ),
-                Text(
-                  "Welcome to GasFeel!",
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w400,
-                    color: monokai.withOpacity(0.7),
-                  ),
-                ),
-                SizedBox(height: 50.h),
+                SizedBox(height: 30.h),
                 Form(
                   key: formKey,
                   child: Column(
@@ -310,7 +295,7 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
                   child: loading
                       ? whiteLoader
                       : Text(
-                          "Create Account",
+                          "Register",
                           style: context.textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
@@ -318,56 +303,6 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
                         ),
                 ),
                 SizedBox(height: 30.h),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   children: [
-                //     SizedBox(
-                //       width: 140.w,
-                //       child: Divider(
-                //         color: neutral2,
-                //         thickness: 1.h,
-                //       ),
-                //     ),
-                //     Text(
-                //       "OR",
-                //       style: context.textTheme.bodyLarge,
-                //     ),
-                //     SizedBox(
-                //       width: 140.w,
-                //       child: Divider(
-                //         color: neutral2,
-                //         thickness: 1.h,
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                // SizedBox(height: 15.h),
-                // Container(
-                //   width: 375.w,
-                //   height: 50.h,
-                //   decoration: BoxDecoration(
-                //     color: Colors.white,
-                //     border: Border.all(color: primary50),
-                //     borderRadius: BorderRadius.circular(7.5.r),
-                //   ),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     crossAxisAlignment: CrossAxisAlignment.center,
-                //     children: [
-                //       Image.asset(
-                //         "assets/images/Google.png",
-                //         width: 40.w,
-                //       ),
-                //       SizedBox(width: 10.w),
-                //       Text(
-                //         "Continue with Google",
-                //         style: context.textTheme.bodyLarge,
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // SizedBox(height: 15.h),
                 RichText(
                   text: TextSpan(
                     children: [
@@ -376,7 +311,7 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
                         style: context.textTheme.bodyMedium,
                       ),
                       TextSpan(
-                        text: " Sign in",
+                        text: " Login",
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: primary,
                           fontWeight: FontWeight.w500,

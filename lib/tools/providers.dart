@@ -50,7 +50,7 @@ Order dummyOrder = Order(
 );
 
 final StateProvider<UserBase> userProvider =
-    StateProvider((ref) => dummyUser);
+    StateProvider((ref) => dummyMerchant);
 
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
 

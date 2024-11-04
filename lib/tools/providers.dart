@@ -11,16 +11,14 @@ import 'package:eexily/components/user/driver.dart';
 import 'package:eexily/components/user/merchant.dart';
 import 'package:eexily/components/user/support.dart';
 import 'package:eexily/components/user/user.dart';
+import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const UserBase dummyBase = UserBase();
 
-const User dummyUser = User(
-  lastName: "Doe",
-  firstName: "John",
-  email: "johndoe@mail.com"
-);
+const User dummyUser =
+    User(lastName: "Doe", firstName: "John", email: "johndoe@mail.com");
 
 const Attendant dummyAttendant = Attendant();
 
@@ -47,6 +45,17 @@ Order dummyOrder = Order(
   riderImage: "",
   riderName: "",
   status: OrderStatus.pending,
+);
+
+final List<Notification> dummyNotifications = List.generate(
+  10,
+  (_) => Notification(
+    timestamp: DateTime.now(),
+    actionLabel: "Action Label",
+    read: false,
+    message: loremIpsum.substring(0, 100),
+    notificationType: "",
+  ),
 );
 
 final StateProvider<UserBase> userProvider =

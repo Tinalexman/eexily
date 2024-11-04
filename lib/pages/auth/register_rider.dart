@@ -66,12 +66,16 @@ class _RegisterRiderPageState extends ConsumerState<RegisterRiderPage> {
     super.dispose();
   }
 
-  void showMessage(String message) => showToast(message, context);
+  void showMessage(String message, {Color? backgroundColor}) => showToast(
+        message,
+        context,
+        backgroundColor: backgroundColor,
+      );
 
   Future<void> createRider() async {
     var response = await updateRiderUser(authDetails, widget.userId);
     setState(() => loading = false);
-    showMessage(response.message);
+    showMessage(response.message, backgroundColor: response.status ? primary : null);
 
     if (!response.status) {
       return;
@@ -81,7 +85,7 @@ class _RegisterRiderPageState extends ConsumerState<RegisterRiderPage> {
   }
 
   void navigate() {
-    context.router.goNamed(Pages.login);
+    context.router.goNamed(Pages.setupAccount, extra: [widget.userId, "Rider"]);
   }
 
   @override
@@ -100,16 +104,15 @@ class _RegisterRiderPageState extends ConsumerState<RegisterRiderPage> {
               children: [
                 SizedBox(height: 40.h),
                 Image.asset(
-                  "assets/images/logo blue.png",
-                  width: 40.w,
+                  "assets/images/GF B.png",
+                  width: 140.w,
                   fit: BoxFit.cover,
                 ),
-                SizedBox(height: 10.h),
                 Text(
-                  "Rider Details",
-                  style: context.textTheme.headlineMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: primary,
+                  "Step 1 of 2",
+                  style: context.textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: monokai.withOpacity(0.7),
                   ),
                 ),
                 SizedBox(height: 50.h),
@@ -247,7 +250,7 @@ class _RegisterRiderPageState extends ConsumerState<RegisterRiderPage> {
                         },
                         onSave: (String value) {
                           value = value.trim();
-                          if(value.isNotEmpty) {
+                          if (value.isNotEmpty) {
                             authDetails["gasStationCode"] = value;
                           }
                         },

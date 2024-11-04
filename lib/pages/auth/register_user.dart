@@ -89,7 +89,7 @@ class _RegisterUserPageState extends ConsumerState<RegisterUserPage> {
                   fit: BoxFit.cover,
                 ),
                 Text(
-                  "Step 1 of 2",
+                  "Please fill in your details",
                   style: context.textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.w400,
                     color: monokai.withOpacity(0.7),

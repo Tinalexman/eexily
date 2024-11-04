@@ -86,7 +86,7 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.registerMerchant.path,
     name: Pages.registerMerchant,
-    builder: (_, __) => const RegisterMerchantPage(),
+    builder: (_, state) => RegisterMerchantPage(userId: state.extra as String),
   ),
   GoRoute(
     path: Pages.registerRider.path,
@@ -151,7 +151,7 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.setupAccount.path,
     name: Pages.setupAccount,
-    builder: (_, state) => SetupAccountPage(userId: state.extra as String),
+    builder: (_, state) => SetupAccountPage(userData: state.extra as List<String>),
   ),
   GoRoute(
     path: Pages.selectBank.path,

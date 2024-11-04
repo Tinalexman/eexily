@@ -72,6 +72,15 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        title: Text(
+          "Edit Profile",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(

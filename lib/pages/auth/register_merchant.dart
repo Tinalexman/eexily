@@ -1,3 +1,4 @@
+import 'package:eexily/api/merchant.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/widgets.dart';
@@ -5,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterMerchantPage extends StatefulWidget {
-
+  final String userId;
 
   const RegisterMerchantPage({
     super.key,
+    required this.userId,
   });
 
   @override
@@ -18,12 +20,20 @@ class RegisterMerchantPage extends StatefulWidget {
 class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
+  final TextEditingController retailController = TextEditingController();
+  final TextEditingController regularController = TextEditingController();
 
-  final Map<String, String> authDetails = {
+  final Map<String, dynamic> authDetails = {
     "storeName": "",
     "address": "",
+    "firstName": "",
+    "lastName": "",
+    "retailPrice": 0,
+    "regularPrice": 0,
   };
 
   bool loading = false;
@@ -35,14 +45,37 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
 
   @override
   void dispose() {
+    retailController.dispose();
+    regularController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     nameController.dispose();
     addressController.dispose();
     super.dispose();
   }
 
-  void showMessage(String message) => showToast(message, context);
+  void showMessage(String message, {Color? backgroundColor}) => showToast(
+        message,
+        context,
+        backgroundColor: backgroundColor,
+      );
 
-  Future<void> createGasStation() async {}
+  Future<void> createMerchant() async {
+    var response = await updateMerchantUser(authDetails, widget.userId);
+    setState(() => loading = false);
+    showMessage(response.message,
+        backgroundColor: response.status ? primary : null);
+
+    if (!response.status) {
+      return;
+    }
+
+    navigate();
+  }
+
+  void navigate() {
+    context.router.goNamed(Pages.setupAccount, extra: [widget.userId, "Merchant"]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +111,47 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
+                        "First Name",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      SpecialForm(
+                        controller: firstNameController,
+                        width: 375.w,
+                        hint: "e.g Doe",
+                        onValidate: (value) {
+                          value = value.trim();
+                          if (value!.isEmpty) {
+                            return 'Invalid First Name';
+                          }
+
+                          return null;
+                        },
+                        onSave: (value) =>
+                            authDetails["firstName"] = value!.trim(),
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Last Name",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      SpecialForm(
+                        controller: lastNameController,
+                        width: 375.w,
+                        hint: "e.g John",
+                        onValidate: (value) {
+                          value = value.trim();
+                          if (value!.isEmpty) {
+                            return 'Invalid Last Name';
+                          }
+                          return null;
+                        },
+                        onSave: (value) =>
+                            authDetails["lastName"] = value!.trim(),
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
                         "Store Name",
                         style: context.textTheme.bodyMedium,
                       ),
@@ -94,7 +168,74 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
                           return null;
                         },
                         onSave: (value) =>
-                        authDetails["storeName"] = value!.trim(),
+                            authDetails["storeName"] = value!.trim(),
+                      ),
+                      SizedBox(height: 10.h),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Retail Price",
+                                style: context.textTheme.bodyMedium,
+                              ),
+                              SizedBox(height: 4.h),
+                              SpecialForm(
+                                controller: retailController,
+                                width: 150.w,
+                                hint: "e.g 1000",
+                                type: TextInputType.number,
+                                formatters: [
+                                  DigitGroupFormatter(),
+                                ],
+                                onValidate: (value) {
+                                  value = value.trim();
+                                  if (value!.isEmpty) {
+                                    return 'Invalid Price';
+                                  }
+                                  return null;
+                                },
+                                onSave: (String value) => authDetails[
+                                    "retailPrice"] = double.tryParse(
+                                        value.trim().replaceAll(",", "")) ??
+                                    0,
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Regular Price",
+                                style: context.textTheme.bodyMedium,
+                              ),
+                              SizedBox(height: 4.h),
+                              SpecialForm(
+                                controller: regularController,
+                                width: 150.w,
+                                hint: "e.g 1000",
+                                type: TextInputType.number,
+                                formatters: [
+                                  DigitGroupFormatter(),
+                                ],
+                                onValidate: (value) {
+                                  value = value.trim();
+                                  if (value!.isEmpty) {
+                                    return 'Invalid Price';
+                                  }
+                                  return null;
+                                },
+                                onSave: (String value) => authDetails[
+                                    "regularPrice"] = double.tryParse(
+                                        value.trim().replaceAll(",", "")) ??
+                                    0,
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                       SizedBox(height: 10.h),
                       Text(
@@ -115,12 +256,12 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
                           return null;
                         },
                         onSave: (value) =>
-                        authDetails["address"] = value!.trim(),
+                            authDetails["address"] = value!.trim(),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 100.h),
+                SizedBox(height: 70.h),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primary,
@@ -135,17 +276,17 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
 
                     if (loading) return;
                     setState(() => loading = true);
-                    createGasStation();
+                    createMerchant();
                   },
                   child: loading
                       ? whiteLoader
                       : Text(
-                    "Continue",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                          "Continue",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
                 SizedBox(height: 30.h),
               ],

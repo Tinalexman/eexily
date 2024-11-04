@@ -28,33 +28,10 @@ class EexilyUserDrawer extends ConsumerWidget {
             SizedBox(height: 80.h),
             Padding(
               padding: EdgeInsets.only(left: 20.w),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/logo blue.png",
-                    width: 50.w,
-                    fit: BoxFit.cover,
-                  ),
-                  SizedBox(width: 20.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "GasFeel",
-                        style: context.textTheme.titleLarge!.copyWith(
-                          color: primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        "Feel the difference",
-                        style: context.textTheme.bodyLarge,
-                      ),
-                    ],
-                  ),
-                ],
+              child: Image.asset(
+                "assets/images/GF B.png",
+                width: 120.w,
+                fit: BoxFit.cover,
               ),
             ),
             SizedBox(height: 80.h),

@@ -38,9 +38,9 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
     "Individual/Household": "INDIVIDUAL",
     "Merchant": "MERCHANT",
     "Driver/Rider": "RIDER",
-    "Business": "BUSINESS",
-    "Gas Station Attendant": "GAS_STATION",
-    "Customer Support": "CUSTOMER_SERVICE",
+    // "Business": "BUSINESS",
+    // "Gas Station Attendant": "GAS_STATION",
+    // "Customer Support": "CUSTOMER_SERVICE",
   };
 
   late List<String> optionKeys;
@@ -80,14 +80,14 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
   void navigate(String userId) {
     String email = emailController.text.trim();
     String destination = "";
-    if (type == optionKeys[3]) {
-      destination = Pages.registerBusiness;
-    } else if (type == optionKeys[0]) {
+    if (type == optionKeys[0]) {
       destination = Pages.registerUser;
     } else if (type == optionKeys[1]) {
       destination = Pages.registerMerchant;
     } else if (type == optionKeys[2]) {
       destination = Pages.registerRider;
+    } else if (type == optionKeys[3]) {
+      destination = Pages.registerBusiness;
     } else if (type == optionKeys[4]) {
       destination = Pages.registerStation;
     } else if (type == optionKeys[5]) {

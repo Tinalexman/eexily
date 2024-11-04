@@ -4,8 +4,8 @@ export 'dart:developer' show log;
 
 export 'package:dio/dio.dart';
 
-const String baseURL = "https://eexily-backend.onrender.com";
-// const String baseURL = "http://192.168.87.168:3030";
+// const String baseURL = "https://eexily-backend.onrender.com";
+const String baseURL = "http://192.168.87.168:3030";
 
 const String nubanUrl = "https://app.nuban.com/api/NUBAN-BUEOFPVS2352/";
 //https://app.nuban.com.ng/api/NUBAN-BUEOFPVS2352?bank_code=058&acc_no=0435172012

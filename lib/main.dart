@@ -34,7 +34,7 @@ class _EexilyState extends State<Eexily> {
     super.initState();
 
     _router = GoRouter(
-      initialLocation: Pages.setupAccount.path,
+      initialLocation: Pages.splash.path,
       initialExtra: "dummyID",
       routes: routes,
     );

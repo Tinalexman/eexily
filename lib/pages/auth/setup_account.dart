@@ -1,6 +1,9 @@
 import 'dart:developer';
 
 import 'package:eexily/api/bank.dart';
+import 'package:eexily/api/base.dart';
+import 'package:eexily/api/merchant.dart';
+import 'package:eexily/api/rider.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/widgets.dart';
@@ -9,11 +12,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SetupAccountPage extends StatefulWidget {
-  final String userId;
+  final List<String> userData;
 
   const SetupAccountPage({
     super.key,
-    required this.userId,
+    required this.userData,
   });
 
   @override
@@ -28,8 +31,7 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
 
   final Map<String, String> authDetails = {
     "accountName": "",
-    "accountNumber": "",
-    "bankName": "",
+    "accountNumber": ""
   };
 
   bool loading = false;
@@ -48,9 +50,30 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
     super.dispose();
   }
 
-  void showMessage(String message) => showToast(message, context);
+  void showMessage(String message, {Color? backgroundColor}) => showToast(
+        message,
+        context,
+        backgroundColor: backgroundColor,
+      );
 
-  Future<void> setup() async {}
+  Future<void> update() async {
+    authDetails["bankName"] = bankName;
+
+    String userId = widget.userData.first;
+    String type = widget.userData[1];
+    var response = type == "Rider"
+        ? (await updateRiderUser(authDetails, userId))
+        : (await updateMerchantUser(authDetails, userId));
+    setState(() => loading = false);
+    showMessage(response.message,
+        backgroundColor: response.status ? primary : null);
+
+    if (!response.status) {
+      return;
+    }
+
+    navigate();
+  }
 
   Future<void> getBankingInformation() async {
     String accountNumber = accountNumberController.text.trim();
@@ -63,6 +86,8 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
       accountNameController.clear();
     }
   }
+
+  void navigate() => context.router.goNamed(Pages.login);
 
   @override
   Widget build(BuildContext context) {
@@ -117,9 +142,9 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
                             }
                           }
                         },
-                        onValidate: (value) {
+                        onValidate: (String value) {
                           value = value.trim();
-                          if (value!.isEmpty) {
+                          if (value.length != 10) {
                             return 'Invalid Account Number';
                           }
                           return null;
@@ -213,7 +238,7 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
                     if (loading) return;
                     if (!validateForm(formKey)) return;
                     setState(() => loading = true);
-                    setup();
+                    update();
                   },
                   child: loading
                       ? whiteLoader

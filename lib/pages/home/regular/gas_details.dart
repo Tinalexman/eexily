@@ -22,7 +22,7 @@ class _GasDetailsPageState extends ConsumerState<GasDetailsPage> {
   @override
   Widget build(BuildContext context) {
     bool isGasActive = ref.watch(playGasAnimationProvider);
-    int cylinderSize = 0;// ref.watch(gasCylinderSizeProvider);
+    int cylinderSize = ref.watch(gasCylinderSizeProvider);
     int level = ref.watch(gasLevelProvider);
 
     return Scaffold(

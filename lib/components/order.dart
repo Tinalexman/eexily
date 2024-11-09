@@ -44,12 +44,20 @@ class UserOrder {
   final String code;
   final double price;
   final int quantity;
+  final String pickedUpTime;
+  final String paymentMethod;
+  final String scheduledTime;
+  final String address;
 
   const UserOrder({
     this.orderState = "PENDING",
     this.id = "",
     this.code = "",
+    this.address = "",
     this.price = 0.0,
     this.quantity = 0,
+    this.paymentMethod = "",
+    this.pickedUpTime = "",
+    this.scheduledTime = "",
   });
 }

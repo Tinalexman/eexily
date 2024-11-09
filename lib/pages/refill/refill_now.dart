@@ -99,7 +99,7 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
       appBar: AppBar(
         elevation: 0.0,
         title: Text(
-          "Refill Now",
+          "Express",
           style: context.textTheme.titleLarge!.copyWith(
             fontWeight: FontWeight.w600,
           ),

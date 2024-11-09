@@ -90,6 +90,7 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
       loading = false;
       orders.clear();
       orders.addAll(response.payload);
+      ref.watch(previousUserOrdersProvider.notifier).state = response.payload;
     });
   }
 
@@ -244,7 +245,43 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 5.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Picked Up Time:",
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        orders[0].pickedUpTime,
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: monokai,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Delivery Time:",
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        convertTime(DateTime.parse(orders[0].scheduledTime)),
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: monokai,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -285,8 +322,8 @@ class _NoOrder extends StatelessWidget {
             dividerColor: Colors.transparent,
             labelStyle: context.textTheme.titleMedium,
             tabs: const [
-              Tab(text: "Standard Delivery"),
-              Tab(text: "Express Delivery"),
+              Tab(text: "Standard"),
+              Tab(text: "Express"),
             ],
           ),
           SizedBox(height: 10.h),

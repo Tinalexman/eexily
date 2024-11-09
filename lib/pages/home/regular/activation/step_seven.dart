@@ -18,7 +18,8 @@ class StepSeven extends ConsumerStatefulWidget {
 }
 
 class _StepSevenState extends ConsumerState<StepSeven> {
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController lastDateController = TextEditingController();
+  final TextEditingController lastValueController = TextEditingController();
 
   DateTime? lastGasFilledDate;
 
@@ -29,19 +30,22 @@ class _StepSevenState extends ConsumerState<StepSeven> {
         ref.read(individualGasQuestionsProvider).lastGasFilledPeriod;
     if (lastFilledDate.isNotEmpty) {
       lastGasFilledDate = DateTime.parse(lastFilledDate);
-      controller.text = formatDateRaw(lastGasFilledDate!);
+      lastDateController.text = formatDateRaw(lastGasFilledDate!);
     }
+    String lastFilledValue =
+        ref.read(individualGasQuestionsProvider).lastGasFilledQuantity;
+    lastValueController.text = lastFilledValue;
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    lastValueController.dispose();
+    lastDateController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    bool darkTheme = context.isDark;
     IndividualGasQuestionsData details =
         ref.watch(individualGasQuestionsProvider);
     return Column(
@@ -60,7 +64,7 @@ class _StepSevenState extends ConsumerState<StepSeven> {
         ),
         SizedBox(height: 10.h),
         SpecialForm(
-          controller: controller,
+          controller: lastDateController,
           width: 375.w,
           hint: "e.g Jan 1, 1960",
           readOnly: true,
@@ -75,7 +79,7 @@ class _StepSevenState extends ConsumerState<StepSeven> {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
                     details.copyWith(
                         lastGasFilledPeriod: pickedDate.toIso8601String());
-                controller.text = formatDateRaw(pickedDate);
+                lastDateController.text = formatDateRaw(pickedDate);
                 setState(() => lastGasFilledDate = pickedDate);
               }
             },
@@ -92,95 +96,16 @@ class _StepSevenState extends ConsumerState<StepSeven> {
           style: context.textTheme.bodyLarge,
         ),
         SizedBox(height: 10.h),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              value: details.lastGasFilledQuantity,
-              groupValue: "3",
-              onChanged: (val) {
-                ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledQuantity: "3");
-              },
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            Text(
-              "3kg",
-              style: context.textTheme.bodyMedium,
-            )
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              value: details.lastGasFilledQuantity,
-              groupValue: "6",
-              onChanged: (val) {
-                ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledQuantity: "6");
-              },
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            Text(
-              "6kg",
-              style: context.textTheme.bodyMedium,
-            )
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              value: details.lastGasFilledQuantity,
-              groupValue: "12",
-              onChanged: (val) {
-                ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledQuantity: "12");
-              },
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            Text(
-              "12kg",
-              style: context.textTheme.bodyMedium,
-            )
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              value: details.lastGasFilledQuantity,
-              groupValue: "25",
-              onChanged: (val) {
-                ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledQuantity: "25");
-              },
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            Text(
-              "25kg",
-              style: context.textTheme.bodyMedium,
-            )
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              value: details.lastGasFilledQuantity,
-              groupValue: "50",
-              onChanged: (val) {
-                ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(lastGasFilledQuantity: "50");
-              },
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            Text(
-              "50kg",
-              style: context.textTheme.bodyMedium,
-            )
-          ],
+        SpecialForm(
+          controller: lastValueController,
+          width: 375.w,
+          hint: "e.g 3",
+          type: TextInputType.number,
+          onChange: (String value) {
+            value = value.trim();
+            ref.watch(individualGasQuestionsProvider.notifier).state =
+                details.copyWith(lastGasFilledQuantity: value);
+          },
         ),
       ],
     );

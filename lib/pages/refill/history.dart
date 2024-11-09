@@ -59,7 +59,7 @@ class _IndividualOrderHistoryState extends ConsumerState<IndividualOrderHistory>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Order #${order.id}",
+                      "Order #${index + 1}",
                       style: context.textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -73,7 +73,7 @@ class _IndividualOrderHistoryState extends ConsumerState<IndividualOrderHistory>
                             style: context.textTheme.bodySmall,
                           ),
                           TextSpan(
-                            text: "",
+                            text: order.address,
                             style: context.textTheme.bodySmall!.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
@@ -107,7 +107,7 @@ class _IndividualOrderHistoryState extends ConsumerState<IndividualOrderHistory>
                           ),
                           TextSpan(
                             text:
-                            "₦${formatAmount("${order.price}")}",
+                            "₦${formatAmount(order.price.toStringAsFixed(0))}",
                             style: context.textTheme.bodySmall!.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
@@ -122,13 +122,13 @@ class _IndividualOrderHistoryState extends ConsumerState<IndividualOrderHistory>
                             text: "Delivered on: ",
                             style: context.textTheme.bodySmall,
                           ),
-                          // TextSpan(
-                          //   text:
-                          //   formatDateRawWithTime(order.states.last.timestamp),
-                          //   style: context.textTheme.bodySmall!.copyWith(
-                          //     fontWeight: FontWeight.w500,
-                          //   ),
-                          // )
+                          TextSpan(
+                            text:
+                            formatDateRawWithTime(DateTime.parse(order.scheduledTime)),
+                            style: context.textTheme.bodySmall!.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
                         ],
                       ),
                     ),

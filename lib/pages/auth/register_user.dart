@@ -52,12 +52,12 @@ class _RegisterUserPageState extends ConsumerState<RegisterUserPage> {
     super.dispose();
   }
 
-  void showMessage(String message) => showToast(message, context);
+  void showMessage(String message, {Color? color}) => showToast(message, context, backgroundColor: color);
 
   Future<void> createUser() async {
     var response = await updateIndividualUser(authDetails, widget.userId);
     setState(() => loading = false);
-    showMessage(response.message);
+    showMessage(response.message, color: response.status ? primary : null);
 
     if (!response.status) {
       return;

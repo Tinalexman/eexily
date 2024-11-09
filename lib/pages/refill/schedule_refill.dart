@@ -86,13 +86,13 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
 
     var response = await createScheduledOrder(data);
     setState(() => loading = false);
-    showMessage(response.message);
+    showMessage(response.message, response.status ? primary : null);
     if(!response.status) return;
 
     showSuccessModal(response.payload!);
   }
 
-  void showMessage(String message) => showToast(message, context);
+  void showMessage(String message, [Color? color]) => showToast(message, context, backgroundColor: color);
 
   @override
   void dispose() {
@@ -140,7 +140,7 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
       appBar: AppBar(
         elevation: 0.0,
         title: Text(
-          "Schedule a refill",
+          "Standard",
           style: context.textTheme.titleLarge!.copyWith(
             fontWeight: FontWeight.w600,
           ),

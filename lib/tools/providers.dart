@@ -17,8 +17,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const UserBase dummyBase = UserBase();
 
-const User dummyUser =
-    User(lastName: "Doe", firstName: "John", email: "johndoe@mail.com");
+const User dummyUser = User(
+  lastName: "Doe",
+  firstName: "John",
+  email: "johndoe@mail.com",
+);
 
 const Attendant dummyAttendant = Attendant();
 
@@ -58,8 +61,7 @@ final List<Notification> dummyNotifications = List.generate(
   ),
 );
 
-final StateProvider<UserBase> userProvider =
-    StateProvider((ref) => dummyMerchant);
+final StateProvider<UserBase> userProvider = StateProvider((ref) => dummyUser);
 
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
 
@@ -222,7 +224,7 @@ final StateProvider<int> gasLevelProvider = StateProvider((ref) => 0);
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
 
 final StateProvider<bool> playGasAnimationProvider =
-    StateProvider((ref) => false);
+    StateProvider((ref) => true);
 
 final StateProvider<IndividualGasQuestionsData> individualGasQuestionsProvider =
     StateProvider((ref) => const IndividualGasQuestionsData());

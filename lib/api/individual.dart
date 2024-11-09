@@ -50,6 +50,8 @@ Future<EexilyResponse<GasData?>> createIndividualGasQuestions(
     if (response.statusCode! == 201) {
       Map<String, dynamic> map = response.data["payload"];
 
+      log("$map");
+
       GasData gd = GasData(
         gasSize: -1,
         gasAmountLeft: (map["estimatedGasRemaining"] as num).toDouble() ?? 0.0,
@@ -113,7 +115,6 @@ Future<EexilyResponse<String?>> createScheduledOrder(
   );
 }
 
-
 Future<EexilyResponse<List<UserOrder>>> getUserOrders() async {
   try {
     Response response = await dio.get(
@@ -122,19 +123,28 @@ Future<EexilyResponse<List<UserOrder>>> getUserOrders() async {
     );
 
     if (response.statusCode! == 200) {
-      // Map<String, dynamic> data = response.data["payload"];
-      //
-      // UserOrder userOrder = UserOrder(
-      //   id: data["_id"],
-      //   orderState: data["status"],
-      //   price: (data["price"] as num).toDouble() +
-      //       (data["deliveryFee"] as num).toDouble(),
-      //   quantity: (data["quantity"] as num).toInt(),
-      // );
+      List<dynamic> data = response.data["payload"];
+      List<UserOrder> orders = [];
+
+      for (var element in data) {
+        UserOrder userOrder = UserOrder(
+          id: element["_id"],
+          orderState: element["status"],
+          price: (element["price"] as num).toDouble() +
+              (element["deliveryFee"] as num).toDouble(),
+          quantity: (element["quantity"] as num).toInt(),
+          code: element["gcode"],
+          paymentMethod: element["paymentMethod"],
+          pickedUpTime: element["pickedUpTime"],
+          scheduledTime: element["timeScheduled"],
+          address: element["address"],
+        );
+        orders.add(userOrder);
+      }
 
       return EexilyResponse(
         message: "Gas Orders Retrieved",
-        payload: [],
+        payload: orders,
         status: true,
       );
     }

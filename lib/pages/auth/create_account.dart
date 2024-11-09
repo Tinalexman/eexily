@@ -250,7 +250,7 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        "Type",
+                        "Register as",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),

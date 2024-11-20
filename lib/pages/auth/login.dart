@@ -13,7 +13,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   final Map<String, String>? savedDetails;
-  const LoginPage({super.key, this.savedDetails,});
+
+  const LoginPage({
+    super.key,
+    this.savedDetails,
+  });
 
   @override
   ConsumerState<LoginPage> createState() => _LoginPageState();
@@ -32,12 +36,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   bool showPassword = false, remember = false, loading = false;
 
-
-
   @override
   void initState() {
     super.initState();
-    if(widget.savedDetails != null) {
+    if (widget.savedDetails != null) {
       Future.delayed(Duration.zero, autoLogin);
     }
   }
@@ -49,18 +51,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     super.dispose();
   }
 
-
   void showMessage(String message) => showToast(message, context);
 
   Future<void> logIn() async {
     var response = await login(authDetails);
     setState(() => loading = false);
-    if(!response.status) {
+    if (!response.status) {
       showMessage(response.message);
       return;
     }
 
-    if(remember) {
+    if (remember) {
       FileHandler.saveAuthDetails(authDetails);
     }
 
@@ -74,13 +75,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     GasData data = response.payload![1];
 
     ref.watch(gasCylinderSizeProvider.notifier).state = data.gasSize;
-    int percentage = data.gasSize == 0 ? 0 : ((data.gasAmountLeft / data.gasSize) * 100).toInt();
+    int percentage = data.gasSize == 0
+        ? 0
+        : ((data.gasAmountLeft / data.gasSize) * 100).toInt();
     ref.watch(gasLevelProvider.notifier).state = percentage;
     ref.watch(gasEndingDateProvider.notifier).state = data.completionDate;
 
     navigate();
   }
-
 
   Future<void> autoLogin() async {
     String savedEmail = widget.savedDetails!["email"]!;
@@ -90,27 +92,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       emailController.text = savedEmail;
       passwordController.text = savedPassword;
       remember = true;
-      loading = true;
     });
 
     authDetails["email"] = savedEmail;
     authDetails["password"] = savedPassword;
-
-    var response = await login(authDetails);
-    setState(() => loading = false);
-    showMessage(response.message);
-
-    if(!response.status) {
-      return;
-    }
-
-    _processResponse(response);
   }
 
   @override
   Widget build(BuildContext context) {
-    bool darkTheme = context.isDark;
-
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -195,7 +184,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           }
                           return null;
                         },
-                        onSave: (value) => authDetails["password"] = value!.trim(),
+                        onSave: (value) =>
+                            authDetails["password"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Row(
@@ -204,14 +194,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           Checkbox(
                             value: remember,
                             onChanged: (val) {
-                              if(!loading) {
+                              if (!loading) {
                                 setState(() => remember = !remember);
                               }
                             },
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(2.r),
                             ),
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
                             side: const BorderSide(
                               color: monokai,
                               width: 1.5,
@@ -239,17 +230,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   onPressed: () {
                     if (!validateForm(formKey)) return;
 
-                    if(loading) return;
+                    if (loading) return;
                     setState(() => loading = true);
                     logIn();
                   },
-                  child: loading ? whiteLoader : Text(
-                    "Login",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: loading
+                      ? whiteLoader
+                      : Text(
+                          "Login",
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
                 SizedBox(height: 30.h),
                 RichText(

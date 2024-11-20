@@ -7,7 +7,7 @@ class UserBase extends Equatable {
   final String lastName;
   final String email;
   final String dateJoined;
-  final String  phoneNumber;
+  final String phoneNumber;
   final UserRole role;
 
   const UserBase({

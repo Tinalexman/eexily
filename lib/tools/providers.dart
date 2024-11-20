@@ -159,6 +159,8 @@ final StateProvider<List<Order>> attendantOrdersProvider = StateProvider(
   ),
 );
 
+final StateProvider<List<Order>> merchantOrdersProvider = StateProvider((ref) => []);
+
 final StateProvider<List<Transaction>> transactionsProvider = StateProvider(
   (ref) => List.generate(10, (index) {
     Random random = Random();
@@ -248,6 +250,7 @@ void logout(WidgetRef ref) {
   ref.invalidate(pageIndexProvider);
   ref.invalidate(shownGasToast);
   ref.invalidate(userProvider);
+  ref.invalidate(merchantOrdersProvider);
   ref.invalidate(notificationsProvider);
   FileHandler.saveAuthDetails(null);
 }

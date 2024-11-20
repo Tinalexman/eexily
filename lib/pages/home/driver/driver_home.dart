@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eexily/api/refill.dart';
 import 'package:eexily/api/rider.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/driver.dart';
@@ -44,7 +45,7 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
 
   Future<void> getRiderOrders() async {
    String id = ref.watch(userProvider.select((u) => u.id));
-    var response = await getIncomingOrders(id);
+    var response = await getDriverScheduledIncomingOrders(id);
     showMessage(response.message);
     setState(() => loading = false);
     if(!response.status) return;

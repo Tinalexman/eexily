@@ -38,8 +38,8 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
     "Individual/Household": "INDIVIDUAL",
     "Merchant": "MERCHANT",
     "Driver/Rider": "RIDER",
-    // "Business": "BUSINESS",
-    // "Gas Station Attendant": "GAS_STATION",
+    "Business": "BUSINESS",
+    "Gas Station Attendant": "GAS_STATION",
     // "Customer Support": "CUSTOMER_SERVICE",
   };
 

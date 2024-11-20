@@ -81,27 +81,43 @@ Future<EexilyResponse<GasData?>> createIndividualGasQuestions(
   );
 }
 
-Future<EexilyResponse<String?>> createScheduledOrder(
-    Map<String, dynamic> map) async {
+Future<EexilyResponse<List<UserOrder>>> getUserStandardOrders() async {
   try {
-    Response response = await dio.post(
+    Response response = await dio.get(
       "/refill-schedule",
-      data: map,
       options: configuration,
     );
 
     if (response.statusCode! == 200) {
-      Map<String, dynamic> data = response.data["payload"];
+      List<dynamic> data = response.data["payload"];
+      List<UserOrder> orders = [];
+
+      for (var element in data) {
+        UserOrder userOrder = UserOrder(
+          id: element["_id"],
+          orderState: element["status"],
+          price: (element["price"] as num).toDouble() +
+              (element["deliveryFee"] as num).toDouble(),
+          quantity: (element["quantity"] as num).toInt(),
+          code: element["gcode"],
+          paymentMethod: element["paymentMethod"],
+          pickedUpTime: element["pickedUpTime"],
+          scheduledTime: element["timeScheduled"],
+          address: element["address"],
+        );
+        orders.add(userOrder);
+      }
+
       return EexilyResponse(
-        message: "Gas Refill Scheduled",
-        payload: data["gcode"],
+        message: "Gas Orders Retrieved",
+        payload: orders,
         status: true,
       );
     }
   } on DioException catch (e) {
     return EexilyResponse(
       message: e.response?.data["message"] ?? "An error occurred.",
-      payload: null,
+      payload: [],
       status: false,
     );
   } catch (e) {
@@ -110,15 +126,15 @@ Future<EexilyResponse<String?>> createScheduledOrder(
 
   return const EexilyResponse(
     message: "An error occurred. Please try again.",
-    payload: null,
+    payload: [],
     status: false,
   );
 }
 
-Future<EexilyResponse<List<UserOrder>>> getUserOrders() async {
+Future<EexilyResponse<List<UserOrder>>> getUserExpressOrders() async {
   try {
     Response response = await dio.get(
-      "/refill-schedule",
+      "/express-refill",
       options: configuration,
     );
 

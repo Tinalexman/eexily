@@ -102,7 +102,7 @@ class _ActivationPagesState extends ConsumerState<ActivationPages> {
     } else if(activeStep == 3) {
       return data.householdSize.isNotEmpty && data.householdType.isNotEmpty && data.householdGender.isNotEmpty;
     } else if(activeStep == 4) {
-      return data.gasUsageAsidesCooking.isNotEmpty && data.grillOrOvenGasCooker.isNotEmpty;
+      return data.gasUsageAsidesCooking.isNotEmpty;
     } else if(activeStep == 5) {
       return data.gasMonthlyRefill.isNotEmpty;
     } else if(activeStep == 6) {

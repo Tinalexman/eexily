@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +9,52 @@ import 'package:go_router/go_router.dart';
 import 'package:timeago/timeago.dart' as time;
 
 import 'api/base.dart';
+import 'controllers/notifications.dart';
 import 'tools/routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+  AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+        channelGroupKey: 'gas_feel_notification_channel_group',
+        channelKey: 'gas_feel_notification_channel_key',
+        channelName: 'Gas Feel',
+        channelShowBadge: true,
+        channelDescription: 'Notification channel',
+        defaultColor: primary,
+        ledColor: Colors.white,
+        importance: NotificationImportance.High,
+        playSound: true,
+        soundSource: 'resource://raw/gas_feel.wav',
+      ),
+    ],
+    channelGroups: [
+      NotificationChannelGroup(
+        channelGroupKey: 'gas_feel_notification_channel_group',
+        channelGroupName: 'GasFeel Notification Group',
+      )
+    ],
+    debug: true,
+  );
+
   await ScreenUtil.ensureScreenSize();
+
+  bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+  if (!isAllowed) {
+    await AwesomeNotifications()
+        .requestPermissionToSendNotifications(permissions: [
+      NotificationPermission.Alert,
+      NotificationPermission.Sound,
+      NotificationPermission.Badge,
+      NotificationPermission.Vibration,
+      NotificationPermission.Light,
+      NotificationPermission.FullScreenIntent,
+    ]);
+  }
 
   runApp(const ProviderScope(child: Eexily()));
 }
@@ -34,11 +74,21 @@ class _EexilyState extends State<Eexily> {
     super.initState();
 
     _router = GoRouter(
-      initialLocation: Pages.home.path,
+      initialLocation: Pages.splash.path,
       routes: routes,
     );
-    
+
     time.setDefaultLocale('en_short');
+
+    AwesomeNotifications().setListeners(
+      onActionReceivedMethod: NotificationController.onActionReceivedMethod,
+      onNotificationCreatedMethod:
+      NotificationController.onNotificationCreatedMethod,
+      onNotificationDisplayedMethod:
+      NotificationController.onNotificationDisplayedMethod,
+      onDismissActionReceivedMethod:
+      NotificationController.onDismissActionReceivedMethod,
+    );
 
     initializeAPIServices();
   }

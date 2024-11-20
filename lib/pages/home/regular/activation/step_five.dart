@@ -15,7 +15,8 @@ class StepFive extends ConsumerStatefulWidget {
   ConsumerState<StepFive> createState() => _StepFiveState();
 }
 
-class _StepFiveState extends ConsumerState<StepFive> {final TextEditingController controller = TextEditingController();
+class _StepFiveState extends ConsumerState<StepFive> {
+  final TextEditingController controller = TextEditingController();
 
   @override
   void dispose() {
@@ -69,48 +70,6 @@ class _StepFiveState extends ConsumerState<StepFive> {final TextEditingControlle
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
                     details.copyWith(gasUsageAsidesCooking: "false");
-              },
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            Text(
-              "No",
-              style: context.textTheme.bodyMedium,
-            )
-          ],
-        ),
-        SizedBox(height: 20.h),
-        Text(
-          "Do you use an oven or grill that runs on gas?",
-          style: context.textTheme.bodyLarge,
-        ),
-        SizedBox(height: 10.h),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              value: details.grillOrOvenGasCooker,
-              groupValue: "true",
-              onChanged: (val) {
-                ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(grillOrOvenGasCooker: "true");
-              },
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            Text(
-              "Yes",
-              style: context.textTheme.bodyMedium,
-            )
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              value: details.grillOrOvenGasCooker,
-              groupValue: "false",
-              onChanged: (val) {
-                ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(grillOrOvenGasCooker: "false");
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),

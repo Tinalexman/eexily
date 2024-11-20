@@ -1,6 +1,9 @@
+import 'package:eexily/api/merchant.dart';
+import 'package:eexily/api/refill.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/merchant.dart';
 import 'package:eexily/tools/constants.dart';
+import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
@@ -15,17 +18,33 @@ class Home extends ConsumerStatefulWidget {
 }
 
 class _HomeState extends ConsumerState<Home> {
-  bool active = true;
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, getOrders);
   }
+
+  Future<void> getOrders() async {
+    String merchantId = ref.watch(userProvider.select((r) => r.id));
+    var response = await getMerchantExpressOrders(merchantId);
+    setState(() => loading = false);
+
+    if(!response.status) {
+      showMessage(response.message);
+      return;
+    }
+
+    ref.watch(merchantOrdersProvider.notifier).state = response.payload;
+  }
+
+  void showMessage(String message) => showToast(message, context);
 
   @override
   Widget build(BuildContext context) {
     Merchant merchant = ref.watch(userProvider) as Merchant;
-    List<Order> orders = ref.watch(attendantOrdersProvider);
+    List<Order> orders = ref.watch(merchantOrdersProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -44,7 +63,7 @@ class _HomeState extends ConsumerState<Home> {
                   SizedBox(
                     width: 220.w,
                     child: Text(
-                      merchant.fullName,
+                      merchant.storeName,
                       style: context.textTheme.titleLarge!.copyWith(
                         color: primary,
                         fontWeight: FontWeight.w600,
@@ -57,7 +76,7 @@ class _HomeState extends ConsumerState<Home> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        active ? "Opened" : "Closed",
+                        merchant.isOpened ? "Opened" : "Closed",
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: monokai,
                           fontWeight: FontWeight.w500,
@@ -66,8 +85,8 @@ class _HomeState extends ConsumerState<Home> {
                       Transform.scale(
                         scale: 0.75,
                         child: Switch(
-                          value: active,
-                          onChanged: (val) => setState(() => active = !active),
+                          value: merchant.isOpened,
+                          onChanged: (val) {},
                         ),
                       ),
                     ],

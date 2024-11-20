@@ -12,15 +12,17 @@ import 'drawer.dart';
 
 class Home extends ConsumerStatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  const Home({super.key, required this.scaffoldKey,});
+
+  const Home({
+    super.key,
+    required this.scaffoldKey,
+  });
 
   @override
   ConsumerState<Home> createState() => _HomeState();
 }
 
 class _HomeState extends ConsumerState<Home> {
-
-
   @override
   Widget build(BuildContext context) {
     User user = ref.watch(userProvider) as User;
@@ -131,7 +133,7 @@ class _HomeState extends ConsumerState<Home> {
                 if (hasCompletedGasQuestions)
                   Tooltip(
                     message:
-                    "You're using the first version of our gas tracking feature. It might not always be perfect for now, but don’t worry—it gets better the more you use it. Over time, you'll see more accurate tracking and reminders. Thanks for being one of our early users and helping us make things better!",
+                        "You're using the first version of our gas tracking feature. It might not always be perfect for now, but don’t worry—it gets better the more you use it. Over time, you'll see more accurate tracking and reminders. Thanks for being one of our early users and helping us make things better!",
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,

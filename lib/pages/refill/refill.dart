@@ -84,14 +84,14 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
   void showMessage(String message) => showToast(message, context);
 
   Future<void> getOrder() async {
-    var response = await getUserOrders();
-    showMessage(response.message);
-    setState(() {
-      loading = false;
-      orders.clear();
-      orders.addAll(response.payload);
-      ref.watch(previousUserOrdersProvider.notifier).state = response.payload;
-    });
+    // var response = await getUserOrders();
+    // showMessage(response.message);
+    // setState(() {
+    //   loading = false;
+    //   orders.clear();
+    //   orders.addAll(response.payload);
+    //   ref.watch(previousUserOrdersProvider.notifier).state = response.payload;
+    // });
   }
 
   Color getOrderColor(String orderState) {

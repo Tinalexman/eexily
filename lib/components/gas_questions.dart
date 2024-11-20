@@ -75,7 +75,7 @@ class IndividualGasQuestionsData {
       "typeOfHouseHold": householdType,
       "genderComposition": householdGender,
       "usageAsideCooking": gasUsageAsidesCooking == "true",
-      "isOvenUsage": grillOrOvenGasCooker == "true",
+      "isOvenUsage": false,
       "frequentRefillPerMonth": gasMonthlyRefill,
       "lastRefill": lastGasFilledPeriod,
       "amountValue": lastGasFilledQuantity,

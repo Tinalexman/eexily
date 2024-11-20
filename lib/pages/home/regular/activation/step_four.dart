@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StepFour extends ConsumerStatefulWidget {
-
   const StepFour({
     super.key,
   });
@@ -19,7 +18,7 @@ class _StepFourState extends ConsumerState<StepFour> {
   @override
   Widget build(BuildContext context) {
     IndividualGasQuestionsData details =
-    ref.watch(individualGasQuestionsProvider);
+        ref.watch(individualGasQuestionsProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -43,7 +42,10 @@ class _StepFourState extends ConsumerState<StepFour> {
               groupValue: "1",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdSize: "1");
+                    details.copyWith(
+                  householdSize: "1",
+                  householdType: "Single",
+                );
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -61,7 +63,10 @@ class _StepFourState extends ConsumerState<StepFour> {
               groupValue: "2-3",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdSize: "2-3");
+                    details.copyWith(
+                  householdSize: "2-3",
+                  householdType: "Shared",
+                );
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -79,7 +84,10 @@ class _StepFourState extends ConsumerState<StepFour> {
               groupValue: "4-5",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdSize: "4-5");
+                    details.copyWith(
+                  householdSize: "4-5",
+                  householdType: "Shared",
+                );
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -97,7 +105,10 @@ class _StepFourState extends ConsumerState<StepFour> {
               groupValue: "more than 5",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdSize: "more than 5");
+                    details.copyWith(
+                  householdSize: "more than 5",
+                  householdType: "Shared",
+                );
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -157,7 +168,10 @@ class _StepFourState extends ConsumerState<StepFour> {
               groupValue: "Single",
               onChanged: (val) {
                 ref.watch(individualGasQuestionsProvider.notifier).state =
-                    details.copyWith(householdType: "Single");
+                    details.copyWith(
+                  householdType: "Single",
+                  householdSize: "1",
+                );
               },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
@@ -167,7 +181,6 @@ class _StepFourState extends ConsumerState<StepFour> {
             )
           ],
         ),
-
         SizedBox(height: 15.h),
         Text(
           "What is the gender composition of your household?",

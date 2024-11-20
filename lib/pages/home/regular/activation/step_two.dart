@@ -31,7 +31,7 @@ class _StepTwoState extends ConsumerState<StepTwo> {
         ),
         SizedBox(height: 20.h),
         Text(
-          "How long does ${details.gasFilledPerTime} last you on average?",
+          "How long does ${details.gasFilledPerTime}kg last you on average?",
           style: context.textTheme.bodyLarge,
         ),
         SizedBox(height: 10.h),

@@ -1,4 +1,5 @@
 import 'package:eexily/api/individual.dart';
+import 'package:eexily/api/refill.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
@@ -125,7 +126,7 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
       context: context,
       barrierDismissible: false,
       builder: (_) => SuccessModal(
-        text: "You have successfully scheduled for a refill",
+        text: "You have successfully scheduled for a standard refill",
         onDismiss: () {
           Navigator.of(context).pop();
           context.router.pop();

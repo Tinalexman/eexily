@@ -73,10 +73,10 @@ Future<EexilyResponse<String?>> createExpressOrder(
 }
 
 
-Future<EexilyResponse<List<Order>>> getDriverScheduledIncomingOrders(String riderId) async {
+Future<EexilyResponse<List<Order>>> getDriverScheduledIncomingOrders(String driverId) async {
   try {
     Response response = await dio.get(
-      "/refill-schedule/rider/$riderId",
+      "/refill-schedule/rider/$driverId",
       options: configuration,
     );
 

@@ -22,13 +22,29 @@ class UserFactory {
           role: UserRole.business,
         );
       case "RIDER":
+      case "DRIVER":
+
+        Type type = Type.nil;
+        String? riderType = typeData?["riderType"];
+        if(riderType != null && riderType == "DRIVER") {
+          type = Type.driver;
+        } else if(riderType != null && riderType == "RIDER") {
+          type = Type.rider;
+        }
+
         return Driver(
           email: map["email"],
           id: map["_id"],
+          type: type,
           dateJoined: map["createdAt"],
           firstName: typeData?["firstName"] ?? "",
           lastName: typeData?["lastName"] ?? "",
           address: typeData?["address"] ?? "",
+          licenseNumber: typeData?["driverLicense"] ?? "",
+          licenseExpiry: typeData?["expiryDate"] ?? "",
+          accountName: typeData?["accountName"] ?? "",
+          accountNumber: typeData?["accountNumber"] ?? "",
+          bankName: typeData?["bankName"] ?? "",
           image: map["image"] ??
               "https://gravatar.com/avatar/${map["_id"].hashCode
                   .toString()}?s=400&d=robohash&r=x",

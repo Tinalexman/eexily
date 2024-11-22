@@ -55,7 +55,7 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
     firstNameController.text = driver.firstName;
     lastNameController.text = driver.lastName;
     addressController.text = driver.address;
-    licenseController.text = driver.licenseNumber;
+    licenseController.text = preFormatLicenseNumber(driver.licenseNumber);
     licenseExpiryController.text = formatDateRaw(DateTime.parse(driver.licenseExpiry));
     accountNameController.text = driver.accountName;
     accountNumberController.text = driver.accountNumber;
@@ -100,6 +100,14 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
       showMessage("Could not locate your account");
       accountNameController.clear();
     }
+  }
+
+  String preFormatLicenseNumber(String license) {
+    String first = license.substring(0, 4);
+    String second = license.substring(4, 8);
+    String third = license.substring(8, 12);
+    String last = license.substring(12);
+    return [first, second, third, last].join(" ");
   }
 
   void navigate() => context.router.pop();

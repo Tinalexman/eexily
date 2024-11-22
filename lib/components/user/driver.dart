@@ -1,5 +1,11 @@
 import 'base.dart';
 
+enum Type {
+  nil,
+  rider,
+  driver
+}
+
 class Driver extends UserBase {
   final String address;
   final String licenseNumber;
@@ -7,6 +13,7 @@ class Driver extends UserBase {
   final String accountName;
   final String accountNumber;
   final String bankName;
+  final Type type;
 
 
   const Driver({
@@ -16,6 +23,7 @@ class Driver extends UserBase {
     super.dateJoined,
     super.email,
     super.image,
+    this.type = Type.nil,
     this.address = "",
     this.licenseExpiry = "",
     this.licenseNumber = "",
@@ -34,6 +42,7 @@ class Driver extends UserBase {
     String? accountName,
     String? accountNumber,
     String? bankName,
+    Type? type,
   }) {
     return Driver(
       address: address ?? this.address,
@@ -48,6 +57,7 @@ class Driver extends UserBase {
       accountNumber: accountNumber ?? this.accountNumber,
       accountName: accountName ?? this.accountName,
       bankName: bankName ?? this.bankName,
+      type: type ?? this.type,
     );
   }
 }

@@ -40,7 +40,7 @@ class _ViewDriverOrderState extends State<ViewDriverOrder> {
               children: [
                 SizedBox(height: 10.h),
                 GasOrderDetail(order: widget.order),
-                SizedBox(height: 200.h),
+                SizedBox(height: 350.h),
                 if (!completed)
                   ElevatedButton(
                     onPressed: () => setState(() => completed = true),

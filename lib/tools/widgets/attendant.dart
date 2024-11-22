@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/sale_report.dart';
-import 'package:eexily/components/user/attendant.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -275,7 +274,7 @@ class _WalletSliderState extends ConsumerState<WalletSlider> {
 
   @override
   Widget build(BuildContext context) {
-    double revenue = 0;//(ref.watch(userProvider) as Attendant).balance;
+    double revenue = 0; //(ref.watch(userProvider) as Attendant).balance;
 
     return Container(
       width: 375.w,
@@ -749,131 +748,6 @@ class _PriceUpdateState extends State<_PriceUpdate> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class GasOrderDetail extends StatelessWidget {
-  final Order order;
-  final double retailPrice;
-
-  const GasOrderDetail({
-    super.key,
-    required this.order,
-    required this.retailPrice,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 250.h,
-      width: 375.w,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15.r),
-        color: Colors.white,
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 1,
-          ),
-        ],
-      ),
-      padding: EdgeInsets.symmetric(
-        vertical: 10.h,
-        horizontal: 10.w,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Order #${order.id}",
-            style: context.textTheme.titleLarge!.copyWith(
-              fontWeight: FontWeight.w600,
-              color: monokai,
-            ),
-          ),
-          Text(
-            order.status.name.capitalize,
-            style: context.textTheme.bodyLarge!.copyWith(
-              fontWeight: FontWeight.w500,
-              color: order.status == OrderStatus.pending ? secondary : primary,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Image.asset(
-                "assets/images/Two Cylinders.png",
-                width: 120.w,
-                height: 180.h,
-                fit: BoxFit.cover,
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 18.h),
-                child: Container(
-                  width: 180.w,
-                  decoration: BoxDecoration(
-                    color: primary50.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(7.5.r),
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.w,
-                    vertical: 5.h,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Price:",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: monokai,
-                            ),
-                          ),
-                          Text(
-                            "₦${formatAmount(order.price.toStringAsFixed(0))}",
-                            style: context.textTheme.titleMedium!.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: monokai,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 5.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Quantity:",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: monokai,
-                            ),
-                          ),
-                          Text(
-                            "${(order.price / retailPrice).toStringAsFixed(1)}kg",
-                            style: context.textTheme.titleMedium!.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: monokai,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 5.h),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

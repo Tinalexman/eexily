@@ -50,6 +50,8 @@ Order dummyOrder = Order(
   status: OrderStatus.pending,
 );
 
+List<Order> dummyOrders = List.filled(10, dummyOrder);
+
 final List<Notification> dummyNotifications = List.generate(
   10,
   (_) => Notification(

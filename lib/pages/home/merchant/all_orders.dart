@@ -6,19 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AttendantAllOrdersPage extends ConsumerStatefulWidget {
-  const AttendantAllOrdersPage({super.key});
+class MerchantAllOrdersPage extends ConsumerStatefulWidget {
+  const MerchantAllOrdersPage({super.key});
 
   @override
-  ConsumerState<AttendantAllOrdersPage> createState() =>
-      _AttendantAllOrdersPageState();
+  ConsumerState<MerchantAllOrdersPage> createState() =>
+      _MerchantAllOrdersPageState();
 }
 
-class _AttendantAllOrdersPageState
-    extends ConsumerState<AttendantAllOrdersPage> {
+class _MerchantAllOrdersPageState
+    extends ConsumerState<MerchantAllOrdersPage> {
   @override
   Widget build(BuildContext context) {
-    List<Order> orders = ref.watch(attendantOrdersProvider);
+    List<Order> orders = ref.watch(merchantOrdersProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +47,7 @@ class _AttendantAllOrdersPageState
             ),
             itemBuilder: (_, index) => OrderContainer(
               order: orders[index],
-              link: Pages.viewAttendantOrder,
+              link: Pages.viewMerchantOrder,
             ),
             physics: const BouncingScrollPhysics(),
             itemCount: orders.length,

@@ -78,7 +78,7 @@ class _ActivationPagesState extends ConsumerState<ActivationPages> {
 
     User user = ref.watch(userProvider) as User;
     ref.watch(userProvider.notifier).state =
-        user.withFields(hasCompletedGas: true);
+        user.copyWith(hasCompletedGas: true);
 
     GasData data = response.payload!;
     int gasSize = ref.watch(gasCylinderSizeProvider);
@@ -93,30 +93,34 @@ class _ActivationPagesState extends ConsumerState<ActivationPages> {
 
   bool get isPageValid {
     IndividualGasQuestionsData data = ref.watch(individualGasQuestionsProvider);
-    if(activeStep == 0) {
+    if (activeStep == 0) {
       return data.gasFilledPerTime != -1;
-    } else if(activeStep == 1) {
+    } else if (activeStep == 1) {
       return data.consumptionDuration.isNotEmpty;
-    } else if(activeStep == 2) {
-      return data.gasUsagePeriod.isNotEmpty && data.householdMeals.isNotEmpty && data.cookingType.isNotEmpty;
-    } else if(activeStep == 3) {
-      return data.householdSize.isNotEmpty && data.householdType.isNotEmpty && data.householdGender.isNotEmpty;
-    } else if(activeStep == 4) {
+    } else if (activeStep == 2) {
+      return data.gasUsagePeriod.isNotEmpty &&
+          data.householdMeals.isNotEmpty &&
+          data.cookingType.isNotEmpty;
+    } else if (activeStep == 3) {
+      return data.householdSize.isNotEmpty &&
+          data.householdType.isNotEmpty &&
+          data.householdGender.isNotEmpty;
+    } else if (activeStep == 4) {
       return data.gasUsageAsidesCooking.isNotEmpty;
-    } else if(activeStep == 5) {
+    } else if (activeStep == 5) {
       return data.gasMonthlyRefill.isNotEmpty;
-    } else if(activeStep == 6) {
-      return data.lastGasFilledPeriod.isNotEmpty && data.lastGasFilledQuantity.isNotEmpty;
+    } else if (activeStep == 6) {
+      return data.lastGasFilledPeriod.isNotEmpty &&
+          data.lastGasFilledQuantity.isNotEmpty;
     }
     return false;
   }
-
 
   @override
   Widget build(BuildContext context) {
     return BackButtonListener(
       onBackButtonPressed: () async {
-        if(activeStep != 0) {
+        if (activeStep != 0) {
           setState(() => activeStep--);
           return true;
         }
@@ -213,14 +217,15 @@ class _ActivationPagesState extends ConsumerState<ActivationPages> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(7.5.r),
                           ),
-                          backgroundColor: isPageValid ? primary : primary.withOpacity(0.6),
+                          backgroundColor:
+                              isPageValid ? primary : primary.withOpacity(0.6),
                           minimumSize:
                               Size((activeStep == 0 ? 335.w : 150.w), 50.h),
                           fixedSize:
                               Size((activeStep == 0 ? 335.w : 150.w), 50.h),
                         ),
                         onPressed: () {
-                          if(!isPageValid) return;
+                          if (!isPageValid) return;
                           if (loading) return;
 
                           if (activeStep != 6) {

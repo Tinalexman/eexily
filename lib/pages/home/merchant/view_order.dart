@@ -1,5 +1,5 @@
 import 'package:eexily/components/order.dart';
-import 'package:eexily/components/user/attendant.dart';
+import 'package:eexily/components/user/merchant.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
@@ -7,27 +7,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ViewAttendantOrder extends ConsumerStatefulWidget {
+class ViewMerchantOrder extends ConsumerStatefulWidget {
   final Order order;
 
-  const ViewAttendantOrder({
+  const ViewMerchantOrder({
     super.key,
     required this.order,
   });
 
   @override
-  ConsumerState<ViewAttendantOrder> createState() => _ViewAttendantOrderState();
+  ConsumerState<ViewMerchantOrder> createState() => _ViewMerchantOrderState();
 }
 
-//<a href="https://www.vecteezy.com/free-vector/gas-cylinder">Gas Cylinder Vectors by Vecteezy</a>
-
-class _ViewAttendantOrderState extends ConsumerState<ViewAttendantOrder> {
+class _ViewMerchantOrderState extends ConsumerState<ViewMerchantOrder> {
   bool completed = false;
 
   @override
   Widget build(BuildContext context) {
-    double retailPrice = (ref.read(userProvider) as Attendant).retailGasPrice;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -44,10 +40,7 @@ class _ViewAttendantOrderState extends ConsumerState<ViewAttendantOrder> {
           child: Column(
             children: [
               SizedBox(height: 10.h),
-              GasOrderDetail(
-                order: widget.order,
-                retailPrice: retailPrice,
-              ),
+              GasOrderDetail(order: widget.order),
               SizedBox(height: 20.h),
               RiderOrderDetail(order: widget.order),
               SizedBox(height: 200.h),
@@ -64,7 +57,7 @@ class _ViewAttendantOrderState extends ConsumerState<ViewAttendantOrder> {
                     backgroundColor: primary,
                   ),
                   child: Text(
-                    "Complete Order",
+                    "Mark as Refilled",
                     style: context.textTheme.bodyLarge!.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,

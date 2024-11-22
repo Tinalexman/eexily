@@ -1,4 +1,5 @@
 import 'package:eexily/api/individual.dart';
+import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -24,13 +25,11 @@ class _EditIndividualProfilePageState
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
-  final TextEditingController gasSizeController = TextEditingController();
 
   final Map<String, dynamic> authDetails = {
     "firstName": "",
     "lastName": "",
     "address": "",
-    "gasSize": "",
     "user": "",
   };
 
@@ -39,6 +38,11 @@ class _EditIndividualProfilePageState
   @override
   void initState() {
     super.initState();
+
+    User user = ref.read(userProvider) as User;
+    firstNameController.text = user.firstName;
+    lastNameController.text = user.lastName;
+    addressController.text = user.address;
     authDetails["user"] = ref.read(userProvider).id;
   }
 
@@ -47,7 +51,6 @@ class _EditIndividualProfilePageState
     firstNameController.dispose();
     lastNameController.dispose();
     addressController.dispose();
-    gasSizeController.dispose();
     super.dispose();
   }
 
@@ -62,6 +65,17 @@ class _EditIndividualProfilePageState
     if (!response.status) {
       return;
     }
+
+    String newFirstName = firstNameController.text.trim();
+    String newLastName = lastNameController.text.trim();
+    String newAddress = addressController.text.trim();
+    User user = ref.read(userProvider) as User;
+
+    ref.watch(userProvider.notifier).state = user.copyWith(
+      firstName: newFirstName,
+      lastName: newLastName,
+      address: newAddress,
+    );
 
     navigate();
   }
@@ -82,21 +96,7 @@ class _EditIndividualProfilePageState
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 40.h),
-                Image.asset(
-                  "assets/images/logo blue.png",
-                  width: 40.w,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  "User Details",
-                  style: context.textTheme.headlineMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: primary,
-                  ),
-                ),
-                SizedBox(height: 50.h),
+                SizedBox(height: 20.h),
                 Form(
                   key: formKey,
                   child: Column(
@@ -141,27 +141,6 @@ class _EditIndividualProfilePageState
                         },
                         onSave: (value) =>
                             authDetails["lastName"] = value!.trim(),
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        "Cylinder Size",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      SizedBox(height: 4.h),
-                      SpecialForm(
-                        controller: gasSizeController,
-                        width: 375.w,
-                        hint: "e.g 5kg",
-                        type: TextInputType.number,
-                        onValidate: (value) {
-                          value = value.trim();
-                          if (value!.isEmpty) {
-                            return 'Invalid Cylinder Size';
-                          }
-                          return null;
-                        },
-                        onSave: (value) =>
-                            authDetails["gasSize"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(

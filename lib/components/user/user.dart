@@ -21,12 +21,9 @@ class User extends UserBase {
   @override
   List<Object?> get props => [id];
 
-  User withFields({
-    int? gasSize,
+  User copyWith({
     bool? hasCompletedGas,
     String? address,
-    String? dateJoined,
-    String? email,
     String? firstName,
     String? image,
     String? lastName,
@@ -35,8 +32,8 @@ class User extends UserBase {
     return User(
       hasCompletedGasQuestions: hasCompletedGas ?? hasCompletedGasQuestions,
       address: address ?? this.address,
-      dateJoined: dateJoined ?? this.dateJoined,
-      email: email ?? this.email,
+      dateJoined: dateJoined,
+      email: email,
       firstName: firstName ?? this.firstName,
       id: id,
       image: image ?? this.image,
@@ -45,7 +42,7 @@ class User extends UserBase {
     );
   }
 
-  User copyWith(User otherUser) {
+  User copyFrom(User otherUser) {
     String email = otherUser.email.isEmpty ? this.email : otherUser.email;
     String firstName =
         otherUser.firstName.isEmpty ? this.firstName : otherUser.firstName;

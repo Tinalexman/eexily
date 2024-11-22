@@ -1,5 +1,6 @@
 import 'package:eexily/components/chat.dart';
 import 'package:eexily/components/order.dart';
+import 'package:eexily/components/user/merchant.dart';
 import 'package:eexily/pages/auth/choose_business_category.dart';
 import 'package:eexily/pages/auth/choose_driver_image.dart';
 import 'package:eexily/pages/auth/create_account.dart';
@@ -22,6 +23,8 @@ import 'package:eexily/pages/home/driver/profile.dart';
 import 'package:eexily/pages/home/driver/view_order.dart';
 import 'package:eexily/pages/home/home.dart';
 import 'package:eexily/pages/home/inbox.dart';
+import 'package:eexily/pages/home/merchant/all_orders.dart';
+import 'package:eexily/pages/home/merchant/view_order.dart';
 import 'package:eexily/pages/home/regular/activation/activation.dart';
 import 'package:eexily/pages/home/regular/cheffy.dart';
 import 'package:eexily/pages/home/regular/devices.dart';
@@ -199,11 +202,6 @@ final List<GoRoute> routes = [
     builder: (_, __) => const EditIndividualProfilePage(),
   ),
   GoRoute(
-    path: Pages.driverProfile.path,
-    name: Pages.driverProfile,
-    builder: (_, __) => const DriverProfilePage(),
-  ),
-  GoRoute(
     path: Pages.editDriverProfile.path,
     name: Pages.editDriverProfile,
     builder: (_, __) => const EditRiderProfilePage(),
@@ -224,9 +222,19 @@ final List<GoRoute> routes = [
     builder: (_, __) => const AttendantAllOrdersPage(),
   ),
   GoRoute(
+    path: Pages.allMerchantOrders.path,
+    name: Pages.allMerchantOrders,
+    builder: (_, __) => const MerchantAllOrdersPage(),
+  ),
+  GoRoute(
     path: Pages.viewAttendantOrder.path,
     name: Pages.viewAttendantOrder,
     builder: (_, state) => ViewAttendantOrder(order: state.extra as Order),
+  ),
+  GoRoute(
+    path: Pages.viewMerchantOrder.path,
+    name: Pages.viewMerchantOrder,
+    builder: (_, state) => ViewMerchantOrder(order: state.extra as Order),
   ),
   GoRoute(
     path: Pages.filter.path,

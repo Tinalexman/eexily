@@ -44,10 +44,7 @@ class _ViewAttendantOrderState extends ConsumerState<ViewAttendantOrder> {
           child: Column(
             children: [
               SizedBox(height: 10.h),
-              GasOrderDetail(
-                order: widget.order,
-                retailPrice: retailPrice,
-              ),
+              GasOrderDetail(order: widget.order),
               SizedBox(height: 20.h),
               RiderOrderDetail(order: widget.order),
               SizedBox(height: 200.h),

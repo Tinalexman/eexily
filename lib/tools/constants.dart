@@ -56,7 +56,6 @@ class Pages
   static String get cheffy => "cheffy";
   static String get individualProfile => "individual-profile";
   static String get editIndividualProfile => "edit-individual-profile";
-  static String get driverProfile => "driver-profile";
   static String get editDriverProfile => "edit-driver-profile";
   static String get gasUsage => 'gas-usage';
   static String get gasDetails => 'gas-details';
@@ -70,6 +69,7 @@ class Pages
   static String get viewAttendantOrder => "view-attendant-order";
   static String get viewMerchantOrder => "view-merchant-order";
   static String get allAttendantOrders => "all-attendant-orders";
+  static String get allMerchantOrders => "all-merchant-orders";
   static String get viewDriverOrder => "view-driver-order";
   static String get selectBank => "select-bank";
  }

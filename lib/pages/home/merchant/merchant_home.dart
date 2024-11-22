@@ -1,3 +1,4 @@
+import 'package:eexily/pages/home/common/drawer.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 import 'home.dart';
-import 'account.dart';
-import 'order_history.dart';
+import 'profile.dart';
+import 'store.dart';
 
 class MerchantHome extends ConsumerStatefulWidget {
   const MerchantHome({super.key});
@@ -18,14 +19,15 @@ class MerchantHome extends ConsumerStatefulWidget {
 
 class _MerchantHomeState extends ConsumerState<MerchantHome> {
   late List<Widget> children;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     children = const [
       Home(),
-      History(),
-      Account(),
+      Store(),
+      Profile(),
     ];
   }
 
@@ -33,51 +35,72 @@ class _MerchantHomeState extends ConsumerState<MerchantHome> {
   Widget build(BuildContext context) {
     int index = ref.watch(pageIndexProvider);
 
-    return Scaffold(
-      body: IndexedStack(
-        index: index,
-        children: children,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: index,
-        selectedItemColor: primary,
-        unselectedItemColor: neutral3,
-        onTap: (val) => ref.watch(pageIndexProvider.notifier).state = val,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              IconsaxPlusBroken.menu,
-              size: 22.r,
+    return BackButtonListener(
+      onBackButtonPressed: () async {
+        final canPop = context.router.canPop();
+        if (!canPop) {
+          ref.watch(pageIndexProvider.notifier).state = 0;
+        }
+        return !canPop;
+      },
+      child: Scaffold(
+        key: scaffoldKey,
+        drawer: EexilyUserDrawer(
+          onCloseDrawer: () => scaffoldKey.currentState?.closeDrawer(),
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 20.w,
+              vertical: 10.h,
             ),
-            activeIcon: Icon(
-              IconsaxPlusBold.menu,
-              size: 22.r,
+            child: IndexedStack(
+              index: index,
+              children: children,
             ),
-            label: "Overview",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              IconsaxPlusBroken.graph,
-              size: 22.r,
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: index,
+          selectedItemColor: primary,
+          unselectedItemColor: neutral3,
+          onTap: (val) => ref.watch(pageIndexProvider.notifier).state = val,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                IconsaxPlusBroken.menu,
+                size: 22.r,
+              ),
+              activeIcon: Icon(
+                IconsaxPlusBold.menu,
+                size: 22.r,
+              ),
+              label: "Overview",
             ),
-            activeIcon: Icon(
-              IconsaxPlusBold.graph,
-              size: 22.r,
+            BottomNavigationBarItem(
+              icon: Icon(
+                IconsaxPlusBroken.shop,
+                size: 22.r,
+              ),
+              activeIcon: Icon(
+                IconsaxPlusBold.shop,
+                size: 22.r,
+              ),
+              label: "Store",
             ),
-            label: "Sales",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              IconsaxPlusBroken.chart_1,
-              size: 22.r,
+            BottomNavigationBarItem(
+              icon: Icon(
+                IconsaxPlusBroken.profile,
+                size: 22.r,
+              ),
+              activeIcon: Icon(
+                IconsaxPlusBold.profile,
+                size: 22.r,
+              ),
+              label: "Profile",
             ),
-            activeIcon: Icon(
-              IconsaxPlusBold.chart_1,
-              size: 22.r,
-            ),
-            label: "Account",
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

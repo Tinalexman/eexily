@@ -46,104 +46,98 @@ class _HomeState extends ConsumerState<Home> {
     Merchant merchant = ref.watch(userProvider) as Merchant;
     List<Order> orders = ref.watch(merchantOrdersProvider);
 
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 10.h,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 220.w,
-                    child: Text(
-                      merchant.storeName,
-                      style: context.textTheme.titleLarge!.copyWith(
-                        color: primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        merchant.isOpened ? "Opened" : "Closed",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: monokai,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Transform.scale(
-                        scale: 0.75,
-                        child: Switch(
-                          value: merchant.isOpened,
-                          onChanged: (val) {},
-                        ),
-                      ),
-                    ],
-                  )
-                ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 220.w,
+              child: Text(
+                merchant.storeName,
+                style: context.textTheme.titleLarge!.copyWith(
+                  color: primary,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 5.h),
-              const RevenueChart(),
-              SizedBox(height: 30.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Hero(
-                    tag: "Incoming Orders Tag",
-                    child: Text(
-                      "Incoming Orders",
-                      style: context.textTheme.titleMedium!.copyWith(
-                        color: monokai,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  merchant.isOpened ? "Opened" : "Closed",
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    color: monokai,
+                    fontWeight: FontWeight.w500,
                   ),
-                  if (orders.length > 2)
-                    GestureDetector(
-                      onTap: () =>
-                          context.router.pushNamed(Pages.allAttendantOrders),
-                      child: Text(
-                        "View all",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: primary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              SizedBox(height: 10.h),
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisExtent: 165.h,
-                    crossAxisSpacing: 20.h,
+                ),
+                Transform.scale(
+                  scale: 0.75,
+                  child: Switch(
+                    value: merchant.isOpened,
+                    onChanged: (val) {
+                      ref.watch(userProvider.notifier).state = merchant.copyWith(
+                        isOpened: !merchant.isOpened,
+                      );
+                    },
                   ),
-                  itemBuilder: (_, index) => OrderContainer(
-                    order: orders[index],
-                    link: Pages.viewMerchantOrder,
-                  ),
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: orders.length < 2 ? orders.length : 2,
+                ),
+              ],
+            )
+          ],
+        ),
+        SizedBox(height: 5.h),
+        const RevenueChart(),
+        SizedBox(height: 30.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Hero(
+              tag: "Incoming Orders Tag",
+              child: Text(
+                "Incoming Orders",
+                style: context.textTheme.titleMedium!.copyWith(
+                  color: monokai,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-            ],
+            ),
+            if (orders.length > 2)
+              GestureDetector(
+                onTap: () =>
+                    context.router.pushNamed(Pages.allAttendantOrders),
+                child: Text(
+                  "View all",
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    color: primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        SizedBox(height: 10.h),
+        Expanded(
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisExtent: 165.h,
+              crossAxisSpacing: 20.h,
+            ),
+            itemBuilder: (_, index) => OrderContainer(
+              order: orders[index],
+              link: Pages.viewMerchantOrder,
+            ),
+            physics: const BouncingScrollPhysics(),
+            itemCount: orders.length < 2 ? orders.length : 2,
           ),
         ),
-      ),
+      ],
     );
   }
 }

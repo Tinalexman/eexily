@@ -20,26 +20,23 @@ class EexilyUserDrawer extends ConsumerWidget {
       elevation: 1.0,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          vertical: 10.h,
+          vertical: 60.h,
+          horizontal: 20.w,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(height: 80.h),
-            Padding(
-              padding: EdgeInsets.only(left: 20.w),
-              child: Image.asset(
-                "assets/images/GF B.png",
-                width: 120.w,
-                fit: BoxFit.cover,
-              ),
+            Image.asset(
+              "assets/images/GF B.png",
+              width: 120.w,
+              fit: BoxFit.cover,
             ),
-            SizedBox(height: 80.h),
             ListTile(
               onTap: () {
                 onCloseDrawer();
                 logout(ref);
-                context.router.goNamed(Pages.login);
+                context.router.goNamed(Pages.splash);
               },
               contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
               leading: Icon(

@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
-import 'drawer.dart';
+import '../common/drawer.dart';
 
 class Home extends ConsumerStatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;

@@ -18,6 +18,7 @@ class Merchant extends UserBase {
     super.phoneNumber,
     super.dateJoined,
     super.email,
+    super.image,
     this.isOpened = false,
     this.balance = 0,
     this.retailGasPrice = 0,

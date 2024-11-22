@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eexily/components/user/merchant.dart';
 import 'package:eexily/pages/home/common/drawer.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
@@ -33,6 +35,7 @@ class _MerchantHomeState extends ConsumerState<MerchantHome> {
 
   @override
   Widget build(BuildContext context) {
+    Merchant merchant = ref.watch(userProvider) as Merchant;
     int index = ref.watch(pageIndexProvider);
 
     return BackButtonListener(
@@ -47,6 +50,67 @@ class _MerchantHomeState extends ConsumerState<MerchantHome> {
         key: scaffoldKey,
         drawer: EexilyUserDrawer(
           onCloseDrawer: () => scaffoldKey.currentState?.closeDrawer(),
+        ),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: index == 0
+              ? GestureDetector(
+                  onTap: () => scaffoldKey.currentState?.openDrawer(),
+                  child: Icon(
+                    IconsaxPlusBroken.menu_1,
+                    size: 26.r,
+                  ),
+                )
+              : Text(
+                  "Profile",
+                  style: context.textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+          actions: [
+            if (index == 0)
+              GestureDetector(
+                onTap: () => ref.watch(pageIndexProvider.notifier).state = 1,
+                child: CachedNetworkImage(
+                  imageUrl: merchant.image,
+                  errorWidget: (_, __, ___) => CircleAvatar(
+                    radius: 20.r,
+                    backgroundColor: Colors.redAccent,
+                    child: Center(
+                      child: Icon(
+                        IconsaxPlusBold.gallery_slash,
+                        color: Colors.white,
+                        size: 20.r,
+                      ),
+                    ),
+                  ),
+                  progressIndicatorBuilder: (_, __, ___) => CircleAvatar(
+                    radius: 20.r,
+                    backgroundColor: primary50,
+                  ),
+                  imageBuilder: (_, provider) => CircleAvatar(
+                    radius: 20.r,
+                    backgroundImage: provider,
+                  ),
+                ),
+              ),
+            IconButton(
+              onPressed: () {
+                if (index == 0) {
+                  context.router.pushNamed(Pages.notification);
+                } else if (index == 1) {
+                  context.router.pushNamed(Pages.editDriverProfile);
+                }
+              },
+              icon: Icon(
+                index == 0
+                    ? IconsaxPlusBroken.notification_1
+                    : IconsaxPlusBroken.edit,
+                color: monokai,
+              ),
+              iconSize: 26.r,
+            )
+          ],
         ),
         body: SafeArea(
           child: Padding(

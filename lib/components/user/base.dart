@@ -8,10 +8,12 @@ class UserBase extends Equatable {
   final String email;
   final String dateJoined;
   final String phoneNumber;
+  final String image;
   final UserRole role;
 
   const UserBase({
     this.id = "",
+    this.image = "",
     this.phoneNumber = "",
     this.dateJoined = "",
     this.email = "",

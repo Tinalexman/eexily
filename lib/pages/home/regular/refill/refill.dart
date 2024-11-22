@@ -9,52 +9,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class RefillPage extends ConsumerStatefulWidget {
-  const RefillPage({super.key});
+class Refill extends ConsumerStatefulWidget {
+  const Refill({super.key});
 
   @override
-  ConsumerState<RefillPage> createState() => _RefillPageState();
+  ConsumerState<Refill> createState() => _RefillState();
 }
 
-class _RefillPageState extends ConsumerState<RefillPage> {
+class _RefillState extends ConsumerState<Refill> {
   @override
   Widget build(BuildContext context) {
     String? currentOrderCode = ref.watch(currentUserOrderProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        title: Text(
-          "Refill Gas",
-          style: context.textTheme.titleLarge!.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 15.w),
-            child: GestureDetector(
-              onTap: () => context.router.pushNamed(Pages.individualOrderHistory),
-              child: Text(
-                "History",
-                style: context.textTheme.bodyLarge!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: primary,
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: currentOrderCode != null
-              ? _HasOrder(orderCode: currentOrderCode)
-              : const _NoOrder(),
-        ),
-      ),
-    );
+    // Padding(
+    //             padding: EdgeInsets.only(right: 15.w),
+    //             child: GestureDetector(
+    //               onTap: () => context.router.pushNamed(Pages.individualOrderHistory),
+    //               child: Text(
+    //                 "History",
+    //                 style: context.textTheme.bodyLarge!.copyWith(
+    //                   fontWeight: FontWeight.w500,
+    //                   color: primary,
+    //                 ),
+    //               ),
+    //             ),
+    //           )
+    return currentOrderCode != null
+        ? _HasOrder(orderCode: currentOrderCode)
+        : const _NoOrder();
   }
 }
 
@@ -71,7 +53,6 @@ class _HasOrder extends ConsumerStatefulWidget {
 }
 
 class _HasOrderState extends ConsumerState<_HasOrder> {
-
   final List<UserOrder> orders = [];
   bool loading = true;
 
@@ -95,16 +76,21 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
   }
 
   Color getOrderColor(String orderState) {
-    switch(orderState) {
-      case "PENDING": return secondary;
-      case "MATCHED": return secondary3;
-      case "REFILL": return secondary2;
-      case "DISPATCHED": return Colors.red;
-      case "DELIVERED": return primary;
-      default: return monokai;
+    switch (orderState) {
+      case "PENDING":
+        return secondary;
+      case "MATCHED":
+        return secondary3;
+      case "REFILL":
+        return secondary2;
+      case "DISPATCHED":
+        return Colors.red;
+      case "DELIVERED":
+        return primary;
+      default:
+        return monokai;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -141,11 +127,11 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
             ],
           ),
           SizedBox(height: 30.h),
-          if(loading)
+          if (loading)
             const Center(
               child: loader,
             ),
-          if(!loading && orders.isEmpty)
+          if (!loading && orders.isEmpty)
             Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -179,7 +165,7 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
                 ],
               ),
             ),
-          if(!loading && orders.isNotEmpty)
+          if (!loading && orders.isNotEmpty)
             Container(
               width: 390.w,
               decoration: BoxDecoration(

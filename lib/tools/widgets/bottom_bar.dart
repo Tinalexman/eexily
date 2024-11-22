@@ -85,7 +85,7 @@ class CustomBottomBar extends ConsumerWidget {
                           icon: IconsaxPlusBroken.home,
                           activeIcon: IconsaxPlusBold.home,
                           label: "Home",
-                          onTap: () {},
+                          onTap: () => ref.watch(pageIndexProvider.notifier).state = 0,
                         ),
                         SizedBox(width: 30.w),
                         CustomIcon(
@@ -93,7 +93,7 @@ class CustomBottomBar extends ConsumerWidget {
                           icon: IconsaxPlusBroken.gas_station,
                           activeIcon: IconsaxPlusBold.gas_station,
                           label: "Refill",
-                          onTap: () => context.router.pushNamed(Pages.refill),
+                          onTap: () => ref.watch(pageIndexProvider.notifier).state = 1,
                         ),
                       ],
                     ),
@@ -106,7 +106,7 @@ class CustomBottomBar extends ConsumerWidget {
                           icon: IconsaxPlusBroken.devices,
                           activeIcon: IconsaxPlusBold.devices,
                           label: "Device",
-                          onTap: () => context.router.pushNamed(Pages.devices),
+                          onTap: () => ref.watch(pageIndexProvider.notifier).state = 2,
                         ),
                         SizedBox(width: 30.w),
                         CustomIcon(
@@ -114,7 +114,7 @@ class CustomBottomBar extends ConsumerWidget {
                           icon: IconsaxPlusBroken.profile,
                           activeIcon: IconsaxPlusBold.profile,
                           label: "Profile",
-                          onTap: () => context.router.pushNamed(Pages.individualProfile),
+                          onTap: () => ref.watch(pageIndexProvider.notifier).state = 3,
                         ),
                       ],
                     ),
@@ -125,9 +125,12 @@ class CustomBottomBar extends ConsumerWidget {
           ),
           Align(
             alignment: Alignment.topCenter,
-            child: Image.asset(
-              "assets/images/Cheffy.gif",
-              width: 40.r,
+            child: GestureDetector(
+              onTap: () => context.router.pushNamed(Pages.cheffy),
+              child: Image.asset(
+                "assets/images/Cheffy.gif",
+                width: 40.r,
+              ),
             ),
           ),
         ],

@@ -2,7 +2,6 @@ import 'base.dart';
 
 class Driver extends UserBase {
   final String address;
-  final String image;
   final String licenseNumber;
   final String licenseExpiry;
   final String accountName;
@@ -16,8 +15,8 @@ class Driver extends UserBase {
     super.id,
     super.dateJoined,
     super.email,
+    super.image,
     this.address = "",
-    this.image = "",
     this.licenseExpiry = "",
     this.licenseNumber = "",
     this.accountName = "",

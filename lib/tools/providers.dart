@@ -21,18 +21,26 @@ const User dummyUser = User(
   lastName: "Doe",
   firstName: "John",
   email: "johndoe@mail.com",
+  image: "https://picsum.com/photos/200",
 );
 
-const Attendant dummyAttendant = Attendant();
+const Attendant dummyAttendant = Attendant(
+  image: "https://picsum.com/photos/200",
+);
 
 const Merchant dummyMerchant = Merchant(
   firstName: "John",
   lastName: "Doe",
+  image: "https://picsum.com/photos/200",
 );
 
-const Support dummySupport = Support();
+const Support dummySupport = Support(
+  image: "https://picsum.com/photos/200",
+);
 
-const Driver dummyDriver = Driver();
+const Driver dummyDriver = Driver(
+  image: "https://picsum.com/photos/200",
+);
 
 Order dummyOrder = Order(
   deliveryDate: DateTime.now(),
@@ -63,7 +71,7 @@ final List<Notification> dummyNotifications = List.generate(
   ),
 );
 
-final StateProvider<UserBase> userProvider = StateProvider((ref) => dummyUser);
+final StateProvider<UserBase> userProvider = StateProvider((ref) => dummyMerchant);
 
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
 
@@ -161,7 +169,8 @@ final StateProvider<List<Order>> attendantOrdersProvider = StateProvider(
   ),
 );
 
-final StateProvider<List<Order>> merchantOrdersProvider = StateProvider((ref) => []);
+final StateProvider<List<Order>> merchantOrdersProvider =
+    StateProvider((ref) => []);
 
 final StateProvider<List<Transaction>> transactionsProvider = StateProvider(
   (ref) => List.generate(10, (index) {

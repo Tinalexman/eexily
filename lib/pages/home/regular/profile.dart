@@ -8,15 +8,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
-class IndividualProfilePage extends ConsumerStatefulWidget {
-  const IndividualProfilePage({super.key});
+class Profile extends ConsumerStatefulWidget {
+  const Profile({super.key});
 
   @override
-  ConsumerState<IndividualProfilePage> createState() =>
-      _IndividualProfilePageState();
+  ConsumerState<Profile> createState() => _ProfileState();
 }
 
-class _IndividualProfilePageState extends ConsumerState<IndividualProfilePage> {
+class _ProfileState extends ConsumerState<Profile> {
   @override
   Widget build(BuildContext context) {
     User user = ref.watch(userProvider) as User;
@@ -37,7 +36,8 @@ class _IndividualProfilePageState extends ConsumerState<IndividualProfilePage> {
           Padding(
             padding: EdgeInsets.only(right: 10.w),
             child: IconButton(
-              onPressed: () => context.router.pushNamed(Pages.editIndividualProfile),
+              onPressed: () =>
+                  context.router.pushNamed(Pages.editIndividualProfile),
               icon: Icon(
                 IconsaxPlusBroken.edit,
                 color: monokai,

@@ -9,6 +9,7 @@ class Business extends UserBase {
     super.email,
     super.dateJoined,
     super.role,
+    super.image,
     this.businessName = "",
     this.address = "",
   });

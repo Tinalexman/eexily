@@ -36,113 +36,122 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
     Driver driver = ref.watch(userProvider) as Driver;
     int index = ref.watch(pageIndexProvider);
 
-    return Scaffold(
-      key: scaffoldKey,
-      drawer: EexilyUserDrawer(
-        onCloseDrawer: () => scaffoldKey.currentState?.closeDrawer(),
-      ),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: index == 0
-            ? GestureDetector(
-                onTap: () => scaffoldKey.currentState?.openDrawer(),
-                child: Icon(
-                  IconsaxPlusBroken.menu_1,
-                  size: 26.r,
-                ),
-              )
-            : Text(
-                "Profile",
-                style: context.textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-        actions: [
-          if (index == 0)
-            GestureDetector(
-              onTap: () => ref.watch(pageIndexProvider.notifier).state = 1,
-              child: CachedNetworkImage(
-                imageUrl: driver.image,
-                errorWidget: (_, __, ___) => CircleAvatar(
-                  radius: 20.r,
-                  backgroundColor: Colors.redAccent,
-                  child: Center(
-                    child: Icon(
-                      IconsaxPlusBold.gallery_slash,
-                      color: Colors.white,
-                      size: 20.r,
-                    ),
+    return BackButtonListener(
+      onBackButtonPressed: () async {
+        final canPop = context.router.canPop();
+        if (!canPop) {
+          ref.watch(pageIndexProvider.notifier).state = 0;
+        }
+        return !canPop;
+      },
+      child: Scaffold(
+        key: scaffoldKey,
+        drawer: EexilyUserDrawer(
+          onCloseDrawer: () => scaffoldKey.currentState?.closeDrawer(),
+        ),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: index == 0
+              ? GestureDetector(
+                  onTap: () => scaffoldKey.currentState?.openDrawer(),
+                  child: Icon(
+                    IconsaxPlusBroken.menu_1,
+                    size: 26.r,
+                  ),
+                )
+              : Text(
+                  "Profile",
+                  style: context.textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                progressIndicatorBuilder: (_, __, ___) => CircleAvatar(
-                  radius: 20.r,
-                  backgroundColor: primary50,
-                ),
-                imageBuilder: (_, provider) => CircleAvatar(
-                  radius: 20.r,
-                  backgroundImage: provider,
+          actions: [
+            if (index == 0)
+              GestureDetector(
+                onTap: () => ref.watch(pageIndexProvider.notifier).state = 1,
+                child: CachedNetworkImage(
+                  imageUrl: driver.image,
+                  errorWidget: (_, __, ___) => CircleAvatar(
+                    radius: 20.r,
+                    backgroundColor: Colors.redAccent,
+                    child: Center(
+                      child: Icon(
+                        IconsaxPlusBold.gallery_slash,
+                        color: Colors.white,
+                        size: 20.r,
+                      ),
+                    ),
+                  ),
+                  progressIndicatorBuilder: (_, __, ___) => CircleAvatar(
+                    radius: 20.r,
+                    backgroundColor: primary50,
+                  ),
+                  imageBuilder: (_, provider) => CircleAvatar(
+                    radius: 20.r,
+                    backgroundImage: provider,
+                  ),
                 ),
               ),
+            IconButton(
+              onPressed: () {
+                if (index == 0) {
+                  context.router.pushNamed(Pages.notification);
+                } else if (index == 1) {
+                  context.router.pushNamed(Pages.editDriverProfile);
+                }
+              },
+              icon: Icon(
+                index == 0
+                    ? IconsaxPlusBroken.notification_1
+                    : IconsaxPlusBroken.edit,
+                color: monokai,
+              ),
+              iconSize: 26.r,
+            )
+          ],
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 20.w,
+              vertical: 10.h,
             ),
-          IconButton(
-            onPressed: () {
-              if (index == 0) {
-                context.router.pushNamed(Pages.notification);
-              } else if (index == 1) {
-                context.router.pushNamed(Pages.editDriverProfile);
-              }
-            },
-            icon: Icon(
-              index == 0
-                  ? IconsaxPlusBroken.notification_1
-                  : IconsaxPlusBroken.edit,
-              color: monokai,
+            child: IndexedStack(
+              index: index,
+              children: children,
             ),
-            iconSize: 26.r,
-          )
-        ],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 10.h,
-          ),
-          child: IndexedStack(
-            index: index,
-            children: children,
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: index,
-        selectedItemColor: primary,
-        unselectedItemColor: neutral3,
-        onTap: (val) => ref.watch(pageIndexProvider.notifier).state = val,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              IconsaxPlusBroken.home,
-              size: 22.r,
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: index,
+          selectedItemColor: primary,
+          unselectedItemColor: neutral3,
+          onTap: (val) => ref.watch(pageIndexProvider.notifier).state = val,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                IconsaxPlusBroken.home,
+                size: 22.r,
+              ),
+              activeIcon: Icon(
+                IconsaxPlusBold.home,
+                size: 22.r,
+              ),
+              label: "Home",
             ),
-            activeIcon: Icon(
-              IconsaxPlusBold.home,
-              size: 22.r,
+            BottomNavigationBarItem(
+              icon: Icon(
+                IconsaxPlusBroken.profile,
+                size: 22.r,
+              ),
+              activeIcon: Icon(
+                IconsaxPlusBold.profile,
+                size: 22.r,
+              ),
+              label: "Profile",
             ),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              IconsaxPlusBroken.profile,
-              size: 22.r,
-            ),
-            activeIcon: Icon(
-              IconsaxPlusBold.profile,
-              size: 22.r,
-            ),
-            label: "Profile",
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

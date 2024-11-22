@@ -1,6 +1,5 @@
 import 'package:eexily/components/chat.dart';
 import 'package:eexily/components/order.dart';
-import 'package:eexily/components/user/merchant.dart';
 import 'package:eexily/pages/auth/choose_business_category.dart';
 import 'package:eexily/pages/auth/choose_driver_image.dart';
 import 'package:eexily/pages/auth/create_account.dart';
@@ -19,7 +18,6 @@ import 'package:eexily/pages/home/attendant/view_order.dart';
 import 'package:eexily/pages/home/common/filter.dart';
 import 'package:eexily/pages/home/common/notifications.dart';
 import 'package:eexily/pages/home/driver/edit_profile.dart';
-import 'package:eexily/pages/home/driver/profile.dart';
 import 'package:eexily/pages/home/driver/view_order.dart';
 import 'package:eexily/pages/home/home.dart';
 import 'package:eexily/pages/home/inbox.dart';
@@ -27,22 +25,19 @@ import 'package:eexily/pages/home/merchant/all_orders.dart';
 import 'package:eexily/pages/home/merchant/view_order.dart';
 import 'package:eexily/pages/home/regular/activation/activation.dart';
 import 'package:eexily/pages/home/regular/cheffy.dart';
-import 'package:eexily/pages/home/regular/devices.dart';
 import 'package:eexily/pages/home/regular/edit_profile.dart';
 import 'package:eexily/pages/home/regular/gas_details.dart';
 import 'package:eexily/pages/home/regular/gas_usage.dart';
-import 'package:eexily/pages/home/regular/profile.dart';
 import 'package:eexily/pages/home/support/order_history.dart';
 import 'package:eexily/pages/home/support/view_order.dart';
 import 'package:eexily/pages/onboard/intro.dart';
 import 'package:eexily/pages/onboard/onboard.dart';
 import 'package:eexily/pages/onboard/splash.dart';
-import 'package:eexily/pages/refill/history.dart';
-import 'package:eexily/pages/refill/refill.dart';
-import 'package:eexily/pages/refill/refill_now.dart';
-import 'package:eexily/pages/refill/schedule_refill.dart';
 import 'package:go_router/go_router.dart';
 
+import '../pages/home/regular/refill/history.dart';
+import '../pages/home/regular/refill/refill_now.dart';
+import '../pages/home/regular/refill/schedule_refill.dart';
 import 'constants.dart';
 
 final List<GoRoute> routes = [
@@ -154,22 +149,13 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.setupAccount.path,
     name: Pages.setupAccount,
-    builder: (_, state) => SetupAccountPage(userData: state.extra as List<String>),
+    builder: (_, state) =>
+        SetupAccountPage(userData: state.extra as List<String>),
   ),
   GoRoute(
     path: Pages.selectBank.path,
     name: Pages.selectBank,
     builder: (_, state) => SelectBankPage(current: state.extra as String),
-  ),
-  GoRoute(
-    path: Pages.refill.path,
-    name: Pages.refill,
-    builder: (_, __) => const RefillPage(),
-  ),
-  GoRoute(
-    path: Pages.devices.path,
-    name: Pages.devices,
-    builder: (_, __) => const DevicePage(),
   ),
   GoRoute(
     path: Pages.cheffy.path,
@@ -190,11 +176,6 @@ final List<GoRoute> routes = [
     path: Pages.gasDetails.path,
     name: Pages.gasDetails,
     builder: (_, __) => const GasDetailsPage(),
-  ),
-  GoRoute(
-    path: Pages.individualProfile.path,
-    name: Pages.individualProfile,
-    builder: (_, __) => const IndividualProfilePage(),
   ),
   GoRoute(
     path: Pages.editIndividualProfile.path,

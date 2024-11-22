@@ -143,7 +143,7 @@ Future<EexilyResponse<List<Order>>> getMerchantExpressOrders(String id) async {
     );
 
     if (response.statusCode! == 200) {
-      Map<String, dynamic> data = response.data["payload"];
+      List<dynamic> data = response.data["payload"];
       List<Order> orders = [];
 
       return EexilyResponse(
@@ -159,7 +159,7 @@ Future<EexilyResponse<List<Order>>> getMerchantExpressOrders(String id) async {
       status: false,
     );
   } catch (e) {
-    log("Create Scheduled Order: $e");
+    log("Retrieve Merchant Orders: $e");
   }
 
   return const EexilyResponse(

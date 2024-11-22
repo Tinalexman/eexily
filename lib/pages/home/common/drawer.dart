@@ -20,17 +20,29 @@ class EexilyUserDrawer extends ConsumerWidget {
       elevation: 1.0,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          vertical: 60.h,
+          vertical: 80.h,
           horizontal: 20.w,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset(
-              "assets/images/GF B.png",
-              width: 120.w,
-              fit: BoxFit.cover,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.asset(
+                  "assets/images/GF B.png",
+                  width: 120.w,
+                  fit: BoxFit.cover,
+                ),
+                Text(
+                  "Feel the difference",
+                  style: context.textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
             ListTile(
               onTap: () {

@@ -33,6 +33,14 @@ class _MerchantHomeState extends ConsumerState<MerchantHome> {
     ];
   }
 
+  String get title {
+    int index = ref.watch(pageIndexProvider);
+    if (index == 1) return "Store";
+    if (index == 2) return "Profile";
+
+    return "";
+  }
+
   @override
   Widget build(BuildContext context) {
     Merchant merchant = ref.watch(userProvider) as Merchant;
@@ -62,7 +70,7 @@ class _MerchantHomeState extends ConsumerState<MerchantHome> {
                   ),
                 )
               : Text(
-                  "Profile",
+                  title,
                   style: context.textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -94,22 +102,23 @@ class _MerchantHomeState extends ConsumerState<MerchantHome> {
                   ),
                 ),
               ),
-            IconButton(
-              onPressed: () {
-                if (index == 0) {
-                  context.router.pushNamed(Pages.notification);
-                } else if (index == 1) {
-                  context.router.pushNamed(Pages.editDriverProfile);
-                }
-              },
-              icon: Icon(
-                index == 0
-                    ? IconsaxPlusBroken.notification_1
-                    : IconsaxPlusBroken.edit,
-                color: monokai,
-              ),
-              iconSize: 26.r,
-            )
+            if (index != 1)
+              IconButton(
+                onPressed: () {
+                  if (index == 0) {
+                    context.router.pushNamed(Pages.notification);
+                  } else if (index == 2) {
+                    context.router.pushNamed(Pages.editMerchantProfile);
+                  }
+                },
+                icon: Icon(
+                  index == 0
+                      ? IconsaxPlusBroken.notification_1
+                      : IconsaxPlusBroken.edit,
+                  color: monokai,
+                ),
+                iconSize: 26.r,
+              )
           ],
         ),
         body: SafeArea(

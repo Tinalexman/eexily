@@ -44,6 +44,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
   Widget build(BuildContext context) {
     List<n.Notification> notifications =
         loading ? dummyNotifications : ref.watch(notificationsProvider);
+    bool canShowData = loading || notifications.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,7 +63,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
             right: 20.w,
             bottom: 5.h,
           ),
-          child: (!loading && notifications.isEmpty)
+          child: (!canShowData)
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -75,21 +76,34 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                       ),
                       SizedBox(height: 30.h),
                       Text(
-                        "No notifications available",
-                        style: context.textTheme.titleLarge,
+                        "Oops :(",
+                        style: context.textTheme.titleLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                         textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 5.h),
+                      Text(
+                        "You do not have any notifications.",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          fontFamily: "WorkSans",
+                        ),
                       ),
                       SizedBox(height: 10.h),
                       GestureDetector(
-                        onTap: getNotifications,
+                        onTap: () {
+                          setState(() => loading = true);
+                          getNotifications();
+                        },
                         child: Text(
-                          "Click here to refresh",
+                          "Click to Refresh",
                           style: context.textTheme.bodyLarge!.copyWith(
-                            color: primary,
+                            fontFamily: "WorkSans",
                             fontWeight: FontWeight.w600,
+                            color: primary,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 )
@@ -99,6 +113,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                     itemBuilder: (_, index) => NotificationContainer(
                       notification: notifications[index],
                     ),
+                    padding: const EdgeInsets.all(1),
                     separatorBuilder: (_, __) => SizedBox(height: 10.h),
                     itemCount: notifications.length,
                   ),

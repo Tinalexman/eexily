@@ -1,3 +1,4 @@
+import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,7 @@ class CustomBottomBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    int activeIndex = ref.watch(pageIndexProvider);
 
     return SizedBox(
       height: 60.h,
@@ -81,7 +83,7 @@ class CustomBottomBar extends ConsumerWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CustomIcon(
-                          active: true,
+                          active: activeIndex == 0,
                           icon: IconsaxPlusBroken.home,
                           activeIcon: IconsaxPlusBold.home,
                           label: "Home",
@@ -89,7 +91,7 @@ class CustomBottomBar extends ConsumerWidget {
                         ),
                         SizedBox(width: 30.w),
                         CustomIcon(
-                          active: false,
+                          active: activeIndex == 1,
                           icon: IconsaxPlusBroken.gas_station,
                           activeIcon: IconsaxPlusBold.gas_station,
                           label: "Refill",
@@ -102,7 +104,7 @@ class CustomBottomBar extends ConsumerWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CustomIcon(
-                          active: false,
+                          active: activeIndex == 2,
                           icon: IconsaxPlusBroken.devices,
                           activeIcon: IconsaxPlusBold.devices,
                           label: "Device",
@@ -110,7 +112,7 @@ class CustomBottomBar extends ConsumerWidget {
                         ),
                         SizedBox(width: 30.w),
                         CustomIcon(
-                          active: false,
+                          active: activeIndex == 3,
                           icon: IconsaxPlusBroken.profile,
                           activeIcon: IconsaxPlusBold.profile,
                           label: "Profile",
@@ -163,10 +165,14 @@ class CustomIcon extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            active ? activeIcon : icon,
-            size: 22.r,
-            color: active ? primary : neutral3,
+          AnimatedSwitcherPlus.zoomOut(
+            duration: const Duration(milliseconds: 300),
+            child: Icon(
+              active ? activeIcon : icon,
+              size: 22.r,
+              key: ValueKey<bool>(active),
+              color: active ? primary : neutral3,
+            ),
           ),
           Text(
             label,

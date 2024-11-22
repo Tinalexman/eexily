@@ -32,7 +32,6 @@ class _ViewMerchantOrderState extends ConsumerState<ViewMerchantOrder> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        centerTitle: true,
       ),
       body: SafeArea(
         child: Padding(

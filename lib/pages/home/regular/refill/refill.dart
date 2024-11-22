@@ -21,19 +21,6 @@ class _RefillState extends ConsumerState<Refill> {
   Widget build(BuildContext context) {
     String? currentOrderCode = ref.watch(currentUserOrderProvider);
 
-    // Padding(
-    //             padding: EdgeInsets.only(right: 15.w),
-    //             child: GestureDetector(
-    //               onTap: () => context.router.pushNamed(Pages.individualOrderHistory),
-    //               child: Text(
-    //                 "History",
-    //                 style: context.textTheme.bodyLarge!.copyWith(
-    //                   fontWeight: FontWeight.w500,
-    //                   color: primary,
-    //                 ),
-    //               ),
-    //             ),
-    //           )
     return currentOrderCode != null
         ? _HasOrder(orderCode: currentOrderCode)
         : const _NoOrder();
@@ -312,7 +299,7 @@ class _NoOrder extends StatelessWidget {
               Tab(text: "Express"),
             ],
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 5.h),
           const Expanded(
             child: TabBarView(
               children: [
@@ -410,7 +397,7 @@ class _ScheduleRefillState extends State<_ScheduleRefill> {
               ),
             ],
           ),
-          SizedBox(height: 110.h),
+          SizedBox(height: 70.h),
           if (currentSlot.isNotEmpty)
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -461,7 +448,7 @@ class _RefillNow extends StatelessWidget {
             style: context.textTheme.bodyMedium,
             // textAlign: TextAlign.center,
           ),
-          SizedBox(height: 200.h),
+          SizedBox(height: 120.h),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               elevation: 0.0,

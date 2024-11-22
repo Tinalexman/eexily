@@ -52,6 +52,7 @@ class Pages
   static String get scheduleRefill => "schedule-refill";
   static String get refillNow => "refill-now";
   static String get cheffy => "cheffy";
+  static String get editMerchantProfile => "edit-merchant-profile";
   static String get editIndividualProfile => "edit-individual-profile";
   static String get editDriverProfile => "edit-driver-profile";
   static String get gasUsage => 'gas-usage';

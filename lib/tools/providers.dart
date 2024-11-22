@@ -71,7 +71,7 @@ final List<Notification> dummyNotifications = List.generate(
   ),
 );
 
-final StateProvider<UserBase> userProvider = StateProvider((ref) => dummyMerchant);
+final StateProvider<UserBase> userProvider = StateProvider((ref) => dummyBase);
 
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
 
@@ -170,7 +170,23 @@ final StateProvider<List<Order>> attendantOrdersProvider = StateProvider(
 );
 
 final StateProvider<List<Order>> merchantOrdersProvider =
-    StateProvider((ref) => []);
+    StateProvider((ref) => List.generate(
+          30,
+          (_) => Order(
+            id: randomOrderID,
+            deliveryDate: DateTime.now(),
+            code: randomGCode,
+            name: "Habeeb Lawal",
+            phone: "09012345678",
+            address: "No 12, Babylon Street, Accord",
+            deliveryIssue: "Delivery bike broke down",
+            riderBike: "360-HG",
+            status: OrderStatus.pending,
+            price: 5000,
+            riderName: "Dina Martins",
+            riderImage: "assets/images/man.png",
+          ),
+        ));
 
 final StateProvider<List<Transaction>> transactionsProvider = StateProvider(
   (ref) => List.generate(10, (index) {

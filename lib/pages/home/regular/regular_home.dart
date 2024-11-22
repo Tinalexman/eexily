@@ -56,7 +56,7 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
     return [
       if (index == 0)
         GestureDetector(
-          onTap: () => ref.watch(pageIndexProvider.notifier).state = 1,
+          onTap: () => ref.watch(pageIndexProvider.notifier).state = 3,
           child: CachedNetworkImage(
             imageUrl: user.image,
             errorWidget: (_, __, ___) => CircleAvatar(
@@ -80,22 +80,27 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
             ),
           ),
         ),
-      IconButton(
-        onPressed: () {
-          if (index == 0) {
-            context.router.pushNamed(Pages.notification);
-          } else if (index == 1) {
-            context.router.pushNamed(Pages.editIndividualProfile);
-          }
-        },
-        icon: Icon(
-          index == 0
-              ? IconsaxPlusBroken.notification_1
-              : IconsaxPlusBroken.edit,
-          color: monokai,
-        ),
-        iconSize: 26.r,
-      )
+      if (index != 2)
+        IconButton(
+          onPressed: () {
+            if (index == 0) {
+              context.router.pushNamed(Pages.notification);
+            } else if (index == 1) {
+              context.router.pushNamed(Pages.individualOrderHistory);
+            } else if (index == 3) {
+              context.router.pushNamed(Pages.editIndividualProfile);
+            }
+          },
+          icon: Icon(
+            index == 0
+                ? IconsaxPlusBroken.notification_1
+                : index == 1
+                    ? IconsaxPlusBroken.chart_2
+                    : IconsaxPlusBroken.edit,
+            color: monokai,
+          ),
+          iconSize: 26.r,
+        )
     ];
   }
 

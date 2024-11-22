@@ -22,6 +22,7 @@ import 'package:eexily/pages/home/driver/view_order.dart';
 import 'package:eexily/pages/home/home.dart';
 import 'package:eexily/pages/home/inbox.dart';
 import 'package:eexily/pages/home/merchant/all_orders.dart';
+import 'package:eexily/pages/home/merchant/edit_profile.dart';
 import 'package:eexily/pages/home/merchant/view_order.dart';
 import 'package:eexily/pages/home/regular/activation/activation.dart';
 import 'package:eexily/pages/home/regular/cheffy.dart';
@@ -186,6 +187,11 @@ final List<GoRoute> routes = [
     path: Pages.editDriverProfile.path,
     name: Pages.editDriverProfile,
     builder: (_, __) => const EditRiderProfilePage(),
+  ),
+  GoRoute(
+    path: Pages.editMerchantProfile.path,
+    name: Pages.editMerchantProfile,
+    builder: (_, __) => const EditMerchantProfilePage(),
   ),
   GoRoute(
     path: Pages.individualOrderHistory.path,

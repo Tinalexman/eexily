@@ -54,13 +54,17 @@ class _EditIndividualProfilePageState
     super.dispose();
   }
 
-  void showMessage(String message) => showToast(message, context);
+  void showMessage(String message, [Color? color]) =>
+      showToast(message, context, backgroundColor: color);
 
   Future<void> updateUser() async {
     var response =
         await updateIndividualUser(authDetails, ref.read(userProvider).id);
     setState(() => loading = false);
-    showMessage(response.message);
+    showMessage(
+      response.message,
+      response.status ? primary : null,
+    );
 
     if (!response.status) {
       return;
@@ -85,6 +89,15 @@ class _EditIndividualProfilePageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        title: Text(
+          "Edit Profile",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -96,7 +109,6 @@ class _EditIndividualProfilePageState
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20.h),
                 Form(
                   key: formKey,
                   child: Column(
@@ -166,7 +178,7 @@ class _EditIndividualProfilePageState
                     ],
                   ),
                 ),
-                SizedBox(height: 50.h),
+                SizedBox(height: 300.h),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primary,

@@ -60,6 +60,9 @@ class UserFactory {
           phoneNumber: map["phoneNumber"] ?? "",
           dateJoined: map["createdAt"] ?? "",
           email: map["email"] ?? "",
+          image: map["image"] ??
+              "https://gravatar.com/avatar/${map["_id"].hashCode
+                  .toString()}?s=400&d=robohash&r=x",
         );
       case "INDIVIDUAL":
         return User(

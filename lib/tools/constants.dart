@@ -57,13 +57,16 @@ class Pages
   static String get editMerchantProfile => "edit-merchant-profile";
   static String get editIndividualProfile => "edit-individual-profile";
   static String get editDriverProfile => "edit-driver-profile";
+  static String get editBusinessProfile => "edit-business-profile";
   static String get gasUsage => 'gas-usage';
   static String get gasDetails => 'gas-details';
   static String get notification => "notification";
   static String get inbox => "inbox";
   static String get filter => "filter";
   static String get individualGasActivation => "individual-gas-activation";
+  static String get businessGasActivation => "business-gas-activation";
   static String get individualOrderHistory => "individual-order-history";
+  static String get businessOrderHistory => "business-order-history";
   static String get orderHistory => "order-history";
   static String get viewSupportOrder => "view-support-order";
   static String get viewAttendantOrder => "view-attendant-order";

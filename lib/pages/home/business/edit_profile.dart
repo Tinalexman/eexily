@@ -1,5 +1,6 @@
-import 'package:eexily/api/business.dart';
+import 'package:eexily/api/individual.dart';
 import 'package:eexily/components/user/business.dart';
+import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -7,70 +8,97 @@ import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iconsax_plus/iconsax_plus.dart';
 
-class RegisterBusinessPage extends ConsumerStatefulWidget {
-  const RegisterBusinessPage({
+class EditIndividualProfilePage extends ConsumerStatefulWidget {
+  const EditIndividualProfilePage({
     super.key,
   });
 
   @override
-  ConsumerState<RegisterBusinessPage> createState() =>
-      _RegisterBusinessPageState();
+  ConsumerState<EditIndividualProfilePage> createState() =>
+      _EditIndividualProfilePageState();
 }
 
-class _RegisterBusinessPageState extends ConsumerState<RegisterBusinessPage> {
+class _EditIndividualProfilePageState
+    extends ConsumerState<EditIndividualProfilePage> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  final TextEditingController businessNameController = TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
-  final TextEditingController categoryController = TextEditingController();
 
-  final Map<String, String> authDetails = {
-    "businessName": "",
+  final Map<String, dynamic> authDetails = {
+    "firstName": "",
+    "lastName": "",
     "address": "",
-    "category": "",
-    "location": "",
+    "user": "",
   };
 
-  String? location;
-  bool loading = false, navigateToCategory = false;
+  bool loading = false;
 
   @override
   void initState() {
     super.initState();
+
+    Business user = ref.read(userProvider) as Business;
+    firstNameController.text = user.firstName;
+    lastNameController.text = user.lastName;
+    addressController.text = user.address;
+    authDetails["user"] = ref.read(userProvider).id;
   }
 
   @override
   void dispose() {
-    categoryController.dispose();
-    businessNameController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     addressController.dispose();
     super.dispose();
   }
 
-  void showMessage(String message) => showToast(message, context);
+  void showMessage(String message, [Color? color]) =>
+      showToast(message, context, backgroundColor: color);
 
-  Future<void> createBusiness() async {
-    var response = await createBusinessUser(authDetails);
+  Future<void> updateUser() async {
+    var response =
+        await updateIndividualUser(authDetails, ref.read(userProvider).id);
     setState(() => loading = false);
+    showMessage(
+      response.message,
+      response.status ? primary : null,
+    );
+
     if (!response.status) {
-      showMessage(response.message);
       return;
     }
 
-    Business business = ref.watch(userProvider) as Business;
-    business.copyFrom(response.payload!);
-    ref.watch(userProvider.notifier).state = business;
+    String newFirstName = firstNameController.text.trim();
+    String newLastName = lastNameController.text.trim();
+    String newAddress = addressController.text.trim();
+    User user = ref.read(userProvider) as User;
+
+    ref.watch(userProvider.notifier).state = user.copyWith(
+      firstName: newFirstName,
+      lastName: newLastName,
+      address: newAddress,
+    );
+
     navigate();
   }
 
-  void navigate() => context.router.goNamed(Pages.home);
+  void navigate() => context.router.pop();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        title: Text(
+          "Edit Profile",
+          style: context.textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -82,77 +110,50 @@ class _RegisterBusinessPageState extends ConsumerState<RegisterBusinessPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 40.h),
-                Image.asset(
-                  "assets/images/logo blue.png",
-                  width: 40.w,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  "Business Details",
-                  style: context.textTheme.headlineMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: primary,
-                  ),
-                ),
-                SizedBox(height: 50.h),
                 Form(
                   key: formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Business Name",
+                        "First Name",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
-                        controller: businessNameController,
+                        controller: firstNameController,
                         width: 375.w,
-                        type: TextInputType.emailAddress,
-                        hint: "e.g A&B Ventures",
+                        hint: "e.g Doe",
                         onValidate: (value) {
                           value = value.trim();
                           if (value!.isEmpty) {
-                            return 'Invalid Business Name';
+                            return 'Invalid First Name';
                           }
+
                           return null;
                         },
                         onSave: (value) =>
-                            authDetails["businessName"] = value!.trim(),
+                            authDetails["firstName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        "Category",
+                        "Last Name",
                         style: context.textTheme.bodyMedium,
                       ),
                       SizedBox(height: 4.h),
                       SpecialForm(
+                        controller: lastNameController,
                         width: 375.w,
-                        controller: categoryController,
-                        hint: "e.g Housing",
-                        focus: FocusNode()
-                          ..addListener(() async {
-                            String? response = await context.router.pushNamed(
-                              Pages.chooseBusinessCategory,
-                              extra: categoryController.text,
-                            );
-                            unFocus();
-                            if (response != null) {
-                              setState(
-                                  () => categoryController.text = response);
-                            }
-                          }),
+                        hint: "e.g John",
                         onValidate: (value) {
                           value = value.trim();
                           if (value!.isEmpty) {
-                            return 'Invalid Business Category';
+                            return 'Invalid Last Name';
                           }
                           return null;
                         },
                         onSave: (value) =>
-                            authDetails["category"] = value!.trim(),
+                            authDetails["lastName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
@@ -175,27 +176,10 @@ class _RegisterBusinessPageState extends ConsumerState<RegisterBusinessPage> {
                         onSave: (value) =>
                             authDetails["address"] = value!.trim(),
                       ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        "Location",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      SizedBox(height: 4.h),
-                      ComboBox(
-                        onChanged: (val) => setState(() => location = val),
-                        value: location,
-                        dropdownItems: allLocations,
-                        hint: "Select Location",
-                        dropdownWidth: 330.w,
-                        icon: const Icon(
-                          IconsaxPlusLinear.arrow_down,
-                          color: monokai,
-                        ),
-                      ),
                     ],
                   ),
                 ),
-                SizedBox(height: 50.h),
+                SizedBox(height: 300.h),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primary,
@@ -206,22 +190,14 @@ class _RegisterBusinessPageState extends ConsumerState<RegisterBusinessPage> {
                     ),
                   ),
                   onPressed: () {
-                    if (!validateForm(formKey)) return;
-                    if (location == null) {
-                      showToast("Please choose a location", context);
-                      return;
-                    } else {
-                      authDetails["location"] = location!;
-                    }
-
-                    if (loading) return;
+                    if (!validateForm(formKey) || loading) return;
                     setState(() => loading = true);
-                    createBusiness();
+                    updateUser();
                   },
                   child: loading
                       ? whiteLoader
                       : Text(
-                          "Continue",
+                          "Update",
                           style: context.textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Colors.white,

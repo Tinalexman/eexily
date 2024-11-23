@@ -3,25 +3,23 @@ import 'package:eexily/components/user/user.dart';
 import 'package:eexily/pages/home/refill/refill.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
-import 'package:eexily/tools/widgets/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../common/drawer.dart';
-import 'devices.dart';
 import 'home.dart';
 import 'profile.dart';
 
-class RegularHome extends ConsumerStatefulWidget {
-  const RegularHome({super.key});
+class BusinessHome extends ConsumerStatefulWidget {
+  const BusinessHome({super.key});
 
   @override
-  ConsumerState<RegularHome> createState() => _RegularHomeState();
+  ConsumerState<BusinessHome> createState() => _BusinessHomeState();
 }
 
-class _RegularHomeState extends ConsumerState<RegularHome> {
+class _BusinessHomeState extends ConsumerState<BusinessHome> {
   late List<Widget> children;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
@@ -31,7 +29,6 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
     children = const [
       Home(),
       Refill(),
-      Devices(),
       Profile(),
     ];
   }
@@ -42,8 +39,6 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
       case 1:
         return "Refill Gas";
       case 2:
-        return "Devices";
-      case 3:
         return "Profile";
       default:
         return "";
@@ -80,27 +75,26 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
             ),
           ),
         ),
-      if (index != 2)
-        IconButton(
-          onPressed: () {
-            if (index == 0) {
-              context.router.pushNamed(Pages.notification);
-            } else if (index == 1) {
-              context.router.pushNamed(Pages.individualOrderHistory);
-            } else if (index == 3) {
-              context.router.pushNamed(Pages.editIndividualProfile);
-            }
-          },
-          icon: Icon(
-            index == 0
-                ? IconsaxPlusBroken.notification_1
-                : index == 1
-                    ? IconsaxPlusBroken.chart_2
-                    : IconsaxPlusBroken.edit_2,
-            color: monokai,
-          ),
-          iconSize: 26.r,
-        )
+      IconButton(
+        onPressed: () {
+          if (index == 0) {
+            context.router.pushNamed(Pages.notification);
+          } else if (index == 1) {
+            context.router.pushNamed(Pages.businessOrderHistory);
+          } else if (index == 2) {
+            context.router.pushNamed(Pages.editBusinessProfile);
+          }
+        },
+        icon: Icon(
+          index == 0
+              ? IconsaxPlusBroken.notification_1
+              : index == 1
+                  ? IconsaxPlusBroken.chart_2
+                  : IconsaxPlusBroken.edit_2,
+          color: monokai,
+        ),
+        iconSize: 26.r,
+      )
     ];
   }
 
@@ -151,7 +145,47 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
             ),
           ),
         ),
-        bottomNavigationBar: const CustomBottomBar(),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: index,
+          selectedItemColor: primary,
+          unselectedItemColor: neutral3,
+          onTap: (val) => ref.watch(pageIndexProvider.notifier).state = val,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                IconsaxPlusBroken.home,
+                size: 22.r,
+              ),
+              activeIcon: Icon(
+                IconsaxPlusBold.home,
+                size: 22.r,
+              ),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                IconsaxPlusBroken.gas_station,
+                size: 22.r,
+              ),
+              activeIcon: Icon(
+                IconsaxPlusBold.gas_station,
+                size: 22.r,
+              ),
+              label: "Refill",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                IconsaxPlusBroken.profile,
+                size: 22.r,
+              ),
+              activeIcon: Icon(
+                IconsaxPlusBold.profile,
+                size: 22.r,
+              ),
+              label: "Profile",
+            ),
+          ],
+        ),
       ),
     );
   }

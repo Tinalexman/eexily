@@ -258,6 +258,9 @@ final StateProvider<bool> playGasAnimationProvider =
 final StateProvider<IndividualGasQuestionsData> individualGasQuestionsProvider =
     StateProvider((ref) => const IndividualGasQuestionsData());
 
+final StateProvider<BusinessGasQuestionsData> businessGasQuestionsProvider =
+StateProvider((ref) => const BusinessGasQuestionsData());
+
 final StateProvider<double> revenueProvider = StateProvider((ref) => 0);
 
 void logout(WidgetRef ref) {
@@ -268,6 +271,7 @@ void logout(WidgetRef ref) {
   ref.invalidate(currentUserOrderProvider);
   ref.invalidate(playGasAnimationProvider);
   ref.invalidate(gasLevelProvider);
+  ref.invalidate(businessGasQuestionsProvider);
   ref.invalidate(individualGasQuestionsProvider);
   ref.invalidate(driverOrdersProvider);
   ref.invalidate(saleReportsProvider);

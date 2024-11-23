@@ -2,14 +2,11 @@ import 'package:easy_stepper/easy_stepper.dart';
 import 'package:eexily/api/individual.dart';
 import 'package:eexily/components/gas_data.dart';
 import 'package:eexily/components/gas_questions.dart';
-import 'package:eexily/components/user/user.dart';
-import 'package:eexily/pages/home/regular/activation/step_five.dart';
-import 'package:eexily/pages/home/regular/activation/step_four.dart';
-import 'package:eexily/pages/home/regular/activation/step_one.dart';
-import 'package:eexily/pages/home/regular/activation/step_seven.dart';
-import 'package:eexily/pages/home/regular/activation/step_six.dart';
-import 'package:eexily/pages/home/regular/activation/step_three.dart';
-import 'package:eexily/pages/home/regular/activation/step_two.dart';
+import 'package:eexily/components/user/business.dart';
+import 'package:eexily/pages/home/business/activation/step_four.dart';
+import 'package:eexily/pages/home/business/activation/step_one.dart';
+import 'package:eexily/pages/home/business/activation/step_three.dart';
+import 'package:eexily/pages/home/business/activation/step_two.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -18,14 +15,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class IndividualActivationPages extends ConsumerStatefulWidget {
-  const IndividualActivationPages({super.key});
+class BusinessActivationPages extends ConsumerStatefulWidget {
+  const BusinessActivationPages({super.key});
 
   @override
-  ConsumerState<IndividualActivationPages> createState() => _ActivationPagesState();
+  ConsumerState<BusinessActivationPages> createState() => _BusinessActivationPagesState();
 }
 
-class _ActivationPagesState extends ConsumerState<IndividualActivationPages> {
+class _BusinessActivationPagesState extends ConsumerState<BusinessActivationPages> {
   int activeStep = 0;
   late List<Widget> children;
   bool loading = false;
@@ -38,9 +35,6 @@ class _ActivationPagesState extends ConsumerState<IndividualActivationPages> {
       StepTwo(),
       StepThree(),
       StepFour(),
-      StepFive(),
-      StepSix(),
-      StepSeven(),
     ];
   }
 
@@ -50,12 +44,8 @@ class _ActivationPagesState extends ConsumerState<IndividualActivationPages> {
         return 250.h;
       case 1:
         return 290.h;
-      case 4:
+      case 3:
         return 240.h;
-      case 5:
-        return 310.h;
-      case 6:
-        return 60.h;
       default:
         return 40.h;
     }
@@ -67,8 +57,8 @@ class _ActivationPagesState extends ConsumerState<IndividualActivationPages> {
   void pop() => context.router.pop();
 
   Future<void> createGasQuestions() async {
-    IndividualGasQuestionsData details =
-        ref.watch(individualGasQuestionsProvider);
+    BusinessGasQuestionsData details =
+        ref.watch(businessGasQuestionsProvider);
     String id = ref.watch(userProvider).id;
     var response = await createIndividualGasQuestions(details.toJson(), id);
     setState(() => loading = false);
@@ -76,7 +66,7 @@ class _ActivationPagesState extends ConsumerState<IndividualActivationPages> {
 
     if (!response.status) return;
 
-    User user = ref.watch(userProvider) as User;
+    Business user = ref.watch(userProvider) as Business;
     ref.watch(userProvider.notifier).state =
         user.copyWith(hasCompletedGas: true);
 
@@ -92,27 +82,27 @@ class _ActivationPagesState extends ConsumerState<IndividualActivationPages> {
   }
 
   bool get isPageValid {
-    IndividualGasQuestionsData data = ref.watch(individualGasQuestionsProvider);
-    if (activeStep == 0) {
-      return data.gasFilledPerTime != -1;
-    } else if (activeStep == 1) {
-      return data.consumptionDuration.isNotEmpty;
-    } else if (activeStep == 2) {
-      return data.gasUsagePeriod.isNotEmpty &&
-          data.householdMeals.isNotEmpty &&
-          data.cookingType.isNotEmpty;
-    } else if (activeStep == 3) {
-      return data.householdSize.isNotEmpty &&
-          data.householdType.isNotEmpty &&
-          data.householdGender.isNotEmpty;
-    } else if (activeStep == 4) {
-      return data.gasUsageAsidesCooking.isNotEmpty;
-    } else if (activeStep == 5) {
-      return data.gasMonthlyRefill.isNotEmpty;
-    } else if (activeStep == 6) {
-      return data.lastGasFilledPeriod.isNotEmpty &&
-          data.lastGasFilledQuantity.isNotEmpty;
-    }
+    BusinessGasQuestionsData data = ref.watch(businessGasQuestionsProvider);
+    // if (activeStep == 0) {
+    //   return data.gasFilledPerTime != -1;
+    // } else if (activeStep == 1) {
+    //   return data.consumptionDuration.isNotEmpty;
+    // } else if (activeStep == 2) {
+    //   return data.gasUsagePeriod.isNotEmpty &&
+    //       data.householdMeals.isNotEmpty &&
+    //       data.cookingType.isNotEmpty;
+    // } else if (activeStep == 3) {
+    //   return data.householdSize.isNotEmpty &&
+    //       data.householdType.isNotEmpty &&
+    //       data.householdGender.isNotEmpty;
+    // } else if (activeStep == 4) {
+    //   return data.gasUsageAsidesCooking.isNotEmpty;
+    // } else if (activeStep == 5) {
+    //   return data.gasMonthlyRefill.isNotEmpty;
+    // } else if (activeStep == 6) {
+    //   return data.lastGasFilledPeriod.isNotEmpty &&
+    //       data.lastGasFilledQuantity.isNotEmpty;
+    // }
     return false;
   }
 
@@ -228,7 +218,7 @@ class _ActivationPagesState extends ConsumerState<IndividualActivationPages> {
                           if (!isPageValid) return;
                           if (loading) return;
 
-                          if (activeStep != 6) {
+                          if (activeStep != 3) {
                             setState(() => ++activeStep);
                           } else {
                             setState(() => loading = true);
@@ -238,7 +228,7 @@ class _ActivationPagesState extends ConsumerState<IndividualActivationPages> {
                         child: loading
                             ? whiteLoader
                             : Text(
-                                activeStep == 6 ? "Complete" : "Next",
+                                activeStep == 3 ? "Complete" : "Next",
                                 style: context.textTheme.titleMedium!.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,

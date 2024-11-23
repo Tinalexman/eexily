@@ -1,5 +1,6 @@
 import 'package:eexily/components/user/base.dart';
 import 'package:eexily/pages/home/attendant/attendant_home.dart';
+import 'package:eexily/pages/home/business/business_home.dart';
 import 'package:eexily/pages/home/driver/driver_home.dart';
 import 'package:eexily/pages/home/merchant/merchant_home.dart';
 import 'package:eexily/pages/home/regular/regular_home.dart';
@@ -31,6 +32,8 @@ class _HomepageState extends ConsumerState<Homepage> {
         return const SupportHome();
       case UserRole.driver:
         return const DriverHome();
+      case UserRole.business:
+        return const BusinessHome();
       default:
         return const SizedBox();
     }

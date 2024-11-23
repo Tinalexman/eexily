@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eexily/components/user/business.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
@@ -47,7 +48,7 @@ class _HomeState extends ConsumerState<Home>
 
   @override
   Widget build(BuildContext context) {
-    User user = ref.watch(userProvider) as User;
+    Business user = ref.watch(userProvider) as Business;
     bool hasCompletedGasQuestions = user.hasCompletedGasQuestions;
 
     return SingleChildScrollView(
@@ -104,7 +105,7 @@ class _HomeState extends ConsumerState<Home>
                   SizedBox(height: 10.h),
                   GestureDetector(
                     onTap: () =>
-                        context.router.pushNamed(Pages.individualGasActivation),
+                        context.router.pushNamed(Pages.businessGasActivation),
                     child: Text(
                       "Click to Activate",
                       style: context.textTheme.bodyLarge!.copyWith(

@@ -51,6 +51,8 @@ class User extends UserBase {
         otherUser.dateJoined.isEmpty ? this.dateJoined : otherUser.dateJoined;
     String address =
         otherUser.address.isEmpty ? this.address : otherUser.address;
+    String phoneNumber =
+        otherUser.phoneNumber.isEmpty ? this.phoneNumber : otherUser.phoneNumber;
     String image = otherUser.image.isEmpty ? this.image : otherUser.image;
     bool completed = otherUser.hasCompletedGasQuestions;
 
@@ -63,6 +65,7 @@ class User extends UserBase {
       id: id,
       address: address,
       hasCompletedGasQuestions: completed,
+      phoneNumber: phoneNumber,
     );
   }
 }

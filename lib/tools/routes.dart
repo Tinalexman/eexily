@@ -15,6 +15,7 @@ import 'package:eexily/pages/auth/setup_account.dart';
 import 'package:eexily/pages/auth/verify.dart';
 import 'package:eexily/pages/home/attendant/all_orders.dart';
 import 'package:eexily/pages/home/attendant/view_order.dart';
+import 'package:eexily/pages/home/business/activation/activation.dart';
 import 'package:eexily/pages/home/common/filter.dart';
 import 'package:eexily/pages/home/common/notifications.dart';
 import 'package:eexily/pages/home/driver/edit_profile.dart';
@@ -25,6 +26,9 @@ import 'package:eexily/pages/home/last_refill.dart';
 import 'package:eexily/pages/home/merchant/all_orders.dart';
 import 'package:eexily/pages/home/merchant/edit_profile.dart';
 import 'package:eexily/pages/home/merchant/view_order.dart';
+import 'package:eexily/pages/home/refill/history.dart';
+import 'package:eexily/pages/home/refill/refill_now.dart';
+import 'package:eexily/pages/home/refill/schedule_refill.dart';
 import 'package:eexily/pages/home/regular/activation/activation.dart';
 import 'package:eexily/pages/home/regular/cheffy.dart';
 import 'package:eexily/pages/home/regular/edit_profile.dart';
@@ -37,10 +41,6 @@ import 'package:eexily/pages/onboard/intro.dart';
 import 'package:eexily/pages/onboard/onboard.dart';
 import 'package:eexily/pages/onboard/splash.dart';
 import 'package:go_router/go_router.dart';
-
-import '../pages/home/regular/refill/history.dart';
-import '../pages/home/regular/refill/refill_now.dart';
-import '../pages/home/regular/refill/schedule_refill.dart';
 import 'constants.dart';
 
 final List<GoRoute> routes = [
@@ -141,7 +141,12 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.individualGasActivation.path,
     name: Pages.individualGasActivation,
-    builder: (_, __) => const ActivationPages(),
+    builder: (_, __) => const IndividualActivationPages(),
+  ),
+  GoRoute(
+    path: Pages.businessGasActivation.path,
+    name: Pages.businessGasActivation,
+    builder: (_, __) => const BusinessActivationPages(),
   ),
   GoRoute(
     path: Pages.scheduleRefill.path,

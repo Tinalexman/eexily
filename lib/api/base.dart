@@ -5,7 +5,7 @@ export 'dart:developer' show log;
 export 'package:dio/dio.dart';
 
 // const String baseURL = "https://eexily-backend.onrender.com";
-const String baseURL = "http://192.168.106.93:3030";
+const String baseURL = "http://192.168.106.93:7030";
 
 String accessToken = "";
 

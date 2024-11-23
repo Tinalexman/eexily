@@ -1,7 +1,9 @@
+import 'package:eexily/api/merchant.dart';
 import 'package:eexily/components/filter_data.dart';
 import 'package:eexily/components/sale_report.dart';
 import 'package:eexily/components/user/attendant.dart';
 import 'package:eexily/components/user/merchant.dart';
+import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/widgets/attendant.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
@@ -20,10 +22,37 @@ class Store extends ConsumerStatefulWidget {
 
 class _StoreState extends ConsumerState<Store> {
   FilterData? filterData;
+  bool loadingUpdatePrices = false;
+
+  Future<void> modifyStore(
+      double newRetailPrice, double newRegularPrice) async {
+    Merchant merchant = ref.watch(userProvider) as Merchant;
+    var response = await updateMerchantUser({
+      "regularPrice": newRegularPrice,
+      "retailPrice": newRetailPrice,
+    }, merchant.id);
+    setState(() => loadingUpdatePrices = false);
+
+    if (!response.status) {
+      showMessage(response.message);
+      return;
+    }
+
+    ref.watch(userProvider.notifier).state = merchant.copyWith(
+      regularGasPrice: newRegularPrice,
+      retailGasPrice: newRetailPrice,
+    );
+  }
+
+  void showMessage(String message, [Color? color]) => showToast(
+        message,
+        context,
+        backgroundColor: color,
+      );
 
   @override
   Widget build(BuildContext context) {
-    Merchant attendant = ref.watch(userProvider) as Merchant;
+    Merchant merchant = ref.watch(userProvider) as Merchant;
     List<SaleReport> reports = ref.watch(saleReportsProvider);
 
     return Column(
@@ -39,27 +68,22 @@ class _StoreState extends ConsumerState<Store> {
               mainAxisExtent: 100.h,
             ),
             itemBuilder: (_, index) {
-              String label =
-              index == 0 ? "Retail Price" : "Regular Price";
+              String label = index == 0 ? "Retail Price" : "Regular Price";
               double price = index == 0
-                  ? attendant.retailGasPrice
-                  : attendant.regularGasPrice;
+                  ? merchant.retailGasPrice
+                  : merchant.regularGasPrice;
+
               void onUpdate(double val) {
                 double regular = 0.0, retail = 0.0;
                 if (index == 0) {
-                  regular = attendant.regularGasPrice;
+                  regular = merchant.regularGasPrice;
                   retail = val;
                 } else {
-                  retail = attendant.retailGasPrice;
+                  retail = merchant.retailGasPrice;
                   regular = val;
                 }
 
-                // Merchant newAttendant = Merchant(
-                //   balance: attendant.balance,
-                //   retailGasPrice: retail,
-                //   regularGasPrice: regular,
-                // );
-                // ref.watch(userProvider.notifier).state = newAttendant;
+                modifyStore(retail, regular);
               }
 
               return SalePriceContainer(
@@ -74,53 +98,14 @@ class _StoreState extends ConsumerState<Store> {
           ),
         ),
         SizedBox(height: 10.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "Reports Store",
-              style: context.textTheme.bodyLarge!.copyWith(
-                color: monokai,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            IconButton(
-              onPressed: () async {
-                FilterData? resp = await context.router
-                    .pushNamed(Pages.filter) as FilterData?;
-                setState(() => filterData = resp);
-              },
-              icon: const Icon(
-                IconsaxPlusBroken.filter,
-                color: monokai,
-              ),
-              iconSize: 20.r,
-            )
-          ],
-        ),
-        if (filterData != null)
-          Chip(
-            label: Text(
-              filterData!.selection,
-              style: context.textTheme.bodySmall!.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            deleteIcon: Icon(
-              Boxicons.bx_x,
-              color: monokai,
-              size: 16.r,
-            ),
-            onDeleted: () => setState(() => filterData = null),
-            backgroundColor: secondary,
-            elevation: 1.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(7.5.r),
-            ),
-            side: const BorderSide(color: Colors.transparent),
+        Text(
+          "Sales Reports",
+          style: context.textTheme.bodyLarge!.copyWith(
+            color: monokai,
+            fontWeight: FontWeight.w600,
           ),
-        if (filterData != null) SizedBox(height: 10.h),
+        ),
+        SizedBox(height: 10.h),
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.all(1),

@@ -173,6 +173,26 @@ class _EditMerchantProfilePageState
                       ),
                       SizedBox(height: 10.h),
                       Text(
+                        "Store Name",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      SpecialForm(
+                        controller: storeController,
+                        width: 375.w,
+                        hint: "e.g A&B Gas Industries",
+                        onValidate: (value) {
+                          value = value.trim();
+                          if (value!.isEmpty) {
+                            return 'Invalid Store Name';
+                          }
+                          return null;
+                        },
+                        onSave: (value) =>
+                            authDetails["storeName"] = value!.trim(),
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
                         "Address",
                         style: context.textTheme.bodyMedium,
                       ),

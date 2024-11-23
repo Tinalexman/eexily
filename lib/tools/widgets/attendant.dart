@@ -589,7 +589,7 @@ class _SalePriceContainerState extends State<SalePriceContainer> {
         onUpdate: widget.onPriceUpdated,
       ),
       useSafeArea: true,
-      barrierDismissible: false,
+      barrierDismissible: true,
     );
   }
 
@@ -689,45 +689,74 @@ class _PriceUpdateState extends State<_PriceUpdate> {
     return Dialog(
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(horizontal: 80.w),
+      insetPadding: EdgeInsets.symmetric(horizontal: 30.w),
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15.r),
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+          padding: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 20.h,
+          ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Price update",
-                style: context.textTheme.bodyLarge!.copyWith(
+                "New Price",
+                style: context.textTheme.titleLarge!.copyWith(
                   fontWeight: FontWeight.w600,
+                  color: monokai,
+                ),
+              ),
+              Text(
+                "Update the prices of your gas",
+                style: context.textTheme.bodyMedium!.copyWith(
+                  color: monokai,
                 ),
               ),
               SizedBox(height: 20.h),
               SpecialForm(
                 controller: controller,
-                width: 160.w,
+                width: 320.w,
                 focus: node,
                 type: TextInputType.number,
                 hint: "New price",
+                fillColor: neutral,
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 30.h),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      side: const BorderSide(color: primary),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.r),
+                      ),
+                      fixedSize: Size(130.w, 40.h),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
                     child: Text(
                       "Cancel",
-                      style: context.textTheme.bodyLarge,
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: primary,
+                      ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.r),
+                      ),
+                      fixedSize: Size(130.w, 40.h),
+                    ),
+                    onPressed: () {
                       String text = controller.text.trim();
                       double? value = double.tryParse(text);
                       if (text.isEmpty || value == null) return;
@@ -739,6 +768,7 @@ class _PriceUpdateState extends State<_PriceUpdate> {
                       "Update",
                       style: context.textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   )

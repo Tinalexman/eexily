@@ -1,3 +1,4 @@
+import 'package:eexily/api/merchant.dart';
 import 'package:eexily/api/refill.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/merchant.dart';
@@ -38,6 +39,19 @@ class _HomeState extends ConsumerState<Home> {
     }
 
     ref.watch(merchantOrdersProvider.notifier).state = response.payload;
+  }
+
+  Future<void> modifyStore(bool active) async {
+    Merchant merchant = ref.watch(userProvider) as Merchant;
+    var response = await updateMerchantUser({"isOpened": active}, merchant.id);
+    setState(() => loading = false);
+
+    if (!response.status) {
+      showMessage(response.message);
+      ref.watch(userProvider.notifier).state =
+          merchant.copyWith(isOpened: !active);
+      return;
+    }
   }
 
   void showMessage(String message) => showToast(message, context);
@@ -84,6 +98,7 @@ class _HomeState extends ConsumerState<Home> {
                     child: Switch(
                       value: merchant.isOpened,
                       onChanged: (val) {
+                        modifyStore(!merchant.isOpened);
                         ref.watch(userProvider.notifier).state =
                             merchant.copyWith(
                           isOpened: !merchant.isOpened,

@@ -17,8 +17,6 @@ class GasDetailsPage extends ConsumerStatefulWidget {
 }
 
 class _GasDetailsPageState extends ConsumerState<GasDetailsPage> {
-
-
   @override
   Widget build(BuildContext context) {
     bool isGasActive = ref.watch(playGasAnimationProvider);
@@ -40,8 +38,9 @@ class _GasDetailsPageState extends ConsumerState<GasDetailsPage> {
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20.h),
+                SizedBox(height: 10.h),
                 DecoratedBox(
                   decoration: BoxDecoration(
                     color: primary,
@@ -154,6 +153,20 @@ class _GasDetailsPageState extends ConsumerState<GasDetailsPage> {
                 SizedBox(height: 20.h),
                 const Center(child: GasContainer()),
                 SizedBox(height: 20.h),
+                Text(
+                  "Won't be around for a while?",
+                  style: context.textTheme.titleLarge!.copyWith(
+                    color: monokai,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  "You can enable or disable your gas tracker here.",
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: monokai,
+                  ),
+                ),
               ],
             ),
           ),

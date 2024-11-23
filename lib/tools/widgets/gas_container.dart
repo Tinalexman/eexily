@@ -25,7 +25,9 @@ class _GasContainerState extends ConsumerState<GasContainer> {
   @override
   void initState() {
     super.initState();
-    int currentGasLevel = 100 - ref.read(gasLevelProvider); // I am subtracting 100 cause the video is played as starting from 100 to 0 instead of 0 to 100
+    int currentGasLevel = 100 -
+        ref.read(
+            gasLevelProvider); // I am subtracting 100 cause the video is played as starting from 100 to 0 instead of 0 to 100
     startPlaybackInMilliseconds =
         (currentGasLevel ~/ gasIncreaseSteps) * animationPlaybackDuration;
 
@@ -35,7 +37,7 @@ class _GasContainerState extends ConsumerState<GasContainer> {
       ..initialize().then((_) {
         setState(() {});
         controller.seekTo(Duration(milliseconds: startPlaybackInMilliseconds));
-        if(shouldPlayGasAnimation) {
+        if (shouldPlayGasAnimation) {
           controller.play();
         }
       });
@@ -49,6 +51,18 @@ class _GasContainerState extends ConsumerState<GasContainer> {
   }
 
   @override
+  void didUpdateWidget(covariant GasContainer oldWidget) {
+    bool status = ref.watch(playGasAnimationProvider);
+    if (status) {
+      controller.play();
+    } else {
+      controller.pause();
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void dispose() {
     controller.dispose();
     super.dispose();
@@ -56,8 +70,9 @@ class _GasContainerState extends ConsumerState<GasContainer> {
 
   void listenForChanges() {
     ref.listen(gasLevelProvider, (previous, next) {
-      if(next <= 15 && !ref.watch(shownGasToast)) {
-        showToast("Your gas is getting low. Please refill as soon as possible.", context);
+      if (next <= 15 && !ref.watch(shownGasToast)) {
+        showToast("Your gas is getting low. Please refill as soon as possible.",
+            context);
         ref.watch(shownGasToast.notifier).state = true;
       }
 
@@ -67,9 +82,8 @@ class _GasContainerState extends ConsumerState<GasContainer> {
       setState(() => startPlaybackInMilliseconds = targetStartInMilliseconds);
     });
 
-
     ref.listen(playGasAnimationProvider, (previous, next) {
-      if(next) {
+      if (next) {
         controller.play();
       } else {
         controller.pause();

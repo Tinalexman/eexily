@@ -16,7 +16,36 @@ class Home extends ConsumerStatefulWidget {
   ConsumerState<Home> createState() => _HomeState();
 }
 
-class _HomeState extends ConsumerState<Home> {
+class _HomeState extends ConsumerState<Home>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+  late Animation<Offset> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat(reverse: true);
+    animation = Tween<Offset>(
+      begin: const Offset(0, -0.02),
+      end: const Offset(0, 0.02),
+    ).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     User user = ref.watch(userProvider) as User;
@@ -85,9 +114,12 @@ class _HomeState extends ConsumerState<Home> {
               ),
             ),
           if (hasCompletedGasQuestions)
-            GestureDetector(
-              onTap: () => context.router.pushNamed(Pages.gasDetails),
-              child: const Center(child: GasContainer()),
+            SlideTransition(
+              position: animation,
+              child: GestureDetector(
+                onTap: () => context.router.pushNamed(Pages.gasDetails),
+                child: const Center(child: GasContainer()),
+              ),
             ),
           SizedBox(height: 10.h),
         ],

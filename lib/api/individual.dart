@@ -50,8 +50,6 @@ Future<EexilyResponse<GasData?>> createIndividualGasQuestions(
     if (response.statusCode! == 201) {
       Map<String, dynamic> map = response.data["payload"];
 
-      log("$map");
-
       GasData gd = GasData(
         gasSize: -1,
         gasAmountLeft: (map["estimatedGasRemaining"] as num).toDouble() ?? 0.0,

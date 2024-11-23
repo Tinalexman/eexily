@@ -32,6 +32,16 @@ class _GasDetailsPageState extends ConsumerState<GasDetailsPage> {
             fontWeight: FontWeight.w600,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () => context.router.pushNamed(Pages.lastRefill),
+            icon: const Icon(
+              IconsaxPlusBroken.edit_2,
+              color: monokai,
+            ),
+            iconSize: 26.r,
+          )
+        ],
       ),
       body: SafeArea(
         child: Padding(

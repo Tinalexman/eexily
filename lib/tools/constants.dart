@@ -52,6 +52,8 @@ class Pages
   static String get scheduleRefill => "schedule-refill";
   static String get refillNow => "refill-now";
   static String get cheffy => "cheffy";
+  static String get lastRefill => "last-refill";
+  static String get updateCylinder => "update-cylinder";
   static String get editMerchantProfile => "edit-merchant-profile";
   static String get editIndividualProfile => "edit-individual-profile";
   static String get editDriverProfile => "edit-driver-profile";
@@ -2145,4 +2147,17 @@ final List<Map<String, dynamic>> bankCodes = [
     "bank_name": "Mercury MFB",
     "code": "090589"
   }
+];
+
+
+final List<String> allLocations = [
+  "Harmony",
+  "Isolu",
+  "Camp",
+  "Oluwo",
+  "Accord",
+  "Zoo",
+  "Kofesu",
+  "Agbede",
+  "Funis",
 ];

@@ -37,7 +37,6 @@ class _HomeState extends ConsumerState<Home>
         curve: Curves.easeInOut,
       ),
     );
-
   }
 
   @override
@@ -69,7 +68,12 @@ class _HomeState extends ConsumerState<Home>
             ),
           ),
           SizedBox(height: 20.h),
-          UserGasStatistics(hasCompleted: hasCompletedGasQuestions),
+          GestureDetector(
+            onTap: () => context.router.pushNamed(Pages.updateCylinder),
+            child: UserGasStatistics(
+              hasCompleted: hasCompletedGasQuestions,
+            ),
+          ),
           SizedBox(height: 20.h),
           if (!hasCompletedGasQuestions)
             Center(

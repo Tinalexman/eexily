@@ -338,13 +338,7 @@ class _ScheduleRefillState extends State<_ScheduleRefill> {
           ),
           SizedBox(height: 50.h),
           Text(
-            "Plan ahead and save cash with our standard delivery! Choose a convenient "
-            "time slot for your gas refill. We do deliveries every day at 12pm and 5pm.",
-            style: context.textTheme.bodyMedium,
-          ),
-          SizedBox(height: 10.h),
-          Text(
-            "Pick a slot that fits your schedule and enjoy lower delivery fees. It’s easy and budget-friendly!",
+            "Plan ahead and save with our standard delivery, and we’ll refill your gas at 12pm or 5pm daily!",
             style: context.textTheme.bodyMedium,
           ),
           SizedBox(height: 20.h),
@@ -397,7 +391,7 @@ class _ScheduleRefillState extends State<_ScheduleRefill> {
               ),
             ],
           ),
-          SizedBox(height: 70.h),
+          SizedBox(height: 150.h),
           if (currentSlot.isNotEmpty)
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -442,13 +436,11 @@ class _RefillNow extends StatelessWidget {
           ),
           SizedBox(height: 50.h),
           Text(
-            "Need gas urgently? No problem! With ‘Express Delivery’, get your gas delivered as "
-            "soon as possible. Just let us know where you are, and we’ll take care of the rest. "
-            "It’s quick and hassle-free!",
+            "Running low on gas? We'll bring it to you fast and hassle-free!",
             style: context.textTheme.bodyMedium,
-            // textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
           ),
-          SizedBox(height: 120.h),
+          SizedBox(height: 197.h),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               elevation: 0.0,

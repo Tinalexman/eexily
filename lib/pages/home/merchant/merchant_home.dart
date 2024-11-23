@@ -114,7 +114,7 @@ class _MerchantHomeState extends ConsumerState<MerchantHome> {
                 icon: Icon(
                   index == 0
                       ? IconsaxPlusBroken.notification_1
-                      : IconsaxPlusBroken.edit,
+                      : IconsaxPlusBroken.edit_2,
                   color: monokai,
                 ),
                 iconSize: 26.r,

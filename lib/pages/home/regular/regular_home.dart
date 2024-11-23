@@ -96,7 +96,7 @@ class _RegularHomeState extends ConsumerState<RegularHome> {
                 ? IconsaxPlusBroken.notification_1
                 : index == 1
                     ? IconsaxPlusBroken.chart_2
-                    : IconsaxPlusBroken.edit,
+                    : IconsaxPlusBroken.edit_2,
             color: monokai,
           ),
           iconSize: 26.r,

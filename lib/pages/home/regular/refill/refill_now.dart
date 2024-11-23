@@ -162,7 +162,7 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 40.h),
+                SizedBox(height: 30.h),
                 Text(
                   "Quantity of gas (kg)?",
                   style: context.textTheme.bodyMedium,
@@ -177,35 +177,17 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                   onChange: calculateNewTotalAmount,
                 ),
                 SizedBox(height: 10.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Address",
-                      style: context.textTheme.bodyMedium,
-                    ),
-                    if (!shouldMakeAddressEditable)
-                      GestureDetector(
-                        onTap: () =>
-                            setState(() => shouldMakeAddressEditable = true),
-                        child: Text(
-                          "Change",
-                          style: context.textTheme.bodySmall!.copyWith(
-                            color: primary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                  ],
+                Text(
+                  "Address",
+                  style: context.textTheme.bodyMedium,
                 ),
                 SizedBox(height: 4.h),
                 SpecialForm(
                   controller: addressController,
                   width: 375.w,
                   maxLines: 4,
-                  readOnly: !shouldMakeAddressEditable,
-                  fillColor: shouldMakeAddressEditable ? null : neutral,
+                  readOnly: true,
+                  fillColor: neutral,
                   hint: "e.g House 12, Camp Junction, Abeokuta",
                 ),
                 SizedBox(height: 160.h),

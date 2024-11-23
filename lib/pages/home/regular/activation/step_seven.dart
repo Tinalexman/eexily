@@ -59,7 +59,7 @@ class _StepSevenState extends ConsumerState<StepSeven> {
         ),
         SizedBox(height: 20.h),
         Text(
-          "When was the last time your filled gas?",
+          "When was the last time you refilled your gas?",
           style: context.textTheme.bodyLarge,
         ),
         SizedBox(height: 10.h),

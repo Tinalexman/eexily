@@ -21,6 +21,7 @@ import 'package:eexily/pages/home/driver/edit_profile.dart';
 import 'package:eexily/pages/home/driver/view_order.dart';
 import 'package:eexily/pages/home/home.dart';
 import 'package:eexily/pages/home/inbox.dart';
+import 'package:eexily/pages/home/last_refill.dart';
 import 'package:eexily/pages/home/merchant/all_orders.dart';
 import 'package:eexily/pages/home/merchant/edit_profile.dart';
 import 'package:eexily/pages/home/merchant/view_order.dart';
@@ -31,6 +32,7 @@ import 'package:eexily/pages/home/regular/gas_details.dart';
 import 'package:eexily/pages/home/regular/gas_usage.dart';
 import 'package:eexily/pages/home/support/order_history.dart';
 import 'package:eexily/pages/home/support/view_order.dart';
+import 'package:eexily/pages/home/update_cylinder.dart';
 import 'package:eexily/pages/onboard/intro.dart';
 import 'package:eexily/pages/onboard/onboard.dart';
 import 'package:eexily/pages/onboard/splash.dart';
@@ -192,6 +194,16 @@ final List<GoRoute> routes = [
     path: Pages.editMerchantProfile.path,
     name: Pages.editMerchantProfile,
     builder: (_, __) => const EditMerchantProfilePage(),
+  ),
+  GoRoute(
+    path: Pages.lastRefill.path,
+    name: Pages.lastRefill,
+    builder: (_, __) => const LastRefillPage(),
+  ),
+  GoRoute(
+    path: Pages.updateCylinder.path,
+    name: Pages.updateCylinder,
+    builder: (_, __) => const UpdateCylinderPage(),
   ),
   GoRoute(
     path: Pages.individualOrderHistory.path,

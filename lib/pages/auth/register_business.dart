@@ -7,15 +7,16 @@ import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RegisterBusinessPage extends ConsumerStatefulWidget {
-
   const RegisterBusinessPage({
     super.key,
   });
 
   @override
-  ConsumerState<RegisterBusinessPage> createState() => _RegisterBusinessPageState();
+  ConsumerState<RegisterBusinessPage> createState() =>
+      _RegisterBusinessPageState();
 }
 
 class _RegisterBusinessPageState extends ConsumerState<RegisterBusinessPage> {
@@ -30,8 +31,10 @@ class _RegisterBusinessPageState extends ConsumerState<RegisterBusinessPage> {
     "businessName": "",
     "address": "",
     "category": "",
+    "location": "",
   };
 
+  String? location;
   bool loading = false, navigateToCategory = false;
 
   @override
@@ -149,7 +152,7 @@ class _RegisterBusinessPageState extends ConsumerState<RegisterBusinessPage> {
                           return null;
                         },
                         onSave: (value) =>
-                        authDetails["category"] = value!.trim(),
+                            authDetails["category"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
@@ -172,6 +175,23 @@ class _RegisterBusinessPageState extends ConsumerState<RegisterBusinessPage> {
                         onSave: (value) =>
                             authDetails["address"] = value!.trim(),
                       ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Location",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      ComboBox(
+                        onChanged: (val) => setState(() => location = val),
+                        value: location,
+                        dropdownItems: allLocations,
+                        hint: "Select Location",
+                        dropdownWidth: 330.w,
+                        icon: const Icon(
+                          IconsaxPlusLinear.arrow_down,
+                          color: monokai,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -187,6 +207,12 @@ class _RegisterBusinessPageState extends ConsumerState<RegisterBusinessPage> {
                   ),
                   onPressed: () {
                     if (!validateForm(formKey)) return;
+                    if (location == null) {
+                      showToast("Please choose a location", context);
+                      return;
+                    } else {
+                      authDetails["location"] = location!;
+                    }
 
                     if (loading) return;
                     setState(() => loading = true);

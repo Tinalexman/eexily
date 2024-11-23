@@ -7,6 +7,7 @@ import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RegisterUserPage extends ConsumerStatefulWidget {
   final String userId;
@@ -32,9 +33,11 @@ class _RegisterUserPageState extends ConsumerState<RegisterUserPage> {
     "lastName": "",
     "address": "",
     "gasSize": "",
+    "location": "",
     "user": "",
   };
 
+  String? location;
   bool loading = false;
 
   @override
@@ -183,6 +186,23 @@ class _RegisterUserPageState extends ConsumerState<RegisterUserPage> {
                         onSave: (value) =>
                             authDetails["address"] = value!.trim(),
                       ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Location",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      ComboBox(
+                        onChanged: (val) => setState(() => location = val),
+                        value: location,
+                        dropdownItems: allLocations,
+                        hint: "Select Location",
+                        dropdownWidth: 330.w,
+                        icon: const Icon(
+                          IconsaxPlusLinear.arrow_down,
+                          color: monokai,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -198,6 +218,12 @@ class _RegisterUserPageState extends ConsumerState<RegisterUserPage> {
                   ),
                   onPressed: () {
                     if (!validateForm(formKey)) return;
+                    if (location == null) {
+                      showToast("Please choose a location", context);
+                      return;
+                    } else {
+                      authDetails["location"] = location;
+                    }
 
                     if (loading) return;
                     setState(() => loading = true);

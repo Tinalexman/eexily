@@ -38,12 +38,13 @@ class _RegisterRiderPageState extends ConsumerState<RegisterRiderPage> {
     "driverLicense": "",
     "expiryDate": "",
     "riderType": "",
+    "location": "",
     "gcode": "",
   };
 
   final Map<String, String> options = {"Driver": "DRIVER", "Rider": "RIDER"};
 
-  String? type;
+  String? type, location;
   DateTime? licenseExpiry;
   late List<String> optionKeys;
 
@@ -293,6 +294,23 @@ class _RegisterRiderPageState extends ConsumerState<RegisterRiderPage> {
                         onSave: (value) =>
                             authDetails["address"] = value!.trim(),
                       ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Location",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      ComboBox(
+                        onChanged: (val) => setState(() => location = val),
+                        value: location,
+                        dropdownItems: allLocations,
+                        hint: "Select Location",
+                        dropdownWidth: 330.w,
+                        icon: const Icon(
+                          IconsaxPlusLinear.arrow_down,
+                          color: monokai,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -314,6 +332,13 @@ class _RegisterRiderPageState extends ConsumerState<RegisterRiderPage> {
                       return;
                     } else {
                       authDetails["riderType"] = options[type!]!;
+                    }
+
+                    if (location == null) {
+                      showToast("Please choose a location", context);
+                      return;
+                    } else {
+                      authDetails["location"] = location!;
                     }
 
                     if (loading) return;

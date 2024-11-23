@@ -3,10 +3,9 @@ import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RegisterGasStationPage extends StatefulWidget {
-
-
   const RegisterGasStationPage({
     super.key,
   });
@@ -28,8 +27,10 @@ class _RegisterGasStationPageState extends State<RegisterGasStationPage> {
   final Map<String, String> authDetails = {
     "gasStationName": "",
     "address": "",
+    "location": "",
   };
 
+  String? location;
   bool loading = false;
 
   @override
@@ -186,6 +187,23 @@ class _RegisterGasStationPageState extends State<RegisterGasStationPage> {
                         onSave: (value) =>
                             authDetails["address"] = value!.trim(),
                       ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Location",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      ComboBox(
+                        onChanged: (val) => setState(() => location = val),
+                        value: location,
+                        dropdownItems: allLocations,
+                        hint: "Select Location",
+                        dropdownWidth: 330.w,
+                        icon: const Icon(
+                          IconsaxPlusLinear.arrow_down,
+                          color: monokai,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -201,6 +219,13 @@ class _RegisterGasStationPageState extends State<RegisterGasStationPage> {
                   ),
                   onPressed: () {
                     if (!validateForm(formKey)) return;
+
+                    if (location == null) {
+                      showToast("Please choose a location", context);
+                      return;
+                    } else {
+                      authDetails["location"] = location!;
+                    }
 
                     if (loading) return;
                     setState(() => loading = true);

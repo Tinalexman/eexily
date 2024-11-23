@@ -29,7 +29,7 @@ Future<void> main() async {
         ledColor: Colors.white,
         importance: NotificationImportance.High,
         playSound: true,
-        soundSource: 'resource://raw/gas_feel.wav',
+        soundSource: 'resource://raw/gas_feel',
       ),
     ],
     channelGroups: [

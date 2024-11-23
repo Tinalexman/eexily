@@ -4,6 +4,7 @@ import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RegisterMerchantPage extends StatefulWidget {
   final String userId;
@@ -34,8 +35,10 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
     "lastName": "",
     "retailPrice": 0,
     "regularPrice": 0,
+    "location": "",
   };
 
+  String? location;
   bool loading = false;
 
   @override
@@ -258,6 +261,23 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
                         onSave: (value) =>
                             authDetails["address"] = value!.trim(),
                       ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Location",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      ComboBox(
+                        onChanged: (val) => setState(() => location = val),
+                        value: location,
+                        dropdownItems: allLocations,
+                        hint: "Select Location",
+                        dropdownWidth: 330.w,
+                        icon: const Icon(
+                          IconsaxPlusLinear.arrow_down,
+                          color: monokai,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -273,6 +293,13 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
                   ),
                   onPressed: () {
                     if (!validateForm(formKey)) return;
+
+                    if (location == null) {
+                      showToast("Please choose a location", context);
+                      return;
+                    } else {
+                      authDetails["location"] = location!;
+                    }
 
                     if (loading) return;
                     setState(() => loading = true);

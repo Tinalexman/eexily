@@ -1,10 +1,8 @@
-import 'package:eexily/api/individual.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
-import 'package:eexily/tools/widgets/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,20 +17,20 @@ class Refill extends ConsumerStatefulWidget {
 class _RefillState extends ConsumerState<Refill> {
   @override
   Widget build(BuildContext context) {
-    String? currentOrderCode = ref.watch(currentUserOrderProvider);
+    UserOrder? currentOrder = ref.watch(currentUserOrderProvider);
 
-    return currentOrderCode != null
-        ? _HasOrder(orderCode: currentOrderCode)
+    return currentOrder != null
+        ? _HasOrder(order: currentOrder)
         : const _NoOrder();
   }
 }
 
 class _HasOrder extends ConsumerStatefulWidget {
-  final String orderCode;
+  final UserOrder order;
 
   const _HasOrder({
     super.key,
-    required this.orderCode,
+    required this.order,
   });
 
   @override
@@ -40,13 +38,12 @@ class _HasOrder extends ConsumerStatefulWidget {
 }
 
 class _HasOrderState extends ConsumerState<_HasOrder> {
-  final List<UserOrder> orders = [];
   bool loading = true;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, getOrder);
+    // Future.delayed(Duration.zero, getOrder);
   }
 
   void showMessage(String message) => showToast(message, context);
@@ -62,23 +59,6 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
     // });
   }
 
-  Color getOrderColor(String orderState) {
-    switch (orderState) {
-      case "PENDING":
-        return secondary;
-      case "MATCHED":
-        return secondary3;
-      case "REFILL":
-        return secondary2;
-      case "DISPATCHED":
-        return Colors.red;
-      case "DELIVERED":
-        return primary;
-      default:
-        return monokai;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     User user = ref.watch(userProvider) as User;
@@ -87,194 +67,18 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 10.h),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: 40.r,
-                height: 40.r,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: monokai),
-                ),
-                child: Icon(
-                  Icons.done_rounded,
-                  size: 28.r,
-                ),
-              ),
-              SizedBox(width: 10.w),
-              Text(
-                "Thank you ${user.firstName}!",
-                style: context.textTheme.headlineSmall!.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+          Text(
+            "Thank you ${user.firstName}! 🥳🥳🥳",
+            style: context.textTheme.headlineSmall!.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          SizedBox(height: 30.h),
-          if (loading)
-            const Center(
-              child: loader,
-            ),
-          if (!loading && orders.isEmpty)
-            Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 80.h),
-                  Image.asset(
-                    "assets/images/error.png",
-                    width: 200.w,
-                    fit: BoxFit.cover,
-                  ),
-                  SizedBox(height: 30.h),
-                  Text(
-                    "Orders not found",
-                    style: context.textTheme.titleLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 10.h),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() => loading = true);
-                      getOrder();
-                    },
-                    child: Text(
-                      "Click here to refresh",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        color: primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          if (!loading && orders.isNotEmpty)
-            Container(
-              width: 390.w,
-              decoration: BoxDecoration(
-                color: primary50.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(7.5.r),
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: 10.w,
-                vertical: 10.h,
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Order ID:",
-                        style: context.textTheme.bodyLarge,
-                      ),
-                      Text(
-                        orders[0].code,
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: monokai,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Amount Paid:",
-                        style: context.textTheme.bodyLarge,
-                      ),
-                      Text(
-                        "₦${formatAmount(orders[0].price.toStringAsFixed(0))}",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: monokai,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Gas Quantity:",
-                        style: context.textTheme.bodyLarge,
-                      ),
-                      Text(
-                        "${orders[0].quantity}kg",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: monokai,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Picked Up Time:",
-                        style: context.textTheme.bodyLarge,
-                      ),
-                      Text(
-                        orders[0].pickedUpTime,
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: monokai,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Delivery Time:",
-                        style: context.textTheme.bodyLarge,
-                      ),
-                      Text(
-                        convertTime(DateTime.parse(orders[0].scheduledTime)),
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: monokai,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Status:",
-                        style: context.textTheme.bodyLarge,
-                      ),
-                      Text(
-                        orders[0].orderState,
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: getOrderColor(orders[0].orderState),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+          SizedBox(height: 20.h),
+          SizedBox(
+            height: 580.h,
+            width: 375.w,
+            child: _CustomOrderStepper(data: widget.order.states),
+          ),
         ],
       ),
     );
@@ -462,6 +266,170 @@ class _RefillNow extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _CustomOrderStepper extends StatefulWidget {
+  final List<OrderStates> data;
+
+  const _CustomOrderStepper({
+    super.key,
+    required this.data,
+  });
+
+  @override
+  State<_CustomOrderStepper> createState() => _CustomOrderStepperState();
+}
+
+class _CustomOrderStepperState extends State<_CustomOrderStepper> {
+  late int total;
+
+  late Widget completedStepIcon,
+      nextStepToBeCompletedIcon,
+      notCompletedStepIcon;
+
+  @override
+  void initState() {
+    super.initState();
+    total = OrderState.values.length - 1;
+    completedStepIcon = Center(
+      child: Icon(
+        Icons.done,
+        size: 26.r,
+        color: Colors.white,
+      ),
+    );
+
+    nextStepToBeCompletedIcon = Center(
+      child: CircleAvatar(
+        radius: 18.r,
+        backgroundColor: Colors.white,
+        child: Center(
+          child: CircleAvatar(
+            radius: 5.r,
+            backgroundColor: primary,
+          ),
+        ),
+      ),
+    );
+
+    notCompletedStepIcon = Center(
+      child: CircleAvatar(
+        radius: 18.r,
+        backgroundColor: Colors.white,
+      ),
+    );
+  }
+
+  String getOrderTitle(int index) {
+    switch (index) {
+      case 0:
+        return "Pending";
+      case 1:
+        return "Matched";
+      case 2:
+        return "Paid";
+      case 3:
+        return "Picked Up";
+      case 4:
+        return "Refilled";
+      case 5:
+        return "Dispatched";
+      case 6:
+        return "Delivered";
+      default:
+        return "";
+    }
+  }
+
+  String getOrderSubtitle(int index) {
+    switch (index) {
+      case 0:
+        return "Your request is pending";
+      case 1:
+        return "Your request has been matched!";
+      case 2:
+        return "Your payment has been confirmed!";
+      case 3:
+        return "Your gas cylinder has been picked up!";
+      case 4:
+        return "Your gas cylinder has been refilled";
+      case 5:
+        return "Your gas cylinder is already on its way back";
+      case 6:
+        return "Your gas cylinder has been delivered";
+      default:
+        return "";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: total,
+      itemBuilder: (_, index) {
+        OrderState state = OrderState.values[index];
+        bool hasStepBeingCompleted = index < widget.data.length;
+        bool isNextToBeCompleted = index == widget.data.length;
+        bool isLastStep = index == total - 1;
+        DateTime? stepTimestamp;
+        if (index < widget.data.length) {
+          stepTimestamp = DateTime.parse(widget.data[index].timestamp);
+        }
+
+        return SizedBox(
+          width: 375.w,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 20.r,
+                    backgroundColor: primary,
+                    child: hasStepBeingCompleted
+                        ? completedStepIcon
+                        : isNextToBeCompleted
+                            ? nextStepToBeCompletedIcon
+                            : notCompletedStepIcon,
+                  ),
+                  if (!isLastStep)
+                    Container(
+                      width: 2.w,
+                      height: 60.r,
+                      color: primary50,
+                    )
+                ],
+              ),
+              SizedBox(width: 10.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    getOrderTitle(index),
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    getOrderSubtitle(index),
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  if (stepTimestamp != null)
+                    Text(
+                      formatDateRawWithTime(stepTimestamp),
+                      style: context.textTheme.bodySmall,
+                    ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

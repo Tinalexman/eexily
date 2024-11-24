@@ -1,6 +1,4 @@
 import 'package:eexily/api/refill.dart';
-import 'package:eexily/components/order.dart';
-import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -80,9 +78,7 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
     setState(() {});
   }
 
-  void showSuccessModal(String code) {
-    ref.watch(currentUserOrderProvider.notifier).state = code;
-
+  void showSuccessModal(String url) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -90,7 +86,7 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
         text: "You have successfully ordered for an express delivery",
         onDismiss: () {
           Navigator.of(context).pop();
-          context.router.pop();
+          launchPayStackUrl(url);
         },
       ),
     );
@@ -115,10 +111,14 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
 
     var response = await createExpressOrder(data);
     setState(() => loading = false);
-    showMessage(response.message, response.status ? primary : null);
-    if (!response.status) return;
 
-    showSuccessModal(response.payload!);
+    if (!response.status) {
+      showMessage(response.message);
+      return;
+    }
+
+    ref.watch(currentUserOrderProvider.notifier).state = response.payload;
+    showSuccessModal(response.payload!.paymentUrl);
   }
 
   @override
@@ -220,7 +220,7 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                   value: location,
                   dropdownItems: allLocations,
                   onChanged: (value) {
-                    if(shouldMakeAddressEditable) {
+                    if (shouldMakeAddressEditable) {
                       setState(() => location = value);
                     }
                   },

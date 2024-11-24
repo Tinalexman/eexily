@@ -236,7 +236,7 @@ final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider(
   ),
 );
 
-final StateProvider<String?> currentUserOrderProvider =
+final StateProvider<UserOrder?> currentUserOrderProvider =
     StateProvider((ref) => null);
 
 final StateProvider<List<UserOrder>> previousUserOrdersProvider = StateProvider(
@@ -253,7 +253,7 @@ final StateProvider<int> gasLevelProvider = StateProvider((ref) => 0);
 final StateProvider<int> pageIndexProvider = StateProvider((ref) => 0);
 
 final StateProvider<bool> playGasAnimationProvider =
-    StateProvider((ref) => true);
+    StateProvider((ref) => false);
 
 final StateProvider<IndividualGasQuestionsData> individualGasQuestionsProvider =
     StateProvider((ref) => const IndividualGasQuestionsData());

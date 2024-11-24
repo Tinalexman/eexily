@@ -80,7 +80,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         : ((data.gasAmountLeft / data.gasSize) * 100).toInt();
     ref.watch(gasLevelProvider.notifier).state = percentage;
     ref.watch(gasEndingDateProvider.notifier).state = data.completionDate;
-
+    ref.watch(playGasAnimationProvider.notifier).state = !data.isPaused;
     navigate();
   }
 

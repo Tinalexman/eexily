@@ -1,4 +1,5 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
+import 'package:eexily/api/individual.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -17,6 +18,18 @@ class GasDetailsPage extends ConsumerStatefulWidget {
 }
 
 class _GasDetailsPageState extends ConsumerState<GasDetailsPage> {
+
+  Future<void> toggle(bool initialState) async {
+    var response = await toggleGasTracker();
+    showMessage(response.message, response.status? primary : null);
+    if(!response.status) {
+      ref.watch(playGasAnimationProvider.notifier).state = initialState;
+    }
+  }
+
+  void showMessage(String message, [Color? color]) => showToast(message, context, backgroundColor: color);
+
+
   @override
   Widget build(BuildContext context) {
     bool isGasActive = ref.watch(playGasAnimationProvider);
@@ -185,8 +198,10 @@ class _GasDetailsPageState extends ConsumerState<GasDetailsPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: primary,
         elevation: 1.0,
-        onPressed: () =>
-            ref.watch(playGasAnimationProvider.notifier).state = !isGasActive,
+        onPressed: () {
+          toggle(isGasActive);
+          ref.watch(playGasAnimationProvider.notifier).state = !isGasActive;
+        },
         child: AnimatedSwitcherTranslation.right(
           duration: const Duration(milliseconds: 300),
           child: Icon(

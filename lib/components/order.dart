@@ -37,9 +37,41 @@ class Order {
   });
 }
 
+enum OrderState {
+  pending,
+  matched,
+  paid,
+  pickedUp,
+  refilled,
+  dispatched,
+  delivered,
+  nil,
+}
+
+OrderState convertState(String state) {
+  switch(state) {
+    case "PENDING": return OrderState.pending;
+    case "MATCHED": return OrderState.matched;
+    case "PAID": return OrderState.paid;
+    case "PICK_UP": return OrderState.pickedUp;
+    case "REFILL": return OrderState.refilled;
+    case "DISPATCHED": return OrderState.dispatched;
+    case "DELIVERED": return OrderState.delivered;
+    default: return OrderState.nil;
+  }
+}
+
+class OrderStates {
+  final OrderState state;
+  final String timestamp;
+
+  const OrderStates({
+    required this.state,
+    required this.timestamp,
+  });
+}
 
 class UserOrder {
-  final String orderState;
   final String id;
   final String code;
   final double price;
@@ -48,10 +80,17 @@ class UserOrder {
   final String paymentMethod;
   final String scheduledTime;
   final String address;
+  final String location;
+  final String paymentUrl;
+  final String reference;
+  final List<OrderStates> states;
 
   const UserOrder({
-    this.orderState = "PENDING",
+    this.states = const [],
     this.id = "",
+    this.paymentUrl = "",
+    this.reference = "",
+    this.location = "",
     this.code = "",
     this.address = "",
     this.price = 0.0,

@@ -1152,7 +1152,7 @@ class SuccessModal extends StatelessWidget {
       ),
       elevation: 0.0,
       child: Container(
-        width: 220.w,
+        width: 300.w,
         height: 250.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.r),

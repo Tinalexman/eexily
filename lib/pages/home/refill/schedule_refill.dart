@@ -89,7 +89,7 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
     showMessage(response.message, response.status ? primary : null);
     if(!response.status) return;
 
-    showSuccessModal(response.payload!);
+    // showSuccessModal(response.payload!);
   }
 
   void showMessage(String message, [Color? color]) => showToast(message, context, backgroundColor: color);
@@ -118,7 +118,7 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
   }
 
   void showSuccessModal(String code) {
-    ref.watch(currentUserOrderProvider.notifier).state = code;
+    // ref.watch(currentUserOrderProvider.notifier).state = code;
 
     showDialog(
       context: context,

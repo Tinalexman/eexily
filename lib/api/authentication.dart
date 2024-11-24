@@ -58,6 +58,7 @@ Future<EexilyResponse<List<dynamic>?>> login(Map<String, dynamic> data) async {
       if (gasData != null) {
         gd.completionDate = gasData["completionDate"];
         gd.gasAmountLeft = (gasData["estimatedGasRemaining"] as num).toDouble() ?? 0.0;
+        gd.isPaused = gasData["isPause"];
       }
 
       return EexilyResponse(

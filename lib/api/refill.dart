@@ -2,9 +2,7 @@ import "package:eexily/components/order.dart";
 
 import "base.dart";
 
-
-
-Future<EexilyResponse<String?>> createScheduledOrder(
+Future<EexilyResponse<UserOrder?>> createScheduledOrder(
     Map<String, dynamic> map) async {
   try {
     Response response = await dio.post(
@@ -38,8 +36,9 @@ Future<EexilyResponse<String?>> createScheduledOrder(
   );
 }
 
-Future<EexilyResponse<String?>> createExpressOrder(
-    Map<String, dynamic> map) async {
+Future<EexilyResponse<UserOrder?>> createExpressOrder(
+  Map<String, dynamic> map,
+) async {
   try {
     Response response = await dio.post(
       "/express-refill",
@@ -47,11 +46,39 @@ Future<EexilyResponse<String?>> createExpressOrder(
       options: configuration,
     );
 
-    if (response.statusCode! == 200) {
+    if (response.statusCode! < 300) {
       Map<String, dynamic> data = response.data["payload"];
+      Map<String, dynamic> transaction = response.data["transactionData"];
+      List<dynamic> states = data["schedule"]["statusHistory"];
+      List<OrderStates> orderStates = [];
+      for (var element in states) {
+        OrderStates state = OrderStates(
+          state: convertState(element["status"]),
+          timestamp: element["updatedAt"],
+        );
+        orderStates.add(state);
+      }
+
+      UserOrder userOrder = UserOrder(
+        address: data["schedule"]["address"],
+        location: data["schedule"]["location"] ?? "",
+        id: data["schedule"]["_id"],
+        quantity: (data["schedule"]["quantity"] as num).toInt(),
+        states: orderStates,
+        scheduledTime: data["schedule"]["timeScheduled"],
+        pickedUpTime: data["schedule"]["pickupDate"],
+        paymentMethod: data["schedule"]["paymentMethod"],
+        code: data["schedule"]["gcode"],
+        price: ((data["schedule"]["price"] + data["schedule"]["deliveryFee"])
+                as num)
+            .toDouble(),
+        paymentUrl: transaction["paymentUrl"],
+        reference: transaction["reference"],
+      );
+
       return EexilyResponse(
-        message: "Gas Refill Scheduled",
-        payload: data["gcode"],
+        message: "Success",
+        payload: userOrder,
         status: true,
       );
     }
@@ -72,8 +99,8 @@ Future<EexilyResponse<String?>> createExpressOrder(
   );
 }
 
-
-Future<EexilyResponse<List<Order>>> getDriverScheduledIncomingOrders(String driverId) async {
+Future<EexilyResponse<List<Order>>> getDriverScheduledIncomingOrders(
+    String driverId) async {
   try {
     Response response = await dio.get(
       "/refill-schedule/rider/$driverId",
@@ -104,7 +131,8 @@ Future<EexilyResponse<List<Order>>> getDriverScheduledIncomingOrders(String driv
   );
 }
 
-Future<EexilyResponse<List<Order>>> getRiderExpressIncomingOrders(String riderId) async {
+Future<EexilyResponse<List<Order>>> getRiderExpressIncomingOrders(
+    String riderId) async {
   try {
     Response response = await dio.get(
       "/express-refill/rider/$riderId",

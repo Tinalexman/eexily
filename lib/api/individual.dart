@@ -79,6 +79,38 @@ Future<EexilyResponse<GasData?>> createIndividualGasQuestions(
   );
 }
 
+Future<EexilyResponse> toggleGasTracker() async {
+  try {
+    Response response = await dio.patch(
+      "/prediction/toggle",
+      options: configuration,
+    );
+
+    if (response.statusCode! < 300) {
+      return const EexilyResponse(
+        message: "Gas Tracker Toggled",
+        payload: null,
+        status: true,
+      );
+    }
+  } on DioException catch (e) {
+    return EexilyResponse(
+      message: e.response?.data["message"] ?? "An error occurred.",
+      payload: null,
+      status: false,
+    );
+  } catch (e) {
+    log("Toggle Gas Tracker: $e");
+  }
+
+  return const EexilyResponse(
+    message: "An error occurred. Please try again.",
+    payload: null,
+    status: false,
+  );
+}
+
+
 Future<EexilyResponse<List<UserOrder>>> getUserStandardOrders() async {
   try {
     Response response = await dio.get(
@@ -93,7 +125,9 @@ Future<EexilyResponse<List<UserOrder>>> getUserStandardOrders() async {
       for (var element in data) {
         UserOrder userOrder = UserOrder(
           id: element["_id"],
-          orderState: element["status"],
+          states: [
+            // element["status"]
+          ],
           price: (element["price"] as num).toDouble() +
               (element["deliveryFee"] as num).toDouble(),
           quantity: (element["quantity"] as num).toInt(),
@@ -143,7 +177,9 @@ Future<EexilyResponse<List<UserOrder>>> getUserExpressOrders() async {
       for (var element in data) {
         UserOrder userOrder = UserOrder(
           id: element["_id"],
-          orderState: element["status"],
+          states: [
+            // orderState: element["status"]
+          ],
           price: (element["price"] as num).toDouble() +
               (element["deliveryFee"] as num).toDouble(),
           quantity: (element["quantity"] as num).toInt(),
@@ -191,7 +227,9 @@ Future<EexilyResponse<UserOrder?>> getUserOrderByGCode(String code) async {
 
       UserOrder userOrder = UserOrder(
         id: data["_id"],
-        orderState: data["status"],
+        states: [
+          // orderState: data["status"]
+        ],
         price: (data["price"] as num).toDouble() +
             (data["deliveryFee"] as num).toDouble(),
         quantity: (data["quantity"] as num).toInt(),

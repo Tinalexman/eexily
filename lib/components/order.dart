@@ -43,7 +43,6 @@ enum OrderState {
   paid,
   pickedUp,
   refilled,
-  dispatched,
   delivered,
   nil,
 }
@@ -55,7 +54,6 @@ OrderState convertState(String state) {
     case "PAID": return OrderState.paid;
     case "PICK_UP": return OrderState.pickedUp;
     case "REFILL": return OrderState.refilled;
-    case "DISPATCHED": return OrderState.dispatched;
     case "DELIVERED": return OrderState.delivered;
     default: return OrderState.nil;
   }
@@ -103,4 +101,38 @@ class UserOrder {
     this.pickedUpTime = "",
     this.scheduledTime = "",
   });
+
+  UserOrder copyWith({
+    String? id,
+    String? code,
+    double? price,
+    String? status,
+    int? quantity,
+    String? sellerType,
+    String? pickedUpTime,
+    String? paymentMethod,
+    String? scheduledTime,
+    String? address,
+    String? location,
+    String? paymentUrl,
+    String? reference,
+    List<OrderStates>? states,
+  }) {
+    return UserOrder(
+      id: id ?? this.id,
+      code: code ?? this.code,
+      price: price ?? this.price,
+      status: status ?? this.status,
+      quantity: quantity ?? this.quantity,
+      sellerType: sellerType ?? this.sellerType,
+      pickedUpTime: pickedUpTime ?? this.pickedUpTime,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      scheduledTime: scheduledTime ?? this.scheduledTime,
+      address: address ?? this.address,
+      location: location ?? this.location,
+      paymentUrl: paymentUrl ?? this.paymentUrl,
+      reference: reference ?? this.reference,
+      states: states ?? this.states,
+    );
+  }
 }

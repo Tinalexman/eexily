@@ -1,5 +1,6 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:eexily/api/authentication.dart';
+import 'package:eexily/api/base.dart';
 import 'package:eexily/api/file_handler.dart';
 import 'package:eexily/components/gas_data.dart';
 import 'package:eexily/tools/constants.dart';
@@ -81,6 +82,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     ref.watch(gasLevelProvider.notifier).state = percentage;
     ref.watch(gasEndingDateProvider.notifier).state = data.completionDate;
     ref.watch(playGasAnimationProvider.notifier).state = !data.isPaused;
+
+    initSocket(response.payload![0].id);
+
     navigate();
   }
 

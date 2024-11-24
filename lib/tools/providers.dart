@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'dart:developer' as d;
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:eexily/api/base.dart';
 import 'package:eexily/api/file_handler.dart';
@@ -90,9 +90,11 @@ final List<Notification> dummyNotifications = List.generate(
 
 final StateProvider<UserBase> userProvider = StateProvider((ref) => dummyBase);
 
-final StateProvider<bool> loadingInitialExpressOrdersProvider = StateProvider((ref) => true);
+final StateProvider<bool> loadingInitialExpressOrdersProvider =
+    StateProvider((ref) => true);
 
-final StateProvider<bool> loadingInitialStandardOrdersProvider = StateProvider((ref) => true);
+final StateProvider<bool> loadingInitialStandardOrdersProvider =
+    StateProvider((ref) => true);
 
 final StateProvider<List<UserOrder>> initialExpressOrdersProvider =
     StateProvider((ref) => []);
@@ -283,17 +285,46 @@ final StateProvider<double> revenueProvider = StateProvider((ref) => 0);
 
 final StateProvider socketProvider = StateProvider((ref) {
   addHandler(notificationSignal, (dynamic data) {
+    Notification notification = Notification.fromJson(data);
     AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 10,
         channelKey: 'gas_feel_notification_channel_key',
         actionType: ActionType.Default,
-        title: "Testing 123",
-        body: "This is a notification",
+        title: notification.actionLabel,
+        body: notification.message,
         fullScreenIntent: true,
         wakeUpScreen: true,
       ),
     );
+    List<Notification> notifications = ref.watch(notificationsProvider);
+    ref.watch(notificationsProvider.notifier).state = [
+      notification,
+      ...notifications,
+    ];
+
+    if (notification.actionLabel == "Order Status") {
+      List<UserOrder> userOrders = ref.watch(initialExpressOrdersProvider);
+      if (userOrders.isNotEmpty) {
+        UserOrder order = userOrders.first;
+        List<OrderStates> states = order.states;
+        OrderState newState = convertState(notification.notificationType);
+        states.add(
+          OrderStates(
+            state: newState,
+            timestamp: notification.timestamp.toIso8601String(),
+          ),
+        );
+
+        ref.watch(initialExpressOrdersProvider.notifier).state = [
+          order.copyWith(
+            status: notification.notificationType,
+            states: states,
+          ),
+          ...(userOrders.sublist(1)),
+        ];
+      }
+    }
   });
 });
 

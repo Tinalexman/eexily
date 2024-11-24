@@ -364,8 +364,6 @@ class _CustomOrderStepperState extends State<_CustomOrderStepper> {
       case 4:
         return "Refilled";
       case 5:
-        return "Dispatched";
-      case 6:
         return "Delivered";
       default:
         return "";
@@ -375,7 +373,7 @@ class _CustomOrderStepperState extends State<_CustomOrderStepper> {
   String getOrderSubtitle(int index) {
     switch (index) {
       case 0:
-        return "Your request is pending";
+        return "Your request is pending!";
       case 1:
         return "Your request has been matched!";
       case 2:
@@ -383,11 +381,9 @@ class _CustomOrderStepperState extends State<_CustomOrderStepper> {
       case 3:
         return "Your gas cylinder has been picked up!";
       case 4:
-        return "Your gas cylinder has been refilled";
+        return "Your gas cylinder has been refilled!";
       case 5:
-        return "Your gas cylinder is already on its way back";
-      case 6:
-        return "Your gas cylinder has been delivered";
+        return "Your gas cylinder has been delivered!";
       default:
         return "";
     }

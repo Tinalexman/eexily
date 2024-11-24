@@ -29,8 +29,8 @@ class _HomeState extends ConsumerState<Home>
       duration: const Duration(milliseconds: 1500),
     )..repeat(reverse: true);
     animation = Tween<Offset>(
-      begin: const Offset(0, -0.02),
-      end: const Offset(0, 0.02),
+      begin: const Offset(0, -0.01),
+      end: const Offset(0, 0.01),
     ).animate(
       CurvedAnimation(
         parent: controller,

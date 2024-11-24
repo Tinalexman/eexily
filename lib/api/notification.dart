@@ -13,13 +13,7 @@ Future<EexilyResponse<List<Notification>?>> notifications() async {
       List<Notification> notifications = [];
 
       for (var element in data) {
-        Notification notification = Notification(
-          timestamp: DateTime.parse(element["createdAt"]),
-          message: element["message"],
-          read: element["read"],
-          actionLabel: element["actionLabel"] ?? "New Notification",
-          notificationType: element["notificationType"] ?? "",
-        );
+        Notification notification = Notification.fromJson(element);
         notifications.add(notification);
       }
 

@@ -6,29 +6,32 @@ export 'dart:developer' show log;
 
 export 'package:dio/dio.dart';
 
-// const String base = "eexily-backend.onrender.com";
-const String base = "192.168.106.93:7030";
-const String baseURL = "http://$base";
+const String onlineBase = "eexily-backend.onrender.com";
+const String localBase = "192.168.106.93:7030";
+const String baseURL = "https://$onlineBase";
 
 String accessToken = "";
 
 const String imgPrefix = "data:image/jpeg;base64,";
 const String vidPrefix = "data:image/mp4;base64,";
 
-final Map<String, List<Function>> _socketManager = {};
+const String notificationSignal = 'notification';
+
+final Map<String, List<Function>> _socketManager = {
+  notificationSignal: [],
+};
 
 Socket? _socket;
 
-const String notificationSignal = 'notification';
 
-void initSocket() {
-  _socket = io(
-    'ws://$base',
-    OptionBuilder().setTransports(['websocket']).build(),
-  );
+
+void initSocket(String id) {
+  _socket = io('wss://$onlineBase',
+      OptionBuilder().setTransports(['websocket']).build());
 
   _socket?.onConnect((e) {
     log("Connected To WebSocket");
+    emit("init", id);
   });
 
   _socket?.onConnectError((e) => log("Socket Connection Error: $e"));
@@ -39,24 +42,24 @@ void initSocket() {
 }
 
 void setupSignalHandlers(String signal) {
-  _socketManager[signal] = [];
   _socket?.on(signal, (data) {
-    if(data == null) return;
+    if (data == null) return;
     List<Function> handlers = _socketManager[signal]!;
-    for(Function handler in handlers) {
+    for (Function handler in handlers) {
       handler(data);
     }
   });
 }
 
-void addHandler(String key, Function handler) => _socketManager[key]?.add(handler);
+void addHandler(String key, Function handler) =>
+    _socketManager[key]?.add(handler);
 
-void removeHandler(String key, Function handler) => _socketManager[key]?.remove(handler);
+void removeHandler(String key, Function handler) =>
+    _socketManager[key]?.remove(handler);
 
 void emit(String signal, dynamic data) => _socket?.emit(signal, data);
 
 void shutdown() => _socket?.disconnect();
-
 
 final Dio dio = Dio(
   BaseOptions(

@@ -107,8 +107,8 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
       "address": address,
       "location": location,
       "sellerType": refillTarget!.toUpperCase().replaceAll(" ", "_"),
-      "price": 10, // (currentPriceOfGas * quantity),
-      "deliveryFee": 5, // (deliveryFee * 0.4).toInt(),
+      "price": (currentPriceOfGas * quantity),
+      "deliveryFee": (deliveryFee * 0.4).toInt(),
       "paymentMethod": "Paystack",
       "user": id,
     };

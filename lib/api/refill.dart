@@ -48,8 +48,8 @@ Future<EexilyResponse<UserOrder?>> createExpressOrder(
 
     if (response.statusCode! < 300) {
       Map<String, dynamic> data = response.data["payload"];
-      Map<String, dynamic> transaction = data["schedule"]["transactionData"];
-      List<dynamic> states = data["schedule"]["statusHistory"];
+      Map<String, dynamic> transaction = data["transactionData"];
+      List<dynamic> states = data["statusHistory"];
       List<OrderStates> orderStates = [];
       for (var element in states) {
         OrderStates state = OrderStates(
@@ -60,17 +60,17 @@ Future<EexilyResponse<UserOrder?>> createExpressOrder(
       }
 
       UserOrder userOrder = UserOrder(
-        address: data["schedule"]["address"],
-        location: data["schedule"]["location"] ?? "",
-        id: data["schedule"]["_id"],
-        quantity: (data["schedule"]["quantity"] as num).toInt(),
+        address: data["address"],
+        location: data["location"] ?? "",
+        id: data["_id"],
+        quantity: (data["quantity"] as num).toInt(),
         states: orderStates,
-        scheduledTime: data["schedule"]["timeScheduled"],
-        pickedUpTime: data["schedule"]["pickupDate"],
-        paymentMethod: data["schedule"]["paymentMethod"],
-        status: data["schedule"]["status"],
-        code: data["schedule"]["gcode"],
-        price: ((data["schedule"]["price"] + data["schedule"]["deliveryFee"])
+        scheduledTime: data["timeScheduled"],
+        pickedUpTime: data["pickupDate"],
+        paymentMethod: data["paymentMethod"],
+        status: data["status"],
+        code: data["gcode"],
+        price: ((data["price"] + data["deliveryFee"])
                 as num)
             .toDouble(),
         paymentUrl: transaction["paymentUrl"],

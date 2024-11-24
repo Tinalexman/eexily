@@ -17,8 +17,6 @@ class Refill extends ConsumerStatefulWidget {
 }
 
 class _RefillState extends ConsumerState<Refill> {
-  bool loadingExpress = true;
-
   @override
   void initState() {
     super.initState();
@@ -29,7 +27,7 @@ class _RefillState extends ConsumerState<Refill> {
 
   Future<void> getExpress() async {
     var response = await getUserExpressOrders();
-    setState(() => loadingExpress = false);
+    ref.watch(loadingInitialExpressOrdersProvider.notifier).state = false;
     if (!response.status) {
       showMessage(response.message);
       return;
@@ -42,6 +40,8 @@ class _RefillState extends ConsumerState<Refill> {
 
   @override
   Widget build(BuildContext context) {
+    bool loadingExpress = ref.watch(loadingInitialExpressOrdersProvider);
+
     if (loadingExpress) {
       return const Center(
         child: loader,
@@ -50,16 +50,21 @@ class _RefillState extends ConsumerState<Refill> {
 
     List<UserOrder> orders = ref.watch(initialExpressOrdersProvider);
     return orders.isNotEmpty && orders.first.status != "DELIVERED"
-        ? _HasOrder(order: orders.first)
+        ? _HasOrder(
+            order: orders.first,
+            getExpress: getExpress,
+          )
         : const _NoOrder();
   }
 }
 
 class _HasOrder extends ConsumerStatefulWidget {
   final UserOrder order;
+  final VoidCallback getExpress;
 
   const _HasOrder({
     super.key,
+    required this.getExpress,
     required this.order,
   });
 
@@ -86,10 +91,17 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
           SizedBox(
             height: 580.h,
             width: 375.w,
-            child: _CustomOrderStepper(
-              data: widget.order.states,
-              paymentUrl: widget.order.paymentUrl,
-              canPay: widget.order.status == "MATCHED",
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.watch(loadingInitialExpressOrdersProvider.notifier).state =
+                    true;
+                widget.getExpress();
+              },
+              child: _CustomOrderStepper(
+                data: widget.order.states,
+                paymentUrl: widget.order.paymentUrl,
+                canPay: widget.order.status == "MATCHED",
+              ),
             ),
           ),
         ],

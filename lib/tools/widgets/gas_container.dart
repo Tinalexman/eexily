@@ -70,11 +70,11 @@ class _GasContainerState extends ConsumerState<GasContainer> {
 
   void listenForChanges() {
     ref.listen(gasLevelProvider, (previous, next) {
-      if (next <= 15 && !ref.watch(shownGasToast)) {
-        showToast("Your gas is getting low. Please refill as soon as possible.",
-            context);
-        ref.watch(shownGasToast.notifier).state = true;
-      }
+      // if (next <= 15 && !ref.watch(shownGasToast)) {
+      //   showToast("Your gas is getting low. Please refill as soon as possible.",
+      //       context);
+      //   ref.watch(shownGasToast.notifier).state = true;
+      // }
 
       int invertedGasLevel = 100 - next;
       int targetStartInMilliseconds =

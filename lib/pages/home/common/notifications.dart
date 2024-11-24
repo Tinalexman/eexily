@@ -16,7 +16,7 @@ class NotificationsPage extends ConsumerStatefulWidget {
 }
 
 class _NotificationsPageState extends ConsumerState<NotificationsPage> {
-  bool loading = false;
+  bool loading = true;
 
   @override
   void initState() {
@@ -25,9 +25,6 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
   }
 
   Future<void> getNotifications() async {
-    if (loading) return;
-    setState(() => loading = true);
-
     var response = await notifications();
     setState(() => loading = false);
     if (!response.status) {
@@ -109,13 +106,19 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                 )
               : Skeletonizer(
                   enabled: loading,
-                  child: ListView.separated(
-                    itemBuilder: (_, index) => NotificationContainer(
-                      notification: notifications[index],
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      setState(() => loading = true);
+                      getNotifications();
+                    },
+                    child: ListView.separated(
+                      itemBuilder: (_, index) => NotificationContainer(
+                        notification: notifications[index],
+                      ),
+                      padding: const EdgeInsets.all(1),
+                      separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                      itemCount: notifications.length,
                     ),
-                    padding: const EdgeInsets.all(1),
-                    separatorBuilder: (_, __) => SizedBox(height: 10.h),
-                    itemCount: notifications.length,
                   ),
                 ),
         ),
@@ -154,12 +157,20 @@ class NotificationContainer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
+            notification.actionLabel,
+            style: context.textTheme.titleMedium!.copyWith(
+              color: monokai,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
             notification.message,
             style: context.textTheme.bodyLarge!.copyWith(
               color: monokai,
             ),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 5.h),
           Text(
             formatDateRawWithTime(notification.timestamp),
             style: context.textTheme.bodySmall!.copyWith(

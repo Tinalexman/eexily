@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:eexily/api/base.dart';
 import 'package:eexily/api/file_handler.dart';
 import 'package:eexily/components/gas_questions.dart';
 import 'package:eexily/components/notification.dart';
@@ -88,11 +90,15 @@ final List<Notification> dummyNotifications = List.generate(
 
 final StateProvider<UserBase> userProvider = StateProvider((ref) => dummyBase);
 
-final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
+final StateProvider<bool> loadingInitialExpressOrdersProvider = StateProvider((ref) => true);
 
-final StateProvider<List<UserOrder>> initialExpressOrdersProvider = StateProvider((ref) => []);
-final StateProvider<List<UserOrder>> initialStandardOrdersProvider = StateProvider((ref) => []);
+final StateProvider<bool> loadingInitialStandardOrdersProvider = StateProvider((ref) => true);
 
+final StateProvider<List<UserOrder>> initialExpressOrdersProvider =
+    StateProvider((ref) => []);
+
+final StateProvider<List<UserOrder>> initialStandardOrdersProvider =
+    StateProvider((ref) => []);
 
 final StateProvider<List<Notification>> notificationsProvider =
     StateProvider((ref) {
@@ -271,9 +277,25 @@ final StateProvider<IndividualGasQuestionsData> individualGasQuestionsProvider =
     StateProvider((ref) => const IndividualGasQuestionsData());
 
 final StateProvider<BusinessGasQuestionsData> businessGasQuestionsProvider =
-StateProvider((ref) => const BusinessGasQuestionsData());
+    StateProvider((ref) => const BusinessGasQuestionsData());
 
 final StateProvider<double> revenueProvider = StateProvider((ref) => 0);
+
+final StateProvider socketProvider = StateProvider((ref) {
+  addHandler(notificationSignal, (dynamic data) {
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 10,
+        channelKey: 'gas_feel_notification_channel_key',
+        actionType: ActionType.Default,
+        title: "Testing 123",
+        body: "This is a notification",
+        fullScreenIntent: true,
+        wakeUpScreen: true,
+      ),
+    );
+  });
+});
 
 void logout(WidgetRef ref) {
   ref.invalidate(initialExpressOrdersProvider);
@@ -291,9 +313,10 @@ void logout(WidgetRef ref) {
   ref.invalidate(pendingOrdersProvider);
   ref.invalidate(orderHistoryProvider);
   ref.invalidate(pageIndexProvider);
-  ref.invalidate(shownGasToast);
   ref.invalidate(userProvider);
   ref.invalidate(merchantOrdersProvider);
   ref.invalidate(notificationsProvider);
+  ref.invalidate(loadingInitialExpressOrdersProvider);
+  ref.invalidate(loadingInitialStandardOrdersProvider);
   FileHandler.saveAuthDetails(null);
 }

@@ -17,8 +17,8 @@ Future<EexilyResponse<List<Notification>?>> notifications() async {
           timestamp: DateTime.parse(element["createdAt"]),
           message: element["message"],
           read: element["read"],
-          actionLabel: element["actionLabel"],
-          notificationType: element["notificationType"],
+          actionLabel: element["actionLabel"] ?? "New Notification",
+          notificationType: element["notificationType"] ?? "",
         );
         notifications.add(notification);
       }

@@ -1,16 +1,62 @@
-import 'package:dio/dio.dart';
+import 'dart:developer';
 
+import 'package:dio/dio.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 export 'dart:developer' show log;
 
 export 'package:dio/dio.dart';
 
-// const String baseURL = "https://eexily-backend.onrender.com";
-const String baseURL = "http://192.168.106.93:7030";
+// const String base = "eexily-backend.onrender.com";
+const String base = "192.168.106.93:7030";
+const String baseURL = "http://$base";
 
 String accessToken = "";
 
 const String imgPrefix = "data:image/jpeg;base64,";
 const String vidPrefix = "data:image/mp4;base64,";
+
+final Map<String, List<Function>> _socketManager = {};
+
+Socket? _socket;
+
+const String notificationSignal = 'notification';
+
+void initSocket() {
+  _socket = io(
+    'ws://$base',
+    OptionBuilder().setTransports(['websocket']).build(),
+  );
+
+  _socket?.onConnect((e) {
+    log("Connected To WebSocket");
+  });
+
+  _socket?.onConnectError((e) => log("Socket Connection Error: $e"));
+  _socket?.onDisconnect((e) => log('Disconnected From WebSocket'));
+  _socket?.onError((e) => log("WebSocket Error: $e"));
+
+  setupSignalHandlers(notificationSignal);
+}
+
+void setupSignalHandlers(String signal) {
+  _socketManager[signal] = [];
+  _socket?.on(signal, (data) {
+    if(data == null) return;
+    List<Function> handlers = _socketManager[signal]!;
+    for(Function handler in handlers) {
+      handler(data);
+    }
+  });
+}
+
+void addHandler(String key, Function handler) => _socketManager[key]?.add(handler);
+
+void removeHandler(String key, Function handler) => _socketManager[key]?.remove(handler);
+
+void emit(String signal, dynamic data) => _socket?.emit(signal, data);
+
+void shutdown() => _socket?.disconnect();
+
 
 final Dio dio = Dio(
   BaseOptions(

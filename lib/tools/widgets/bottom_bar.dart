@@ -1,4 +1,5 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +88,8 @@ class CustomBottomBar extends ConsumerWidget {
                           icon: IconsaxPlusBroken.home,
                           activeIcon: IconsaxPlusBold.home,
                           label: "Home",
-                          onTap: () => ref.watch(pageIndexProvider.notifier).state = 0,
+                          onTap: () =>
+                              ref.watch(pageIndexProvider.notifier).state = 0,
                         ),
                         SizedBox(width: 30.w),
                         CustomIcon(
@@ -95,7 +97,8 @@ class CustomBottomBar extends ConsumerWidget {
                           icon: IconsaxPlusBroken.gas_station,
                           activeIcon: IconsaxPlusBold.gas_station,
                           label: "Refill",
-                          onTap: () => ref.watch(pageIndexProvider.notifier).state = 1,
+                          onTap: () =>
+                              ref.watch(pageIndexProvider.notifier).state = 1,
                         ),
                       ],
                     ),
@@ -108,7 +111,8 @@ class CustomBottomBar extends ConsumerWidget {
                           icon: IconsaxPlusBroken.devices,
                           activeIcon: IconsaxPlusBold.devices,
                           label: "Device",
-                          onTap: () => ref.watch(pageIndexProvider.notifier).state = 2,
+                          onTap: () =>
+                              ref.watch(pageIndexProvider.notifier).state = 2,
                         ),
                         SizedBox(width: 30.w),
                         CustomIcon(
@@ -116,7 +120,8 @@ class CustomBottomBar extends ConsumerWidget {
                           icon: IconsaxPlusBroken.profile,
                           activeIcon: IconsaxPlusBold.profile,
                           label: "Profile",
-                          onTap: () => ref.watch(pageIndexProvider.notifier).state = 3,
+                          onTap: () =>
+                              ref.watch(pageIndexProvider.notifier).state = 3,
                         ),
                       ],
                     ),

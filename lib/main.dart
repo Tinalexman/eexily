@@ -1,5 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:eexily/tools/constants.dart';
+import 'package:eexily/tools/providers.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,14 +60,14 @@ Future<void> main() async {
   runApp(const ProviderScope(child: Eexily()));
 }
 
-class Eexily extends StatefulWidget {
+class Eexily extends ConsumerStatefulWidget {
   const Eexily({super.key});
 
   @override
-  State<Eexily> createState() => _EexilyState();
+  ConsumerState<Eexily> createState() => _EexilyState();
 }
 
-class _EexilyState extends State<Eexily> {
+class _EexilyState extends ConsumerState<Eexily> {
   late GoRouter _router;
 
   @override
@@ -91,6 +92,9 @@ class _EexilyState extends State<Eexily> {
     );
 
     initializeAPIServices();
+    Future.delayed(Duration.zero, () {
+      ref.watch(socketProvider);
+    });
   }
 
   @override

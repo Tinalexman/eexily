@@ -11,6 +11,8 @@ class Attendant extends UserBase {
     super.lastName,
     super.id,
     super.image,
+    super.location,
+    super.address,
     this.balance = 0,
     this.retailGasPrice = 0,
     this.regularGasPrice = 0,

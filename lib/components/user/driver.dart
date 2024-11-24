@@ -7,7 +7,6 @@ enum Type {
 }
 
 class Driver extends UserBase {
-  final String address;
   final String licenseNumber;
   final String licenseExpiry;
   final String accountName;
@@ -23,8 +22,9 @@ class Driver extends UserBase {
     super.dateJoined,
     super.email,
     super.image,
+    super.location,
+    super.address,
     this.type = Type.nil,
-    this.address = "",
     this.licenseExpiry = "",
     this.licenseNumber = "",
     this.accountName = "",

@@ -25,7 +25,6 @@ class ScheduleRefillPage extends ConsumerStatefulWidget {
 
 class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
   final TextEditingController quantityController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
 
   late DateTime deliveryDate;
   late String nextDeliveryTime;
@@ -37,6 +36,8 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
   int totalAmountToPay = 0, priceMarkup = -1;
   int fakePriceToPayForGas = 0, fakeDiscount = 0, actualGasAmount = 0;
 
+  String? location;
+
   @override
   void initState() {
     super.initState();
@@ -46,8 +47,7 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
   }
 
   void setCurrentUserAddress() {
-    String address = ref.read(userProvider.select((u) => (u as User).address));
-    addressController.text = address;
+    // location = ref.read(userProvider.select((u) => u.location));
   }
 
   void determineAppropriateDeliveryDateAndTime() {
@@ -72,13 +72,12 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
 
   Future<void> createOrder() async {
     String id = ref.watch(userProvider.select((u) => u.id));
-    String address = addressController.text.trim();
     int quantity = int.parse(quantityController.text.trim());
 
     Map<String, dynamic> data = {
       "pickedUpTime": widget.scheduledTime,
       "quantity": quantity,
-      "address": address,
+      "address": location,
       "price": (currentPriceOfGas * quantity),
       "deliveryFee": (deliveryFee * 0.4).toInt(),
       "paymentMethod": "Paystack",
@@ -97,7 +96,6 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
 
   @override
   void dispose() {
-    addressController.dispose();
     quantityController.dispose();
     super.dispose();
   }
@@ -200,7 +198,7 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Address",
+                      "Location",
                       style: context.textTheme.bodyMedium,
                     ),
                     if (!shouldMakeAddressEditable)
@@ -218,15 +216,21 @@ class _ScheduleRefillPageState extends ConsumerState<ScheduleRefillPage> {
                   ],
                 ),
                 SizedBox(height: 4.h),
-                SpecialForm(
-                  controller: addressController,
-                  width: 375.w,
-                  maxLines: 4,
-                  readOnly: !shouldMakeAddressEditable,
-                  fillColor: shouldMakeAddressEditable ? null : neutral,
-                  hint: "e.g House 12, Camp Junction, Abeokuta",
+                ComboBox(
+                  hint: "Select location",
+                  value: location,
+                  dropdownItems: allLocations,
+                  onChanged: (value) {
+                    if(shouldMakeAddressEditable) {
+                      setState(() => location = value);
+                    }
+                  },
+                  buttonDecoration: BoxDecoration(
+                    color: shouldMakeAddressEditable ? Colors.white : neutral,
+                    borderRadius: BorderRadius.circular(7.5.r),
+                  ),
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 50.h),
                 Row(
                   children: [
                     Container(

@@ -1,7 +1,6 @@
 import 'package:eexily/components/user/base.dart';
 
 class Business extends UserBase {
-  final String address;
   final String businessName;
   final bool hasCompletedGasQuestions;
 
@@ -14,9 +13,10 @@ class Business extends UserBase {
     super.firstName,
     super.lastName,
     super.phoneNumber,
+    super.location,
+    super.address,
     this.hasCompletedGasQuestions = false,
     this.businessName = "",
-    this.address = "",
   });
 
   Business copyWith({

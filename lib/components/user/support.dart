@@ -10,6 +10,8 @@ class Support extends UserBase {
     super.id,
     super.email,
     super.image,
+    super.location,
+    super.address,
     this.supportRole = "",
   }) : super(role: UserRole.support);
 }

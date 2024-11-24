@@ -2,7 +2,6 @@ import 'base.dart';
 export 'base.dart';
 
 class User extends UserBase {
-  final String address;
   final bool hasCompletedGasQuestions;
 
   const User({
@@ -13,7 +12,8 @@ class User extends UserBase {
     super.dateJoined,
     super.phoneNumber,
     super.image,
-    this.address = "",
+    super.location,
+    super.address,
     this.hasCompletedGasQuestions = false,
   }) : super(role: UserRole.individual);
 

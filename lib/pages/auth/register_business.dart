@@ -84,16 +84,15 @@ class _RegisterBusinessPageState extends ConsumerState<RegisterBusinessPage> {
               children: [
                 SizedBox(height: 40.h),
                 Image.asset(
-                  "assets/images/logo blue.png",
-                  width: 40.w,
+                  "assets/images/GF B.png",
+                  width: 140.w,
                   fit: BoxFit.cover,
                 ),
-                SizedBox(height: 10.h),
                 Text(
-                  "Business Details",
-                  style: context.textTheme.headlineMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: primary,
+                  "Please fill in your details",
+                  style: context.textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: monokai.withOpacity(0.7),
                   ),
                 ),
                 SizedBox(height: 50.h),

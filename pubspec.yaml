@@ -45,7 +45,7 @@ dependencies:
   faker:
   curved_labeled_navigation_bar:
   easy_stepper:
-  pay_with_paystack:
+  url_launcher:
 #  device_preview:
 
 

@@ -1,18 +1,21 @@
+import 'package:eexily/api/individual.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
+import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
-class UpdateCylinderPage extends StatefulWidget {
+class UpdateCylinderPage extends ConsumerStatefulWidget {
   const UpdateCylinderPage({super.key});
 
   @override
-  State<UpdateCylinderPage> createState() => _UpdateCylinderPageState();
+  ConsumerState<UpdateCylinderPage> createState() => _UpdateCylinderPageState();
 }
 
-class _UpdateCylinderPageState extends State<UpdateCylinderPage> {
+class _UpdateCylinderPageState extends ConsumerState<UpdateCylinderPage> {
   final TextEditingController sizeController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
   bool loading = false;
@@ -28,8 +31,31 @@ class _UpdateCylinderPageState extends State<UpdateCylinderPage> {
   }
 
   Future<void> update() async {
+    String id = ref.watch(userProvider.select((u) => u.id));
+    var response = await updateIndividualUser(details, id);
     setState(() => loading = false);
+
+    showMessage(response.message, response.status ? primary : null);
+
+    if (response.status) {
+      // int gasSize = ref.watch(gasCylinderSizeProvider);
+      // int percentage =
+      // gasSize <= 0 ? 0 : ((data.gasAmountLeft / gasSize) * 100).toInt();
+      // ref.watch(gasLevelProvider.notifier).state = percentage;
+      // ref.watch(gasEndingDateProvider.notifier).state = data.completionDate;
+      //
+      // ref.watch(playGasAnimationProvider.notifier).state = true;
+      pop();
+    }
   }
+
+  void pop() => context.router.pop();
+
+  void showMessage(String message, [Color? color]) => showToast(
+        message,
+        context,
+        backgroundColor: color,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -54,22 +80,6 @@ class _UpdateCylinderPageState extends State<UpdateCylinderPage> {
                 children: [
                   SizedBox(height: 20.h),
                   Text(
-                    "Changed your gas cylinder?",
-                    style: context.textTheme.titleLarge!.copyWith(
-                      color: monokai,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    "You can update the size of your gas cylinder. "
-                    "Please note that your gas predictions would be deleted and you would have to fill in a new set of details.",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: monokai,
-                    ),
-                  ),
-                  SizedBox(height: 30.h),
-                  Text(
                     "What is the size of your new gas cylinder?",
                     style: context.textTheme.bodyLarge,
                   ),
@@ -86,7 +96,7 @@ class _UpdateCylinderPageState extends State<UpdateCylinderPage> {
                       }
                       return null;
                     },
-                    onSave: (value) => details["amountValue"] = value!.trim(),
+                    onSave: (value) => details["cylinderSize"] = value!.trim(),
                   ),
                   SizedBox(height: 400.h),
                   ElevatedButton(

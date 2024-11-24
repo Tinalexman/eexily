@@ -27,6 +27,8 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
   int totalAmountToPay = 0, priceMarkup = -1, nightOrderFee = 100;
   int fakePriceToPayForGas = 0, fakeDiscount = 0;
 
+  String? location, refillTarget;
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +37,8 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
   }
 
   void setCurrentUserAddress() {
-    String address = ref.read(userProvider.select((u) => (u as User).address));
+    String address = ref.read(userProvider.select((u) => u.address));
+    // location = ref.read(userProvider.select((u) => u.location));
     addressController.text = address;
   }
 
@@ -56,7 +59,8 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
     super.dispose();
   }
 
-  void showMessage(String message, [Color? color]) => showToast(message, context, backgroundColor: color);
+  void showMessage(String message, [Color? color]) =>
+      showToast(message, context, backgroundColor: color);
 
   void calculateNewTotalAmount(String value) {
     int? targetQuantity = int.tryParse(value);
@@ -101,6 +105,8 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
       "pickupDate": DateTime.now().toIso8601String(),
       "quantity": quantity,
       "address": address,
+      "location": location,
+      "sellerType": refillTarget!.toUpperCase().replaceAll(" ", "_"),
       "price": (currentPriceOfGas * quantity),
       "deliveryFee": (deliveryFee * 0.4).toInt(),
       "paymentMethod": "Paystack",
@@ -110,7 +116,7 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
     var response = await createExpressOrder(data);
     setState(() => loading = false);
     showMessage(response.message, response.status ? primary : null);
-    if(!response.status) return;
+    if (!response.status) return;
 
     showSuccessModal(response.payload!);
   }
@@ -162,7 +168,7 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 30.h),
+                SizedBox(height: 20.h),
                 Text(
                   "Quantity of gas (kg)?",
                   style: context.textTheme.bodyMedium,
@@ -177,20 +183,65 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                   onChange: calculateNewTotalAmount,
                 ),
                 SizedBox(height: 10.h),
-                Text(
-                  "Address",
-                  style: context.textTheme.bodyMedium,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Address",
+                      style: context.textTheme.bodyMedium,
+                    ),
+                    if (!shouldMakeAddressEditable)
+                      GestureDetector(
+                        onTap: () =>
+                            setState(() => shouldMakeAddressEditable = true),
+                        child: Text(
+                          "Change",
+                          style: context.textTheme.bodySmall!.copyWith(
+                            color: primary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
                 SizedBox(height: 4.h),
                 SpecialForm(
                   controller: addressController,
                   width: 375.w,
                   maxLines: 4,
-                  readOnly: true,
-                  fillColor: neutral,
+                  readOnly: !shouldMakeAddressEditable,
+                  fillColor: shouldMakeAddressEditable ? null : neutral,
                   hint: "e.g House 12, Camp Junction, Abeokuta",
                 ),
-                SizedBox(height: 160.h),
+                SizedBox(height: 10.h),
+                ComboBox(
+                  hint: "Select location",
+                  value: location,
+                  dropdownItems: allLocations,
+                  onChanged: (value) {
+                    if(shouldMakeAddressEditable) {
+                      setState(() => location = value);
+                    }
+                  },
+                  buttonDecoration: BoxDecoration(
+                    color: shouldMakeAddressEditable ? Colors.white : neutral,
+                    borderRadius: BorderRadius.circular(7.5.r),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                Text(
+                  "Where do you want your gas to be refilled?",
+                  style: context.textTheme.bodyMedium,
+                ),
+                SizedBox(height: 4.h),
+                ComboBox(
+                  hint: "Select refill target",
+                  value: refillTarget,
+                  dropdownItems: const ["Gas Station", "Merchant"],
+                  onChanged: (value) => setState(() => refillTarget = value),
+                ),
+                SizedBox(height: 50.h),
                 Text(
                   "Analysis",
                   style: context.textTheme.titleLarge!.copyWith(
@@ -206,8 +257,8 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                       "Price",
                       style: context.textTheme.bodyLarge,
                     ),
-                    RichText(text: TextSpan(
-                      children: [
+                    RichText(
+                      text: TextSpan(children: [
                         TextSpan(
                           text: "₦${formatAmount("$actualGasAmount")} ",
                           style: context.textTheme.bodyMedium!.copyWith(
@@ -223,9 +274,8 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                             color: neutral2,
                           ),
                         ),
-                      ]
-                    ),),
-
+                      ]),
+                    ),
                   ],
                 ),
                 Row(
@@ -292,7 +342,7 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                   ),
                   onPressed: () {
                     String quantity = quantityController.text.trim();
-                    if(quantity.isEmpty) {
+                    if (quantity.isEmpty) {
                       showToast("Enter your desired gas quantity", context);
                       return;
                     }

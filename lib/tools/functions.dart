@@ -5,6 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
+
+Future<void> launchPayStackUrl(String url) async {
+  final Uri uri = Uri.parse(url);
+  if(await canLaunchUrl(uri)) {
+    await launchUrl(uri);
+  }
+}
+
 void showToast(String message, BuildContext context, {Color? backgroundColor}) {
   HapticFeedback.mediumImpact();
   context.messenger.showSnackBar(
@@ -339,3 +349,5 @@ extension DateTimeExtensions on DateTime {
 
   String get longMonthName => month("${this.month}", false);
 }
+
+

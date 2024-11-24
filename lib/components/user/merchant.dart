@@ -5,7 +5,6 @@ class Merchant extends UserBase {
   final double retailGasPrice;
   final double regularGasPrice;
   final bool isOpened;
-  final String address;
   final String storeName;
   final String accountName;
   final String accountNumber;
@@ -19,11 +18,12 @@ class Merchant extends UserBase {
     super.dateJoined,
     super.email,
     super.image,
+    super.location,
+    super.address,
     this.isOpened = false,
     this.balance = 0,
     this.retailGasPrice = 0,
     this.regularGasPrice = 0,
-    this.address = "",
     this.bankName = "",
     this.accountNumber = "",
     this.accountName = "",

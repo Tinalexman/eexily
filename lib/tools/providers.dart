@@ -58,7 +58,22 @@ Order dummyOrder = Order(
   status: OrderStatus.pending,
 );
 
+UserOrder userOrder = UserOrder(
+  code: "94224",
+  price: 1000,
+  paymentMethod: "fkjskfjkfjs",
+  pickedUpTime: DateTime.now().toIso8601String(),
+  scheduledTime: DateTime.now().toIso8601String(),
+  quantity: 0,
+  address: "jedksjhdkjshdkjs",
+  location: "kdhskdhskdjhskjdhksjd",
+  status: "PENDING",
+  sellerType: "GAS_STATION",
+);
+
 List<Order> dummyOrders = List.filled(10, dummyOrder);
+
+List<UserOrder> dummyUserOrders = List.filled(10, userOrder);
 
 final List<Notification> dummyNotifications = List.generate(
   10,
@@ -74,6 +89,10 @@ final List<Notification> dummyNotifications = List.generate(
 final StateProvider<UserBase> userProvider = StateProvider((ref) => dummyBase);
 
 final StateProvider<bool> shownGasToast = StateProvider((ref) => false);
+
+final StateProvider<List<UserOrder>> initialExpressOrdersProvider = StateProvider((ref) => []);
+final StateProvider<List<UserOrder>> initialStandardOrdersProvider = StateProvider((ref) => []);
+
 
 final StateProvider<List<Notification>> notificationsProvider =
     StateProvider((ref) {
@@ -236,13 +255,6 @@ final StateProvider<List<SaleReport>> saleReportsProvider = StateProvider(
   ),
 );
 
-final StateProvider<UserOrder?> currentUserOrderProvider =
-    StateProvider((ref) => null);
-
-final StateProvider<List<UserOrder>> previousUserOrdersProvider = StateProvider(
-  (ref) => [],
-);
-
 final StateProvider<int> gasCylinderSizeProvider = StateProvider((ref) => 0);
 
 final StateProvider<String?> gasEndingDateProvider =
@@ -264,11 +276,11 @@ StateProvider((ref) => const BusinessGasQuestionsData());
 final StateProvider<double> revenueProvider = StateProvider((ref) => 0);
 
 void logout(WidgetRef ref) {
+  ref.invalidate(initialExpressOrdersProvider);
+  ref.invalidate(initialStandardOrdersProvider);
   ref.invalidate(revenueProvider);
   ref.invalidate(gasEndingDateProvider);
   ref.invalidate(gasCylinderSizeProvider);
-  ref.invalidate(previousUserOrdersProvider);
-  ref.invalidate(currentUserOrderProvider);
   ref.invalidate(playGasAnimationProvider);
   ref.invalidate(gasLevelProvider);
   ref.invalidate(businessGasQuestionsProvider);

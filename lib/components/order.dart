@@ -75,7 +75,9 @@ class UserOrder {
   final String id;
   final String code;
   final double price;
+  final String status;
   final int quantity;
+  final String sellerType;
   final String pickedUpTime;
   final String paymentMethod;
   final String scheduledTime;
@@ -92,9 +94,11 @@ class UserOrder {
     this.reference = "",
     this.location = "",
     this.code = "",
+    this.sellerType = "",
     this.address = "",
     this.price = 0.0,
     this.quantity = 0,
+    this.status = "",
     this.paymentMethod = "",
     this.pickedUpTime = "",
     this.scheduledTime = "",

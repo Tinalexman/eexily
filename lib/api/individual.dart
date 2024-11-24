@@ -110,7 +110,6 @@ Future<EexilyResponse> toggleGasTracker() async {
   );
 }
 
-
 Future<EexilyResponse<List<UserOrder>>> getUserStandardOrders() async {
   try {
     Response response = await dio.get(
@@ -166,7 +165,7 @@ Future<EexilyResponse<List<UserOrder>>> getUserStandardOrders() async {
 Future<EexilyResponse<List<UserOrder>>> getUserExpressOrders() async {
   try {
     Response response = await dio.get(
-      "/express-refill",
+      "/express-refill/user",
       options: configuration,
     );
 
@@ -175,19 +174,29 @@ Future<EexilyResponse<List<UserOrder>>> getUserExpressOrders() async {
       List<UserOrder> orders = [];
 
       for (var element in data) {
+        List<dynamic> states = element["statusHistory"];
+        List<OrderStates> orderStates = [];
+        for (var element in states) {
+          OrderStates state = OrderStates(
+            state: convertState(element["status"]),
+            timestamp: element["updatedAt"],
+          );
+          orderStates.add(state);
+        }
+
         UserOrder userOrder = UserOrder(
           id: element["_id"],
-          states: [
-            // orderState: element["status"]
-          ],
+          states: orderStates,
           price: (element["price"] as num).toDouble() +
               (element["deliveryFee"] as num).toDouble(),
           quantity: (element["quantity"] as num).toInt(),
           code: element["gcode"],
+          status: element["status"],
           paymentMethod: element["paymentMethod"],
-          pickedUpTime: element["pickedUpTime"],
+          pickedUpTime: element["pickupDate"],
           scheduledTime: element["timeScheduled"],
           address: element["address"],
+          sellerType: element["sellerType"],
         );
         orders.add(userOrder);
       }

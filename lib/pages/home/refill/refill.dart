@@ -1,8 +1,10 @@
+import 'package:eexily/api/individual.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/user.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
+import 'package:eexily/tools/widgets/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,12 +17,40 @@ class Refill extends ConsumerStatefulWidget {
 }
 
 class _RefillState extends ConsumerState<Refill> {
+  bool loadingExpress = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      getExpress();
+    });
+  }
+
+  Future<void> getExpress() async {
+    var response = await getUserExpressOrders();
+    setState(() => loadingExpress = false);
+    if (!response.status) {
+      showMessage(response.message);
+      return;
+    }
+
+    ref.watch(initialExpressOrdersProvider.notifier).state = response.payload;
+  }
+
+  void showMessage(String message) => showToast(message, context);
+
   @override
   Widget build(BuildContext context) {
-    UserOrder? currentOrder = ref.watch(currentUserOrderProvider);
+    if (loadingExpress) {
+      return const Center(
+        child: loader,
+      );
+    }
 
-    return currentOrder != null
-        ? _HasOrder(order: currentOrder)
+    List<UserOrder> orders = ref.watch(initialExpressOrdersProvider);
+    return orders.isNotEmpty
+        ? _HasOrder(order: orders.first)
         : const _NoOrder();
   }
 }

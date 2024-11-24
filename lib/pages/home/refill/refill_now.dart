@@ -1,4 +1,5 @@
 import 'package:eexily/api/refill.dart';
+import 'package:eexily/components/order.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -117,7 +118,11 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
       return;
     }
 
-    ref.watch(currentUserOrderProvider.notifier).state = response.payload;
+    List<UserOrder> orders = ref.watch(initialExpressOrdersProvider);
+    ref.watch(initialExpressOrdersProvider.notifier).state = [
+      ...orders,
+      response.payload!,
+    ];
     showSuccessModal(response.payload!.paymentUrl);
   }
 

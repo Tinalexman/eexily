@@ -79,8 +79,8 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
     setState(() {});
   }
 
-  void showSuccessModal(String url) {
-    showDialog(
+  Future<void> showSuccessModal(String url) async {
+    await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) => SuccessModal(
@@ -91,7 +91,10 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
         },
       ),
     );
+    pop();
   }
+
+  void pop() => context.router.pop();
 
   Future<void> createOrder() async {
     String id = ref.watch(userProvider.select((u) => u.id));
@@ -104,8 +107,8 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
       "address": address,
       "location": location,
       "sellerType": refillTarget!.toUpperCase().replaceAll(" ", "_"),
-      "price": (currentPriceOfGas * quantity),
-      "deliveryFee": (deliveryFee * 0.4).toInt(),
+      "price": 10, // (currentPriceOfGas * quantity),
+      "deliveryFee": 5, // (deliveryFee * 0.4).toInt(),
       "paymentMethod": "Paystack",
       "user": id,
     };

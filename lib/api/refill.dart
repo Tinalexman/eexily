@@ -48,7 +48,7 @@ Future<EexilyResponse<UserOrder?>> createExpressOrder(
 
     if (response.statusCode! < 300) {
       Map<String, dynamic> data = response.data["payload"];
-      Map<String, dynamic> transaction = response.data["transactionData"];
+      Map<String, dynamic> transaction = data["schedule"]["transactionData"];
       List<dynamic> states = data["schedule"]["statusHistory"];
       List<OrderStates> orderStates = [];
       for (var element in states) {
@@ -68,6 +68,7 @@ Future<EexilyResponse<UserOrder?>> createExpressOrder(
         scheduledTime: data["schedule"]["timeScheduled"],
         pickedUpTime: data["schedule"]["pickupDate"],
         paymentMethod: data["schedule"]["paymentMethod"],
+        status: data["schedule"]["status"],
         code: data["schedule"]["gcode"],
         price: ((data["schedule"]["price"] + data["schedule"]["deliveryFee"])
                 as num)

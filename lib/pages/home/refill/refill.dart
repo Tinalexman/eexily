@@ -49,7 +49,7 @@ class _RefillState extends ConsumerState<Refill> {
     }
 
     List<UserOrder> orders = ref.watch(initialExpressOrdersProvider);
-    return orders.isNotEmpty
+    return orders.isNotEmpty && orders.first.status != "DELIVERED"
         ? _HasOrder(order: orders.first)
         : const _NoOrder();
   }
@@ -68,27 +68,6 @@ class _HasOrder extends ConsumerStatefulWidget {
 }
 
 class _HasOrderState extends ConsumerState<_HasOrder> {
-  bool loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    // Future.delayed(Duration.zero, getOrder);
-  }
-
-  void showMessage(String message) => showToast(message, context);
-
-  Future<void> getOrder() async {
-    // var response = await getUserOrders();
-    // showMessage(response.message);
-    // setState(() {
-    //   loading = false;
-    //   orders.clear();
-    //   orders.addAll(response.payload);
-    //   ref.watch(previousUserOrdersProvider.notifier).state = response.payload;
-    // });
-  }
-
   @override
   Widget build(BuildContext context) {
     User user = ref.watch(userProvider) as User;
@@ -107,7 +86,11 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
           SizedBox(
             height: 580.h,
             width: 375.w,
-            child: _CustomOrderStepper(data: widget.order.states),
+            child: _CustomOrderStepper(
+              data: widget.order.states,
+              paymentUrl: widget.order.paymentUrl,
+              canPay: widget.order.status == "MATCHED",
+            ),
           ),
         ],
       ),
@@ -301,10 +284,14 @@ class _RefillNow extends StatelessWidget {
 }
 
 class _CustomOrderStepper extends StatefulWidget {
+  final String paymentUrl;
+  final bool canPay;
   final List<OrderStates> data;
 
   const _CustomOrderStepper({
     super.key,
+    required this.canPay,
+    required this.paymentUrl,
     required this.data,
   });
 
@@ -449,6 +436,25 @@ class _CustomOrderStepperState extends State<_CustomOrderStepper> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                  if (widget.canPay && index == 2)
+                    ElevatedButton(
+                      onPressed: () => launchPayStackUrl(widget.paymentUrl),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.5.r),
+                        ),
+                        elevation: 1.0,
+                        fixedSize: Size(150.w, 40.h),
+                      ),
+                      child: Text(
+                        "Make Payment",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
                   if (stepTimestamp != null)
                     Text(
                       formatDateRawWithTime(stepTimestamp),

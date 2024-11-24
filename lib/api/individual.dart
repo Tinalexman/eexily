@@ -197,6 +197,8 @@ Future<EexilyResponse<List<UserOrder>>> getUserExpressOrders() async {
           scheduledTime: element["timeScheduled"],
           address: element["address"],
           sellerType: element["sellerType"],
+          paymentUrl: element["transactionData"]["paymentUrl"],
+          reference: element["transactionData"]["reference"],
         );
         orders.add(userOrder);
       }

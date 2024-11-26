@@ -3,6 +3,7 @@ import 'package:eexily/components/order.dart';
 import 'package:eexily/pages/auth/choose_business_category.dart';
 import 'package:eexily/pages/auth/choose_driver_image.dart';
 import 'package:eexily/pages/auth/create_account.dart';
+import 'package:eexily/pages/auth/forgot_password.dart';
 import 'package:eexily/pages/auth/login.dart';
 import 'package:eexily/pages/auth/register_business.dart';
 import 'package:eexily/pages/auth/register_merchant.dart';
@@ -10,6 +11,7 @@ import 'package:eexily/pages/auth/register_rider.dart';
 import 'package:eexily/pages/auth/register_station.dart';
 import 'package:eexily/pages/auth/register_support.dart';
 import 'package:eexily/pages/auth/register_user.dart';
+import 'package:eexily/pages/auth/reset_password.dart';
 import 'package:eexily/pages/auth/select_bank.dart';
 import 'package:eexily/pages/auth/setup_account.dart';
 import 'package:eexily/pages/auth/verify.dart';
@@ -30,7 +32,7 @@ import 'package:eexily/pages/home/refill/history.dart';
 import 'package:eexily/pages/home/refill/refill_now.dart';
 import 'package:eexily/pages/home/refill/schedule_refill.dart';
 import 'package:eexily/pages/home/regular/activation/activation.dart';
-import 'package:eexily/pages/home/regular/cheffy.dart';
+import 'package:eexily/pages/home/cheffy.dart';
 import 'package:eexily/pages/home/regular/edit_profile.dart';
 import 'package:eexily/pages/home/regular/gas_details.dart';
 import 'package:eexily/pages/home/regular/gas_usage.dart';
@@ -73,6 +75,16 @@ final List<GoRoute> routes = [
     path: Pages.register.path,
     name: Pages.register,
     builder: (_, __) => const CreateAccountPage(),
+  ),
+  GoRoute(
+    path: Pages.forgotPassword.path,
+    name: Pages.forgotPassword,
+    builder: (_, __) => const ForgotPasswordPage(),
+  ),
+  GoRoute(
+    path: Pages.resetPassword.path,
+    name: Pages.resetPassword,
+    builder: (_, __) => const ResetPasswordPage(),
   ),
   GoRoute(
     path: Pages.registerUser.path,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:eexily/components/user/attendant.dart';
 import 'package:eexily/components/user/business.dart';
 import 'package:eexily/components/user/driver.dart';
@@ -37,6 +39,7 @@ class UserFactory {
           id: map["_id"],
           type: type,
           dateJoined: map["createdAt"],
+          riderId: typeData?["_id"] ?? "",
           firstName: typeData?["firstName"] ?? "",
           lastName: typeData?["lastName"] ?? "",
           address: typeData?["address"] ?? "",
@@ -67,6 +70,7 @@ class UserFactory {
               0.0,
           retailGasPrice: (typeData?["retailPrice"] as num).toDouble() ?? 0.0,
           balance: 000,
+          merchantId: typeData?["_id"] ?? "",
           isOpened: typeData?["isOpened"] ?? false,
           bankName: typeData?["bankName"] ?? "",
           accountNumber: typeData?["accountNumber"] ?? "",

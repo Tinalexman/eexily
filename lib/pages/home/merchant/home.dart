@@ -6,7 +6,6 @@ import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,16 +20,18 @@ class Home extends ConsumerStatefulWidget {
 
 class _HomeState extends ConsumerState<Home> {
   bool loading = true;
+  String id = "";
 
   @override
   void initState() {
     super.initState();
+    Merchant merchant = ref.read(userProvider) as Merchant;
+    id = merchant.merchantId;
     Future.delayed(Duration.zero, getOrders);
   }
 
   Future<void> getOrders() async {
-    String merchantId = ref.watch(userProvider.select((r) => r.id));
-    var response = await getMerchantExpressOrders(merchantId);
+    var response = await getMerchantExpressOrders(id);
     setState(() => loading = false);
 
     if (!response.status) {

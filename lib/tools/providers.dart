@@ -13,6 +13,7 @@ import 'package:eexily/components/user/driver.dart';
 import 'package:eexily/components/user/merchant.dart';
 import 'package:eexily/components/user/support.dart';
 import 'package:eexily/components/user/user.dart';
+import 'package:eexily/database.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -137,25 +138,8 @@ final StateProvider<List<Order>> pendingOrdersProvider = StateProvider(
   ),
 );
 
-final StateProvider<List<Order>> driverOrdersProvider = StateProvider(
-  (ref) => List.generate(
-    15,
-    (index) => Order(
-      deliveryDate: DateTime.now(),
-      code: randomGCode,
-      id: "$index",
-      gasQuantity: 10,
-      name: "Habeeb Lawal",
-      phone: "09012345678",
-      address: "No 12, Babylon Street, Accord",
-      deliveryIssue: "Delivery bike broke down",
-      riderBike: "360-HG",
-      price: 3000,
-      riderName: "Dina Martins",
-      riderImage: "assets/images/man.png",
-    ),
-  ),
-);
+final StateProvider<List<Order>> driverOrdersProvider =
+    StateProvider((ref) => []);
 
 final StateProvider<List<Order>> orderHistoryProvider = StateProvider(
   (ref) => List.generate(
@@ -283,51 +267,6 @@ final StateProvider<BusinessGasQuestionsData> businessGasQuestionsProvider =
 
 final StateProvider<double> revenueProvider = StateProvider((ref) => 0);
 
-final StateProvider socketProvider = StateProvider((ref) {
-  addHandler(notificationSignal, (dynamic data) {
-    Notification notification = Notification.fromJson(data);
-    AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: 10,
-        channelKey: 'gas_feel_notification_channel_key',
-        actionType: ActionType.Default,
-        title: notification.actionLabel,
-        body: notification.message,
-        fullScreenIntent: true,
-        wakeUpScreen: true,
-      ),
-    );
-    List<Notification> notifications = ref.watch(notificationsProvider);
-    ref.watch(notificationsProvider.notifier).state = [
-      notification,
-      ...notifications,
-    ];
-
-    if (notification.actionLabel == "Order Status") {
-      List<UserOrder> userOrders = ref.watch(initialExpressOrdersProvider);
-      if (userOrders.isNotEmpty) {
-        UserOrder order = userOrders.first;
-        List<OrderStates> states = order.states;
-        OrderState newState = convertState(notification.notificationType);
-        states.add(
-          OrderStates(
-            state: newState,
-            timestamp: notification.timestamp.toIso8601String(),
-          ),
-        );
-
-        ref.watch(initialExpressOrdersProvider.notifier).state = [
-          order.copyWith(
-            status: notification.notificationType,
-            states: states,
-          ),
-          ...(userOrders.sublist(1)),
-        ];
-      }
-    }
-  });
-});
-
 void logout(WidgetRef ref) {
   ref.invalidate(initialExpressOrdersProvider);
   ref.invalidate(initialStandardOrdersProvider);
@@ -349,5 +288,6 @@ void logout(WidgetRef ref) {
   ref.invalidate(notificationsProvider);
   ref.invalidate(loadingInitialExpressOrdersProvider);
   ref.invalidate(loadingInitialStandardOrdersProvider);
+  DatabaseManager.clearAllMessages();
   FileHandler.saveAuthDetails(null);
 }

@@ -12,6 +12,7 @@ class Driver extends UserBase {
   final String accountName;
   final String accountNumber;
   final String bankName;
+  final String riderId;
   final Type type;
 
 
@@ -24,6 +25,7 @@ class Driver extends UserBase {
     super.image,
     super.location,
     super.address,
+    this.riderId = "",
     this.type = Type.nil,
     this.licenseExpiry = "",
     this.licenseNumber = "",
@@ -42,9 +44,11 @@ class Driver extends UserBase {
     String? accountName,
     String? accountNumber,
     String? bankName,
+    String? riderId,
     Type? type,
   }) {
     return Driver(
+      riderId: riderId ?? this.riderId,
       address: address ?? this.address,
       firstName: firstName ?? this.address,
       id: id,

@@ -48,16 +48,17 @@ Future<EexilyResponse<List<dynamic>?>> login(Map<String, dynamic> data) async {
       data["isGas"] = hasCompleted;
 
       UserBase base = UserFactory.createUser(data, typeData: typeData);
-      Map<String, dynamic>? gasData = response
-          .data["payload"]["gasPredictionData"];
+      Map<String, dynamic>? gasData =
+          response.data["payload"]["gasPredictionData"];
 
       GasData gd = GasData(
-          gasSize: typeData != null ? typeData["gasSize"] ?? 0 : 0,
+        gasSize: typeData != null ? typeData["gasSize"] ?? 0 : 0,
       );
 
       if (gasData != null) {
         gd.completionDate = gasData["completionDate"];
-        gd.gasAmountLeft = (gasData["estimatedGasRemaining"] as num).toDouble() ?? 0.0;
+        gd.gasAmountLeft =
+            (gasData["estimatedGasRemaining"] as num).toDouble() ?? 0.0;
         gd.isPaused = gasData["isPause"];
       }
 
@@ -118,8 +119,8 @@ Future<EexilyResponse<UserBase?>> verify(Map<String, dynamic> data) async {
 
 Future<EexilyResponse> resendToken(String email) async {
   try {
-    Response response = await dio.post(
-        "/auth/verify-user", data: {"email": email});
+    Response response =
+        await dio.post("/auth/verify-user", data: {"email": email});
     if (response.statusCode! == 200) {
       return const EexilyResponse(
         message: "Verification Code Sent",
@@ -135,6 +136,66 @@ Future<EexilyResponse> resendToken(String email) async {
     );
   } catch (e) {
     log("Resend Token Error: $e");
+  }
+
+  return const EexilyResponse(
+    message: "An error occurred. Please try again.",
+    payload: null,
+    status: false,
+  );
+}
+
+Future<EexilyResponse> forgot(Map<String, String> details) async {
+  try {
+    Response response = await dio.patch(
+      "/auth/forgotten-password",
+      data: details,
+    );
+    if (response.statusCode! < 300) {
+      return const EexilyResponse(
+        message: "Verification Code Sent",
+        payload: null,
+        status: true,
+      );
+    }
+  } on DioException catch (e) {
+    return EexilyResponse(
+      message: e.response?.data["message"] ?? "An error occurred.",
+      payload: null,
+      status: false,
+    );
+  } catch (e) {
+    log("Forgot Password Error: $e");
+  }
+
+  return const EexilyResponse(
+    message: "An error occurred. Please try again.",
+    payload: null,
+    status: false,
+  );
+}
+
+Future<EexilyResponse> reset(Map<String, String> details) async {
+  try {
+    Response response = await dio.post(
+      "/auth/update-password",
+      data: details,
+    );
+    if (response.statusCode! < 300) {
+      return const EexilyResponse(
+        message: "Password reset successfully. Proceed to login.",
+        payload: null,
+        status: true,
+      );
+    }
+  } on DioException catch (e) {
+    return EexilyResponse(
+      message: e.response?.data["message"] ?? "An error occurred.",
+      payload: null,
+      status: false,
+    );
+  } catch (e) {
+    log("Reset Password Error: $e");
   }
 
   return const EexilyResponse(

@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:eexily/components/notification.dart' as n;
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
@@ -10,7 +11,9 @@ import 'package:go_router/go_router.dart';
 import 'package:timeago/timeago.dart' as time;
 
 import 'api/base.dart';
+import 'components/order.dart';
 import 'controllers/notifications.dart';
+import 'database.dart';
 import 'tools/routes.dart';
 
 Future<void> main() async {
@@ -43,6 +46,8 @@ Future<void> main() async {
   );
 
   await ScreenUtil.ensureScreenSize();
+  await DatabaseManager.init();
+  await DatabaseManager.clearAllMessages();
 
   bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
   if (!isAllowed) {
@@ -61,6 +66,7 @@ Future<void> main() async {
 }
 
 class Eexily extends ConsumerStatefulWidget {
+  static late WidgetRef globalRef;
   const Eexily({super.key});
 
   @override
@@ -69,6 +75,7 @@ class Eexily extends ConsumerStatefulWidget {
 
 class _EexilyState extends ConsumerState<Eexily> {
   late GoRouter _router;
+  late WidgetRef globalRef;
 
   @override
   void initState() {
@@ -78,6 +85,8 @@ class _EexilyState extends ConsumerState<Eexily> {
       initialLocation: Pages.splash.path,
       routes: routes,
     );
+
+    Eexily.globalRef = ref;
 
     time.setDefaultLocale('en_short');
 
@@ -92,8 +101,54 @@ class _EexilyState extends ConsumerState<Eexily> {
     );
 
     initializeAPIServices();
-    Future.delayed(Duration.zero, () {
-      ref.watch(socketProvider);
+    setupSocketHandlers();
+  }
+
+
+  void setupSocketHandlers() {
+    addHandler(notificationSignal, (dynamic data) {
+
+      n.Notification notification = n.Notification.fromJson(data);
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: notification.message.hashCode,
+          channelKey: 'gas_feel_notification_channel_key',
+          actionType: ActionType.Default,
+          title: notification.actionLabel,
+          body: notification.message,
+          fullScreenIntent: true,
+          wakeUpScreen: true,
+          customSound: "gas_feel",
+        ),
+      );
+      List<n.Notification> notifications = ref.watch(notificationsProvider);
+      ref.watch(notificationsProvider.notifier).state = [
+        notification,
+        ...notifications,
+      ];
+
+      if (notification.actionLabel == "Order Status") {
+        List<UserOrder> userOrders = ref.watch(initialExpressOrdersProvider);
+        if (userOrders.isNotEmpty) {
+          UserOrder order = userOrders.first;
+          List<OrderStates> states = order.states;
+          OrderState newState = convertState(notification.notificationType);
+          states.add(
+            OrderStates(
+              state: newState,
+              timestamp: notification.timestamp.toIso8601String(),
+            ),
+          );
+
+          ref.watch(initialExpressOrdersProvider.notifier).state = [
+            order.copyWith(
+              status: notification.notificationType,
+              states: states,
+            ),
+            ...(userOrders.sublist(1)),
+          ];
+        }
+      }
     });
   }
 

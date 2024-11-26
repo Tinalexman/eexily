@@ -193,29 +193,46 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       ),
                       SizedBox(height: 10.h),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Checkbox(
-                            value: remember,
-                            onChanged: (val) {
-                              if (!loading) {
-                                setState(() => remember = !remember);
-                              }
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(2.r),
-                            ),
-                            materialTapTargetSize:
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Checkbox(
+                                value: remember,
+                                onChanged: (val) {
+                                  if (!loading) {
+                                    setState(() => remember = !remember);
+                                  }
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(2.r),
+                                ),
+                                materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
-                            side: const BorderSide(
-                              color: monokai,
-                              width: 1.5,
+                                side: const BorderSide(
+                                  color: monokai,
+                                  width: 1.5,
+                                ),
+                              ),
+                              Text(
+                                "Remember me",
+                                style: context.textTheme.bodyMedium,
+                              )
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () => context.router.pushNamed(Pages.forgotPassword),
+                            child: Text(
+                              "Forgot password?",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: primary,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                          Text(
-                            "Remember me",
-                            style: context.textTheme.bodyMedium,
-                          )
                         ],
                       )
                     ],

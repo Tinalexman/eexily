@@ -1,9 +1,7 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:eexily/api/authentication.dart';
-import 'package:eexily/components/user/base.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
-import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

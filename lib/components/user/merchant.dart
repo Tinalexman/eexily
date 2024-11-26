@@ -9,6 +9,7 @@ class Merchant extends UserBase {
   final String accountName;
   final String accountNumber;
   final String bankName;
+  final String merchantId;
 
   const Merchant({
     super.firstName,
@@ -20,6 +21,7 @@ class Merchant extends UserBase {
     super.image,
     super.location,
     super.address,
+    this.merchantId = "",
     this.isOpened = false,
     this.balance = 0,
     this.retailGasPrice = 0,
@@ -47,8 +49,10 @@ class Merchant extends UserBase {
     String? accountName,
     String? accountNumber,
     String? bankName,
+    String? merchantId,
   }) {
     return Merchant(
+      merchantId: merchantId ?? this.merchantId,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       id: id ?? this.id,

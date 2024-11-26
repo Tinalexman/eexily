@@ -56,7 +56,8 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
     lastNameController.text = driver.lastName;
     addressController.text = driver.address;
     licenseController.text = preFormatLicenseNumber(driver.licenseNumber);
-    licenseExpiryController.text = formatDateRaw(DateTime.parse(driver.licenseExpiry));
+    licenseExpiry = DateTime.parse(driver.licenseExpiry);
+    licenseExpiryController.text = formatDateRaw(licenseExpiry!);
     accountNameController.text = driver.accountName;
     accountNumberController.text = driver.accountNumber;
 
@@ -75,17 +76,40 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
     super.dispose();
   }
 
-  void showMessage(String message) => showToast(message, context);
+  void showMessage(String message, [Color? color]) => showToast(
+        message,
+        context,
+        backgroundColor: color,
+      );
 
   Future<void> updateRider() async {
     String id = ref.watch(userProvider.select((u) => u.id));
     var response = await updateRiderUser(authDetails, id);
     setState(() => loading = false);
-    showMessage(response.message);
+    showMessage(response.message, response.status ? primary : null);
 
     if (!response.status) {
       return;
     }
+
+    String firstName = firstNameController.text.trim();
+    String lastName = lastNameController.text.trim();
+    String licenseNumber = licenseController.text.trim();
+    String address = addressController.text.trim();
+    String accountName = accountNameController.text.trim();
+    String accountNumber = accountNumberController.text.trim();
+
+    Driver driver = ref.watch(userProvider) as Driver;
+    ref.watch(userProvider.notifier).state = driver.copyWith(
+      firstName: firstName,
+      lastName: lastName,
+      licenseNumber: licenseNumber,
+      licenseExpiry: licenseExpiry?.toIso8601String(),
+      address: address,
+      bankName: bankName,
+      accountName: accountName,
+      accountNumber: accountNumber,
+    );
 
     navigate();
   }
@@ -308,7 +332,7 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
                           return null;
                         },
                         onSave: (value) =>
-                        authDetails["accountNumber"] = value!.trim(),
+                            authDetails["accountNumber"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(
@@ -319,7 +343,7 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
                       GestureDetector(
                         onTap: () async {
                           Map<String, dynamic>? response =
-                          await context.router.pushNamed(
+                              await context.router.pushNamed(
                             Pages.selectBank,
                             extra: bankName,
                           );
@@ -353,7 +377,7 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
                                   ? FontWeight.w300
                                   : FontWeight.w500,
                               color:
-                              bankName.isEmpty ? Colors.black45 : monokai,
+                                  bankName.isEmpty ? Colors.black45 : monokai,
                             ),
                           ),
                         ),
@@ -377,7 +401,7 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
                           return null;
                         },
                         onSave: (value) =>
-                        authDetails["accountName"] = value!.trim(),
+                            authDetails["accountName"] = value!.trim(),
                       ),
                     ],
                   ),

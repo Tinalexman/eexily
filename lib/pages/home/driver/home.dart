@@ -27,10 +27,10 @@ class _HomeState extends ConsumerState<Home> {
   void initState() {
     super.initState();
     d.Driver driver = ref.read(userProvider) as d.Driver;
-    id = driver.id;
+    id = driver.riderId;
     driverType = driver.type;
-    // loading = true;
-    // Future.delayed(Duration.zero, getOrders);
+    loading = true;
+    Future.delayed(Duration.zero, getOrders);
   }
 
   Future<void> getOrders() async {

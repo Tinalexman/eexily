@@ -46,6 +46,8 @@ class Pages
   static String get registerStation => "register-station";
   static String get registerSupport => "register-support";
   static String get chooseDriverImage => "choose-driver-image";
+  static String get resetPassword => "reset-password";
+  static String get forgotPassword => "forgot-password";
   static String get chooseBusinessCategory => "choose-business-category";
   static String get login => "sign-in";
   static String get verification => "verification";

@@ -46,6 +46,7 @@ dependencies:
   curved_labeled_navigation_bar:
   easy_stepper:
   url_launcher:
+  sqflite:
 #  device_preview:
 
 

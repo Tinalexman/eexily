@@ -47,6 +47,7 @@ dependencies:
   easy_stepper:
   url_launcher:
   sqflite:
+  get_it:
 #  device_preview:
 
 

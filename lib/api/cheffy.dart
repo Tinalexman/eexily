@@ -1,9 +1,8 @@
 import 'package:eexily/components/cheffy_message.dart';
 import 'base.dart';
 
-// const String openAIKey =
-//     "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";
-const String openAIKey = "";
+const String openAIKey =
+    "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";
 
 
 Future<EexilyResponse> sendMessageToCheffy(List<CheffyMessage> messages) async {

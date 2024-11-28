@@ -65,6 +65,7 @@ class Pages
   static String get notification => "notification";
   static String get inbox => "inbox";
   static String get filter => "filter";
+  static String get help => "help";
   static String get individualGasActivation => "individual-gas-activation";
   static String get businessGasActivation => "business-gas-activation";
   static String get individualOrderHistory => "individual-order-history";

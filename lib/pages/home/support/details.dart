@@ -55,7 +55,7 @@ class OrderDetails extends StatelessWidget {
                   ),
                 ),
                 TextSpan(
-                  text: order.name,
+                  text: order.metadata.userName,
                   style: context.textTheme.bodySmall!.copyWith(
                     fontWeight: FontWeight.w500,
                     color: monokai,
@@ -75,7 +75,7 @@ class OrderDetails extends StatelessWidget {
                   ),
                 ),
                 TextSpan(
-                  text: order.phone,
+                  text: order.metadata.userPhoneNumber,
                   style: context.textTheme.bodySmall!.copyWith(
                     fontWeight: FontWeight.w500,
                     color: monokai,
@@ -89,13 +89,13 @@ class OrderDetails extends StatelessWidget {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: "Address: ",
+                  text: "PickUp Address: ",
                   style: context.textTheme.bodySmall!.copyWith(
                     color: monokai,
                   ),
                 ),
                 TextSpan(
-                  text: order.address,
+                  text: "${order.metadata.pickUpAddress} ${order.metadata.pickUpLocation}",
                   style: context.textTheme.bodySmall!.copyWith(
                     fontWeight: FontWeight.w500,
                     color: monokai,
@@ -125,45 +125,27 @@ class OrderDetails extends StatelessWidget {
             ),
           ),
           SizedBox(height: 5.h),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "Delivery date: ",
-                  style: context.textTheme.bodySmall!.copyWith(
-                    color: monokai,
-                  ),
-                ),
-                TextSpan(
-                  text: formatDateRaw(order.deliveryDate, shorten: true,),
-                  style: context.textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: monokai,
-                  ),
-                )
-              ],
-            ),
-          ),
+          // RichText(
+          //   text: TextSpan(
+          //     children: [
+          //       TextSpan(
+          //         text: "Delivery date: ",
+          //         style: context.textTheme.bodySmall!.copyWith(
+          //           color: monokai,
+          //         ),
+          //       ),
+          //       TextSpan(
+          //         text: formatDateRaw(order.deliveryDate, shorten: true,),
+          //         style: context.textTheme.bodySmall!.copyWith(
+          //           fontWeight: FontWeight.w500,
+          //           color: monokai,
+          //         ),
+          //       )
+          //     ],
+          //   ),
+          // ),
           SizedBox(height: 5.h),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "Delivery status: ",
-                  style: context.textTheme.bodySmall!.copyWith(
-                    color: monokai,
-                  ),
-                ),
-                TextSpan(
-                  text: order.status.name.capitalize,
-                  style: context.textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: order.status == OrderStatus.pending ? secondary : primary,
-                  ),
-                )
-              ],
-            ),
-          ),
+          // /
         ],
       ),
     );

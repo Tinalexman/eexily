@@ -19,6 +19,7 @@ import 'package:eexily/pages/home/attendant/all_orders.dart';
 import 'package:eexily/pages/home/attendant/view_order.dart';
 import 'package:eexily/pages/home/business/activation/activation.dart';
 import 'package:eexily/pages/home/common/filter.dart';
+import 'package:eexily/pages/home/common/help.dart';
 import 'package:eexily/pages/home/common/notifications.dart';
 import 'package:eexily/pages/home/driver/edit_profile.dart';
 import 'package:eexily/pages/home/driver/view_order.dart';
@@ -80,6 +81,11 @@ final List<GoRoute> routes = [
     path: Pages.forgotPassword.path,
     name: Pages.forgotPassword,
     builder: (_, __) => const ForgotPasswordPage(),
+  ),
+  GoRoute(
+    path: Pages.help.path,
+    name: Pages.help,
+    builder: (_, __) => const HelpPage(),
   ),
   GoRoute(
     path: Pages.resetPassword.path,

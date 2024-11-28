@@ -2,7 +2,7 @@ import "package:eexily/components/order.dart";
 
 import "base.dart";
 
-Future<EexilyResponse<UserOrder?>> createScheduledOrder(
+Future<EexilyResponse<Order?>> createScheduledOrder(
     Map<String, dynamic> map) async {
   try {
     Response response = await dio.post(
@@ -36,7 +36,7 @@ Future<EexilyResponse<UserOrder?>> createScheduledOrder(
   );
 }
 
-Future<EexilyResponse<UserOrder?>> createExpressOrder(
+Future<EexilyResponse<Order?>> createExpressOrder(
   Map<String, dynamic> map,
 ) async {
   try {
@@ -59,14 +59,10 @@ Future<EexilyResponse<UserOrder?>> createExpressOrder(
         orderStates.add(state);
       }
 
-      UserOrder userOrder = UserOrder(
-        address: data["address"],
-        location: data["location"] ?? "",
+      Order userOrder = Order(
         id: data["_id"],
         quantity: (data["quantity"] as num).toInt(),
         states: orderStates,
-        scheduledTime: data["timeScheduled"],
-        pickedUpTime: data["pickupDate"],
         paymentMethod: data["paymentMethod"],
         status: data["status"],
         code: data["gcode"],
@@ -107,9 +103,50 @@ Future<EexilyResponse<List<Order>>> getDriverScheduledIncomingOrders(
     );
 
     if (response.statusCode! == 200) {
-      return const EexilyResponse(
+      List<Order> orders = [];
+      List<dynamic> _orders = response.data["payload"] as List<dynamic>;
+
+      for (var element in _orders) {
+        Map<String, dynamic> metadata = element["metaData"];
+        List<dynamic> states = element["statusHistory"];
+        List<OrderStates> orderStates = [];
+        for (var element in states) {
+          OrderStates state = OrderStates(
+            state: convertState(element["status"]),
+            timestamp: element["updatedAt"],
+          );
+          orderStates.add(state);
+        }
+
+        Order order = Order(
+          createdAt: element["createdAt"],
+          price: (element["price"] as num).toDouble(),
+          status: element["status"],
+          code: element["gcode"],
+          id: element["_id"],
+          quantity: (element["quantity"] as num).toInt(),
+          metadata: OrderMetadata(
+            riderName: metadata["riderName"] ?? "",
+            gasStationAddress: metadata["gasStationAddress"] ?? "",
+            gasStationLocation: metadata["gasStationLocation"] ?? "",
+            gasStationName: metadata["gasStationName"] ?? "",
+            merchantAddress: metadata["merchantAddress"] ?? "",
+            merchantLocation: metadata["merchantLocation"] ?? "",
+            merchantName: metadata["merchantName"] ?? "",
+            merchantPhoneNumber: metadata["merchantPhoneNumber"] ?? "",
+            pickUpAddress: metadata["pickUpAddress"] ?? "",
+            pickUpLocation: metadata["pickUpLocation"] ?? "",
+            riderPhoneNumber: metadata["riderPhoneNumber"] ?? "",
+            userName: metadata["userName"] ?? "",
+            userPhoneNumber: metadata["userPhoneNumber"] ?? "",
+          ),
+        );
+        orders.add(order);
+      }
+
+      return EexilyResponse(
         message: "Orders Retrieved",
-        payload: [],
+        payload: orders,
         status: true,
       );
     }
@@ -142,67 +179,45 @@ Future<EexilyResponse<List<Order>>> getRiderExpressIncomingOrders(
       List<Order> orders = [];
       List<dynamic> _orders = response.data["payload"] as List<dynamic>;
 
-      for(var element in _orders) {
+      for (var element in _orders) {
+        Map<String, dynamic> metadata = element["metaData"];
+        List<dynamic> states = element["statusHistory"];
+        List<OrderStates> orderStates = [];
+        for (var element in states) {
+          OrderStates state = OrderStates(
+            state: convertState(element["status"]),
+            timestamp: element["updatedAt"],
+          );
+          orderStates.add(state);
+        }
+
         Order order = Order(
-          deliveryDate: DateTime.parse(element["timeScheduled"]),
-          address: element["address"],
-          name: element["user"]?["firstName"] ?? "Test Name",
-          phone: element["phone"] ?? "08012345678",
           price: (element["price"] as num).toDouble(),
-          status: element["status"] != "DELIVERED" ? OrderStatus.pending : OrderStatus.completed,
+          status: element["status"],
           code: element["gcode"],
           id: element["_id"],
-          gasQuantity: (element["quantity"] as num).toInt(),
-          riderName: element["rider"]["name"] ?? "Test Rider Name",
-         );
+          quantity: (element["quantity"] as num).toInt(),
+          createdAt: element["createdAt"],
+          sellerType: element["sellerType"] ?? "",
+          states: orderStates,
+          metadata: OrderMetadata(
+            riderName: metadata["riderName"] ?? "",
+            gasStationAddress: metadata["gasStationAddress"] ?? "",
+            gasStationLocation: metadata["gasStationLocation"] ?? "",
+            gasStationName: metadata["gasStationName"] ?? "",
+            merchantAddress: metadata["merchantAddress"] ?? "",
+            merchantLocation: metadata["merchantLocation"] ?? "",
+            merchantName: metadata["merchantName"] ?? "",
+            merchantPhoneNumber: metadata["merchantPhoneNumber"] ?? "",
+            pickUpAddress: metadata["pickUpAddress"] ?? "",
+            pickUpLocation: metadata["pickUpLocation"] ?? "",
+            riderPhoneNumber: metadata["riderPhoneNumber"] ?? "",
+            userName: metadata["userName"] ?? "",
+            userPhoneNumber: metadata["userPhoneNumber"] ?? "",
+          ),
+        );
         orders.add(order);
       }
-
-      Map map = {
-        "payload": [
-          {
-            "_id": "67443e17f8222777673e0296",
-            "sellerType": "MERCHANT",
-            "pickupDate": "2024-11-25T10:06:30.061Z",
-            "quantity": 1,
-            "address": "bsbsnsnsn",
-            "price": 1100,
-            "deliveryFee": 80,
-            "paymentMethod": "Paystack",
-            "user": "674378f53f42156f485e0238",
-            "status": "PAID",
-            "merchant": "674242af1b7b02690ced52da",
-            "timeScheduled": "2024-11-25T09:01:49.867Z",
-            "statusHistory": [
-              {
-                "status": "PENDING",
-                "updatedAt": "2024-11-25T09:06:31.387Z",
-                "_id": "67443e17f8222777673e0297"
-              },
-              {
-                "status": "MATCHED",
-                "updatedAt": "2024-11-25T09:06:32.738Z",
-                "_id": "67443e18f8222777673e02a0"
-              },
-              {
-                "status": "PAID",
-                "updatedAt": "2024-11-25T09:06:49.013Z",
-                "_id": "67443e29f8222777673e02a4"
-              }
-            ],
-            "createdAt": "2024-11-25T09:06:31.387Z",
-            "updatedAt": "2024-11-25T09:06:49.013Z",
-            "gcode": "G41CE",
-            "__v": 0,
-            "rider": "674435f837bc354ef857f31c",
-            "transactionData": {
-              "paymentUrl": "https://checkout.paystack.com/74rw7gl9mb91sxl",
-              "reference": "ref_1732525592076",
-            },
-          },
-        ],
-      };
-
 
       return EexilyResponse(
         message: "Orders Retrieved",
@@ -235,11 +250,49 @@ Future<EexilyResponse<List<Order>>> getMerchantExpressOrders(String id) async {
     );
 
     if (response.statusCode! == 200) {
-      List<dynamic> data = response.data["payload"];
       List<Order> orders = [];
+      List<dynamic> _orders = response.data["payload"] as List<dynamic>;
+
+      for (var element in _orders) {
+        Map<String, dynamic> metadata = element["metaData"];
+        List<dynamic> states = element["statusHistory"];
+        List<OrderStates> orderStates = [];
+        for (var element in states) {
+          OrderStates state = OrderStates(
+            state: convertState(element["status"]),
+            timestamp: element["updatedAt"],
+          );
+          orderStates.add(state);
+        }
+        Order order = Order(
+          createdAt: element["createdAt"],
+          price: (element["price"] as num).toDouble(),
+          status: element["status"],
+          code: element["gcode"],
+          id: element["_id"],
+          states: orderStates,
+          quantity: (element["quantity"] as num).toInt(),
+          metadata: OrderMetadata(
+            riderName: metadata["riderName"] ?? "",
+            gasStationAddress: metadata["gasStationAddress"] ?? "",
+            gasStationLocation: metadata["gasStationLocation"] ?? "",
+            gasStationName: metadata["gasStationName"] ?? "",
+            merchantAddress: metadata["merchantAddress"] ?? "",
+            merchantLocation: metadata["merchantLocation"] ?? "",
+            merchantName: metadata["merchantName"] ?? "",
+            merchantPhoneNumber: metadata["merchantPhoneNumber"] ?? "",
+            pickUpAddress: metadata["pickUpAddress"] ?? "",
+            pickUpLocation: metadata["pickUpLocation"] ?? "",
+            riderPhoneNumber: metadata["riderPhoneNumber"] ?? "",
+            userName: metadata["userName"] ?? "",
+            userPhoneNumber: metadata["userPhoneNumber"] ?? "",
+          ),
+        );
+        orders.add(order);
+      }
 
       return EexilyResponse(
-        message: "Retrieved Merchant Orders",
+        message: "Orders Retrieved",
         payload: orders,
         status: true,
       );

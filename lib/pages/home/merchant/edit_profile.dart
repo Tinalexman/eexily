@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class EditMerchantProfilePage extends ConsumerStatefulWidget {
   const EditMerchantProfilePage({super.key});
@@ -41,7 +42,7 @@ class _EditMerchantProfilePageState
     "accountNumber": "",
   };
 
-  String? type;
+  String? type, location;
   DateTime? licenseExpiry;
   late List<String> optionKeys;
 
@@ -84,6 +85,25 @@ class _EditMerchantProfilePageState
     if (!response.status) {
       return;
     }
+
+    String firstName = firstNameController.text.trim();
+    String lastName = lastNameController.text.trim();
+    String storeName = storeController.text.trim();
+    String address = addressController.text.trim();
+    String accountName = accountNameController.text.trim();
+    String accountNumber = accountNumberController.text.trim();
+
+    Merchant merchant = ref.watch(userProvider) as Merchant;
+    ref.watch(userProvider.notifier).state = merchant.copyWith(
+      firstName: firstName,
+      lastName: lastName,
+      storeName: storeName,
+      address: address,
+      bankName: bankName,
+      accountName: accountName,
+      accountNumber: accountNumber,
+      location: location!,
+    );
 
     navigate();
   }
@@ -212,6 +232,23 @@ class _EditMerchantProfilePageState
                         onSave: (value) =>
                             authDetails["address"] = value!.trim(),
                       ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Location",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      ComboBox(
+                        onChanged: (val) => setState(() => location = val),
+                        value: location,
+                        dropdownItems: allLocations,
+                        hint: "Select Location",
+                        dropdownWidth: 330.w,
+                        icon: const Icon(
+                          IconsaxPlusLinear.arrow_down,
+                          color: monokai,
+                        ),
+                      ),
                       SizedBox(height: 20.h),
                       Text(
                         "Account Information",
@@ -335,6 +372,12 @@ class _EditMerchantProfilePageState
                   ),
                   onPressed: () {
                     if (!validateForm(formKey) || loading) return;
+                    if(location == null) {
+                      showToast("Please choose a location", context);
+                      return;
+                    }
+
+                    authDetails["location"] = location!;
                     setState(() => loading = true);
                     updateMerchant();
                   },

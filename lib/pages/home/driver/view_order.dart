@@ -17,50 +17,53 @@ class ViewDriverOrder extends StatefulWidget {
 }
 
 class _ViewDriverOrderState extends State<ViewDriverOrder> {
-  bool completed = false;
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        title: Text(
-          "Order Details",
-          style: context.textTheme.titleLarge!.copyWith(
-            fontWeight: FontWeight.w600,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
+          title: Text(
+            "View Order",
+            style: context.textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 22.w),
-          child: SingleChildScrollView(
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 22.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TabBar(
+                  dividerColor: Colors.transparent,
+                  labelStyle: context.textTheme.titleMedium,
+                  tabs: const [
+                    Tab(text: "Order Details"),
+                    Tab(text: "Track Order"),
+                  ],
+                ),
                 SizedBox(height: 10.h),
-                GasOrderDetail(order: widget.order),
-                SizedBox(height: 350.h),
-                if (!completed)
-                  ElevatedButton(
-                    onPressed: () => setState(() => completed = true),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(330.w, 50.h),
-                      fixedSize: Size(330.w, 50.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.5.r),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            GasOrderDetail(order: widget.order),
+                            SizedBox(height: 20.h),
+                            UserOrderDetail(order: widget.order),
+                            SizedBox(height: 20.h),
+                            MerchantOrderDetail(order: widget.order),
+                          ],
+                        ),
                       ),
-                      elevation: 1.0,
-                      backgroundColor: primary,
-                    ),
-                    child: Text(
-                      "Mark as Delivered",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  )
+                      CustomOrderStepper(order: widget.order),
+                    ],
+                  ),
+                )
               ],
             ),
           ),

@@ -36,8 +36,8 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
     "Individual/Household": "INDIVIDUAL",
     "Merchant": "MERCHANT",
     "Driver/Rider": "RIDER",
-    "Business": "BUSINESS",
     "Gas Station Attendant": "GAS_STATION",
+    // "Business": "BUSINESS",
     // "Customer Support": "CUSTOMER_SERVICE",
   };
 
@@ -85,9 +85,9 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
     } else if (type == optionKeys[2]) {
       destination = Pages.registerRider;
     } else if (type == optionKeys[3]) {
-      destination = Pages.registerBusiness;
-    } else if (type == optionKeys[4]) {
       destination = Pages.registerStation;
+    } else if (type == optionKeys[4]) {
+      destination = Pages.registerBusiness;
     } else if (type == optionKeys[5]) {
       destination = Pages.registerSupport;
     }

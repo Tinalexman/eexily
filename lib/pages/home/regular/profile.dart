@@ -80,6 +80,13 @@ class _ProfileState extends ConsumerState<Profile> {
               color: monokai,
             ),
           ),
+          Text(
+            "${user.address}, ${user.location}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
+            ),
+          ),
           SizedBox(height: 30.h),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,

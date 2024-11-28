@@ -20,47 +20,68 @@ class EexilyUserDrawer extends ConsumerWidget {
       elevation: 1.0,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          vertical: 80.h,
-          horizontal: 20.w,
+          vertical: 60.h,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Padding(
+              padding: EdgeInsets.only(left: 20.w),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    "assets/images/GF B.png",
+                    width: 120.w,
+                    fit: BoxFit.cover,
+                  ),
+                  Text(
+                    "Feel the difference",
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset(
-                  "assets/images/GF B.png",
-                  width: 120.w,
-                  fit: BoxFit.cover,
+                ListTile(
+                  onTap: () {
+                    onCloseDrawer();
+                    context.router.pushNamed(Pages.help);
+                  },
+                  leading: Icon(
+                    IconsaxPlusLinear.info_circle,
+                    size: 24.r,
+                  ),
+                  title: Text(
+                    "Help & Support",
+                    style: context.textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
-                Text(
-                  "Feel the difference",
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w500,
+                ListTile(
+                  onTap: () {
+                    onCloseDrawer();
+                    logout(ref);
+                    context.router.goNamed(Pages.splash);
+                  },
+                  leading: Icon(
+                    IconsaxPlusLinear.logout,
+                    size: 24.r,
+                  ),
+                  title: Text(
+                    "Logout",
+                    style: context.textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],
-            ),
-            ListTile(
-              onTap: () {
-                onCloseDrawer();
-                logout(ref);
-                context.router.goNamed(Pages.splash);
-              },
-              contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
-              leading: Icon(
-                IconsaxPlusLinear.logout,
-                size: 30.r,
-              ),
-              title: Text(
-                "Logout",
-                style: context.textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
             )
           ],
         ),

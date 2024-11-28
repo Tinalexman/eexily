@@ -1,5 +1,6 @@
 import 'dart:math';
-
+import 'dart:developer' as d;
+import 'package:eexily/components/order.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,10 +8,9 @@ import 'package:intl/intl.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-
 Future<void> launchPayStackUrl(String url) async {
   final Uri uri = Uri.parse(url);
-  if(await canLaunchUrl(uri)) {
+  if (await canLaunchUrl(uri)) {
     await launchUrl(uri);
   }
 }
@@ -350,4 +350,47 @@ extension DateTimeExtensions on DateTime {
   String get longMonthName => month("${this.month}", false);
 }
 
+String getUniqueImageUrl(String value) =>
+    "https://gravatar.com/avatar/${value.hashCode}?s=400&d=robohash&r=x";
 
+Future<void> launchPhoneNumber(String phone) async {
+  Uri uri = Uri.parse("tel:+234${phone.substring(1)}");
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri);
+  }
+}
+
+class FilterOption {
+  final List<Order> orders;
+  final int filterIndex;
+
+  const FilterOption({
+    required this.orders,
+    required this.filterIndex,
+  });
+}
+
+Future<List<Order>> filterDriverOrders(FilterOption option) async {
+  List<Order> response = [];
+  for (Order order in option.orders) {
+    if ((option.filterIndex == 1 && order.status == "PAID") ||
+        (option.filterIndex == 2 && order.status == "REFILLED") ||
+        (option.filterIndex == 3 && order.status == "DELIVERED")) {
+      response.add(order);
+    }
+  }
+
+  return response;
+}
+
+Future<List<Order>> filterMerchantOrders(FilterOption option) async {
+  List<Order> response = [];
+  for (Order order in option.orders) {
+    if ((option.filterIndex == 1 && order.status == "MATCHED") ||
+        (option.filterIndex == 2 && order.status == "REFILLED")) {
+      response.add(order);
+    }
+  }
+
+  return response;
+}

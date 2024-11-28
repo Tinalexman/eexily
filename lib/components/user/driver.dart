@@ -1,10 +1,6 @@
 import 'base.dart';
 
-enum Type {
-  nil,
-  rider,
-  driver
-}
+enum Type { nil, rider, driver }
 
 class Driver extends UserBase {
   final String licenseNumber;
@@ -14,7 +10,6 @@ class Driver extends UserBase {
   final String bankName;
   final String riderId;
   final Type type;
-
 
   const Driver({
     super.firstName,
@@ -45,6 +40,7 @@ class Driver extends UserBase {
     String? accountNumber,
     String? bankName,
     String? riderId,
+    String? location,
     Type? type,
   }) {
     return Driver(
@@ -62,6 +58,7 @@ class Driver extends UserBase {
       accountName: accountName ?? this.accountName,
       bankName: bankName ?? this.bankName,
       type: type ?? this.type,
+      location: location ?? this.location,
     );
   }
 }

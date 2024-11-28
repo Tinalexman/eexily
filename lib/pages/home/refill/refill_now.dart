@@ -37,7 +37,7 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
 
   void setCurrentUserAddress() {
     String address = ref.read(userProvider.select((u) => u.address));
-    // location = ref.read(userProvider.select((u) => u.location));
+    location = ref.read(userProvider.select((u) => u.location));
     addressController.text = address;
   }
 
@@ -121,7 +121,7 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
       return;
     }
 
-    List<UserOrder> orders = ref.watch(initialExpressOrdersProvider);
+    List<Order> orders = ref.watch(initialExpressOrdersProvider);
     ref.watch(initialExpressOrdersProvider.notifier).state = [
       ...orders,
       response.payload!,

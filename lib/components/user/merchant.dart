@@ -50,6 +50,7 @@ class Merchant extends UserBase {
     String? accountNumber,
     String? bankName,
     String? merchantId,
+    String? location,
   }) {
     return Merchant(
       merchantId: merchantId ?? this.merchantId,
@@ -69,6 +70,7 @@ class Merchant extends UserBase {
       accountName: accountName ?? this.accountName,
       accountNumber: accountNumber ?? this.accountNumber,
       bankName: bankName ?? this.bankName,
+      location: location ?? this.location,
     );
   }
 }

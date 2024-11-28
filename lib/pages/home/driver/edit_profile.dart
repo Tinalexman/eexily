@@ -41,7 +41,7 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
     "accountNumber": "",
   };
 
-  String? type;
+  String? type, location;
   DateTime? licenseExpiry;
   late List<String> optionKeys;
 
@@ -60,6 +60,11 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
     licenseExpiryController.text = formatDateRaw(licenseExpiry!);
     accountNameController.text = driver.accountName;
     accountNumberController.text = driver.accountNumber;
+
+    location = driver.location;
+    if(location!.isEmpty) {
+      location = null;
+    }
 
     bankName = driver.bankName;
   }
@@ -109,6 +114,7 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
       bankName: bankName,
       accountName: accountName,
       accountNumber: accountNumber,
+      location: location!,
     );
 
     navigate();
@@ -295,6 +301,23 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
                         onSave: (value) =>
                             authDetails["address"] = value!.trim(),
                       ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Location",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      ComboBox(
+                        onChanged: (val) => setState(() => location = val),
+                        value: location,
+                        dropdownItems: allLocations,
+                        hint: "Select Location",
+                        dropdownWidth: 330.w,
+                        icon: const Icon(
+                          IconsaxPlusLinear.arrow_down,
+                          color: monokai,
+                        ),
+                      ),
                       SizedBox(height: 20.h),
                       Text(
                         "Account Information",
@@ -418,6 +441,13 @@ class _EditRiderProfilePageState extends ConsumerState<EditRiderProfilePage> {
                   ),
                   onPressed: () {
                     if (!validateForm(formKey) || loading) return;
+                    if(location == null) {
+                      showToast("Please choose a location", context);
+                      return;
+                    }
+
+                    authDetails["location"] = location!;
+
                     setState(() => loading = true);
                     updateRider();
                   },

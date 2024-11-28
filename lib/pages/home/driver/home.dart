@@ -5,6 +5,7 @@ import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets/driver.dart' as wd;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,9 +20,21 @@ class Home extends ConsumerStatefulWidget {
 
 class _HomeState extends ConsumerState<Home> {
   bool loading = false;
+  bool hasFilter = false;
+
+  final List<Order> filteredOrders = [];
 
   String id = "";
   d.Type driverType = d.Type.nil;
+
+  final List<String> filterOptions = [
+    "All",
+    "Paid",
+    "Refilled",
+    "Delivered",
+  ];
+
+  int currentFilterIndex = 0;
 
   @override
   void initState() {
@@ -59,11 +72,38 @@ class _HomeState extends ConsumerState<Home> {
         backgroundColor: color,
       );
 
+  Future<void> onFilterChange(int newFilterIndex) async {
+    filteredOrders.clear();
+    currentFilterIndex = newFilterIndex;
+
+    if (newFilterIndex == 0) {
+      hasFilter = false;
+      setState(() {});
+      return;
+    }
+
+    List<Order> orders = ref.watch(driverOrdersProvider);
+
+    List<Order> response = await compute(
+      filterDriverOrders,
+      FilterOption(
+        orders: orders,
+        filterIndex: newFilterIndex,
+      ),
+    );
+    filteredOrders.addAll(response);
+    hasFilter = true;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Order> driverOrders =
-        loading ? dummyOrders : ref.watch(driverOrdersProvider);
-    bool canShowData = loading || driverOrders.isNotEmpty;
+    List<Order> driverOrders = hasFilter
+        ? filteredOrders
+        : loading
+            ? dummyOrders
+            : ref.watch(driverOrdersProvider);
+    bool canShowData = hasFilter || loading || driverOrders.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,14 +132,6 @@ class _HomeState extends ConsumerState<Home> {
                   ),
                   SizedBox(height: 30.h),
                   Text(
-                    "Oops :(",
-                    style: context.textTheme.titleLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 5.h),
-                  Text(
                     "You do not have any incoming orders.",
                     style: context.textTheme.bodyMedium!.copyWith(
                       fontFamily: "WorkSans",
@@ -126,19 +158,62 @@ class _HomeState extends ConsumerState<Home> {
             ),
           ),
         if (canShowData)
+          Column(
+            children: [
+              SizedBox(
+                height: 50.h,
+                child: ListView.separated(
+                  itemBuilder: (_, index) {
+                    bool selected = currentFilterIndex == index;
+                    return GestureDetector(
+                      onTap: () => onFilterChange(index),
+                      child: Chip(
+                        label: Text(
+                          filterOptions[index],
+                          style: context.textTheme.bodySmall!.copyWith(
+                            fontWeight:
+                                selected ? FontWeight.w500 : FontWeight.w400,
+                          ),
+                        ),
+                        backgroundColor:
+                            selected ? secondary : primary50.withOpacity(0.2),
+                        elevation: selected ? 1.0 : 0.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.5.r),
+                        ),
+                        side: const BorderSide(color: Colors.transparent),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (_, __) => SizedBox(width: 10.w),
+                  itemCount: filterOptions.length,
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                ),
+              ),
+              SizedBox(height: 10.h),
+            ],
+          ),
+        if (canShowData)
           Expanded(
-            child: Skeletonizer(
-              enabled: loading,
-              child: ListView.separated(
-                itemBuilder: (_, index) =>
-                    wd.OrderContainer(order: driverOrders[index]),
-                padding: const EdgeInsets.all(1),
-                separatorBuilder: (_, __) => SizedBox(height: 10.h),
-                itemCount: driverOrders.length,
-                physics: const BouncingScrollPhysics(),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                setState(() => loading = true);
+                getOrders();
+              },
+              child: Skeletonizer(
+                enabled: loading,
+                child: ListView.separated(
+                  itemBuilder: (_, index) =>
+                      wd.OrderContainer(order: driverOrders[index]),
+                  separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                  padding: const EdgeInsets.all(1),
+                  itemCount: driverOrders.length,
+                  physics: const BouncingScrollPhysics(),
+                ),
               ),
             ),
-          )
+          ),
       ],
     );
   }

@@ -19,10 +19,12 @@ class BusinessActivationPages extends ConsumerStatefulWidget {
   const BusinessActivationPages({super.key});
 
   @override
-  ConsumerState<BusinessActivationPages> createState() => _BusinessActivationPagesState();
+  ConsumerState<BusinessActivationPages> createState() =>
+      _BusinessActivationPagesState();
 }
 
-class _BusinessActivationPagesState extends ConsumerState<BusinessActivationPages> {
+class _BusinessActivationPagesState
+    extends ConsumerState<BusinessActivationPages> {
   int activeStep = 0;
   late List<Widget> children;
   bool loading = false;
@@ -57,10 +59,8 @@ class _BusinessActivationPagesState extends ConsumerState<BusinessActivationPage
   void pop() => context.router.pop();
 
   Future<void> createGasQuestions() async {
-    BusinessGasQuestionsData details =
-        ref.watch(businessGasQuestionsProvider);
-    String id = ref.watch(userProvider).id;
-    var response = await createIndividualGasQuestions(details.toJson(), id);
+    BusinessGasQuestionsData details = ref.watch(businessGasQuestionsProvider);
+    var response = await createIndividualGasQuestions(details.toJson());
     setState(() => loading = false);
     showMessage(response.message, color: response.status ? primary : null);
 

@@ -1,7 +1,5 @@
 import "package:eexily/components/gas_data.dart";
 import "package:eexily/components/order.dart";
-import "package:eexily/components/user/user.dart";
-import "package:eexily/components/user/user_factory.dart";
 
 import "base.dart";
 
@@ -9,7 +7,7 @@ Future<EexilyResponse> updateIndividualUser(
     Map<String, dynamic> data, String userId) async {
   try {
     Response response = await dio.patch(
-      "/individual/$userId",
+      "/individual",
       data: data,
       options: configuration,
     );
@@ -39,7 +37,7 @@ Future<EexilyResponse> updateIndividualUser(
 }
 
 Future<EexilyResponse<GasData?>> createIndividualGasQuestions(
-    Map<String, dynamic> data, String userId) async {
+    Map<String, dynamic> data) async {
   try {
     Response response = await dio.post(
       "/prediction",
@@ -70,6 +68,50 @@ Future<EexilyResponse<GasData?>> createIndividualGasQuestions(
     );
   } catch (e) {
     log("Create Individual Gas Questions: $e");
+  }
+
+  return const EexilyResponse(
+    message: "An error occurred. Please try again.",
+    payload: null,
+    status: false,
+  );
+}
+
+Future<EexilyResponse<GasData?>> updateGasData(
+    String refillDate, String amountFilled) async {
+  try {
+    Response response = await dio.patch(
+      "/prediction",
+      data: {
+        "refillDate": refillDate,
+        "amountFilled": amountFilled,
+      },
+      options: configuration,
+    );
+
+    if (response.statusCode! == 201) {
+      Map<String, dynamic> map = response.data["payload"];
+
+      GasData gd = GasData(
+        gasSize: -1,
+        gasAmountLeft: (map["estimatedGasRemaining"] as num).toDouble() ?? 0.0,
+        completionDate: map["completionDate"],
+      );
+
+      return EexilyResponse(
+        message: "Gas Details Updated",
+        payload: gd,
+        status: true,
+      );
+    }
+  } on DioException catch (e) {
+    return EexilyResponse(
+      message: e.response?.data["message"] ?? "An error occurred.",
+      payload: null,
+      status: false,
+    );
+  } catch (e) {
+    log("Update Gas Data: $e");
   }
 
   return const EexilyResponse(
@@ -110,7 +152,7 @@ Future<EexilyResponse> toggleGasTracker() async {
   );
 }
 
-Future<EexilyResponse<List<UserOrder>>> getUserStandardOrders() async {
+Future<EexilyResponse<List<Order>>> getUserStandardOrders() async {
   try {
     Response response = await dio.get(
       "/refill-schedule",
@@ -119,10 +161,10 @@ Future<EexilyResponse<List<UserOrder>>> getUserStandardOrders() async {
 
     if (response.statusCode! == 200) {
       List<dynamic> data = response.data["payload"];
-      List<UserOrder> orders = [];
+      List<Order> orders = [];
 
       for (var element in data) {
-        UserOrder userOrder = UserOrder(
+        Order userOrder = Order(
           id: element["_id"],
           states: [
             // element["status"]
@@ -132,9 +174,6 @@ Future<EexilyResponse<List<UserOrder>>> getUserStandardOrders() async {
           quantity: (element["quantity"] as num).toInt(),
           code: element["gcode"],
           paymentMethod: element["paymentMethod"],
-          pickedUpTime: element["pickedUpTime"],
-          scheduledTime: element["timeScheduled"],
-          address: element["address"],
         );
         orders.add(userOrder);
       }
@@ -162,7 +201,7 @@ Future<EexilyResponse<List<UserOrder>>> getUserStandardOrders() async {
   );
 }
 
-Future<EexilyResponse<List<UserOrder>>> getUserExpressOrders() async {
+Future<EexilyResponse<List<Order>>> getUserExpressOrders() async {
   try {
     Response response = await dio.get(
       "/express-refill/user",
@@ -171,7 +210,7 @@ Future<EexilyResponse<List<UserOrder>>> getUserExpressOrders() async {
 
     if (response.statusCode! == 200) {
       List<dynamic> data = response.data["payload"];
-      List<UserOrder> orders = [];
+      List<Order> orders = [];
 
       for (var element in data) {
         List<dynamic> states = element["statusHistory"];
@@ -184,7 +223,9 @@ Future<EexilyResponse<List<UserOrder>>> getUserExpressOrders() async {
           orderStates.add(state);
         }
 
-        UserOrder userOrder = UserOrder(
+        Map<String, dynamic> metadata = element["metaData"];
+
+        Order userOrder = Order(
           id: element["_id"],
           states: orderStates,
           price: (element["price"] as num).toDouble() +
@@ -193,9 +234,21 @@ Future<EexilyResponse<List<UserOrder>>> getUserExpressOrders() async {
           code: element["gcode"],
           status: element["status"],
           paymentMethod: element["paymentMethod"],
-          pickedUpTime: element["pickupDate"],
-          scheduledTime: element["timeScheduled"],
-          address: element["address"],
+          createdAt: element["createdAt"],
+          metadata: OrderMetadata(
+            riderName: metadata["riderName"] ?? "",
+            gasStationAddress: metadata["gasStationAddress"] ?? "",
+            gasStationLocation: metadata["gasStationLocation"] ?? "",
+            gasStationName: metadata["gasStationName"] ?? "",
+            merchantAddress: metadata["merchantAddress"] ?? "",
+            merchantName: metadata["merchantName"] ?? "",
+            merchantPhoneNumber: metadata["merchantPhoneNumber"] ?? "",
+            pickUpAddress: metadata["pickUpAddress"] ?? "",
+            pickUpLocation: metadata["pickUpLocation"] ?? "",
+            riderPhoneNumber: metadata["riderPhoneNumber"] ?? "",
+            userName: metadata["userName"] ?? "",
+            userPhoneNumber: metadata["userPhoneNumber"] ?? "",
+          ),
           sellerType: element["sellerType"],
           paymentUrl: element["transactionData"]["paymentUrl"],
           reference: element["transactionData"]["reference"],
@@ -222,49 +275,6 @@ Future<EexilyResponse<List<UserOrder>>> getUserExpressOrders() async {
   return const EexilyResponse(
     message: "An error occurred. Please try again.",
     payload: [],
-    status: false,
-  );
-}
-
-Future<EexilyResponse<UserOrder?>> getUserOrderByGCode(String code) async {
-  try {
-    Response response = await dio.get(
-      "/refill-schedule/by-gcode/$code",
-      options: configuration,
-    );
-
-    if (response.statusCode! == 200) {
-      Map<String, dynamic> data = response.data["payload"];
-
-      UserOrder userOrder = UserOrder(
-        id: data["_id"],
-        states: [
-          // orderState: data["status"]
-        ],
-        price: (data["price"] as num).toDouble() +
-            (data["deliveryFee"] as num).toDouble(),
-        quantity: (data["quantity"] as num).toInt(),
-      );
-
-      return EexilyResponse(
-        message: "Gas Orders Retrieved",
-        payload: userOrder,
-        status: true,
-      );
-    }
-  } on DioException catch (e) {
-    return EexilyResponse(
-      message: e.response?.data["message"] ?? "An error occurred.",
-      payload: null,
-      status: false,
-    );
-  } catch (e) {
-    log("Get Order Error: $e");
-  }
-
-  return const EexilyResponse(
-    message: "An error occurred. Please try again.",
-    payload: null,
     status: false,
   );
 }

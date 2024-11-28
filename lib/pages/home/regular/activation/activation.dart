@@ -22,7 +22,8 @@ class IndividualActivationPages extends ConsumerStatefulWidget {
   const IndividualActivationPages({super.key});
 
   @override
-  ConsumerState<IndividualActivationPages> createState() => _ActivationPagesState();
+  ConsumerState<IndividualActivationPages> createState() =>
+      _ActivationPagesState();
 }
 
 class _ActivationPagesState extends ConsumerState<IndividualActivationPages> {
@@ -69,8 +70,7 @@ class _ActivationPagesState extends ConsumerState<IndividualActivationPages> {
   Future<void> createGasQuestions() async {
     IndividualGasQuestionsData details =
         ref.watch(individualGasQuestionsProvider);
-    String id = ref.watch(userProvider).id;
-    var response = await createIndividualGasQuestions(details.toJson(), id);
+    var response = await createIndividualGasQuestions(details.toJson());
     setState(() => loading = false);
     showMessage(response.message, color: response.status ? primary : null);
 
@@ -94,7 +94,7 @@ class _ActivationPagesState extends ConsumerState<IndividualActivationPages> {
   bool get isPageValid {
     IndividualGasQuestionsData data = ref.watch(individualGasQuestionsProvider);
     if (activeStep == 0) {
-      return data.gasFilledPerTime != -1;
+      return data.gasFilledPerTime != 0;
     } else if (activeStep == 1) {
       return data.consumptionDuration.isNotEmpty;
     } else if (activeStep == 2) {

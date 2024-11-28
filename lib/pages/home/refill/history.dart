@@ -26,8 +26,8 @@ class _IndividualOrderHistoryState
   void initState() {
     super.initState();
 
-    List<UserOrder> expressOrders = ref.read(initialExpressOrdersProvider);
-    List<UserOrder> scheduledOrders = ref.read(initialStandardOrdersProvider);
+    List<Order> expressOrders = ref.read(initialExpressOrdersProvider);
+    List<Order> scheduledOrders = ref.read(initialStandardOrdersProvider);
 
     if (expressOrders.isEmpty) {
       loadingExpress = true;
@@ -49,6 +49,7 @@ class _IndividualOrderHistoryState
 
   Future<void> getExpress() async {
     var response = await getUserExpressOrders();
+    if(!context.mounted) return;
     setState(() => loadingExpress = false);
     if (!response.status) {
       showMessage(response.message);
@@ -60,6 +61,7 @@ class _IndividualOrderHistoryState
 
   Future<void> getStandard() async {
     var response = await getUserStandardOrders();
+    if(!context.mounted) return;
     setState(() => loadingStandard = false);
     if (!response.status) {
       showMessage(response.message);
@@ -73,13 +75,11 @@ class _IndividualOrderHistoryState
 
   @override
   Widget build(BuildContext context) {
-    List<UserOrder> expressOrders = ref.watch(initialExpressOrdersProvider);
-    List<UserOrder> scheduledOrders = ref.watch(initialStandardOrdersProvider);
+    List<Order> expressOrders = ref.watch(initialExpressOrdersProvider);
+    List<Order> scheduledOrders = ref.watch(initialStandardOrdersProvider);
 
-    List<UserOrder> expressData =
-        loadingExpress ? dummyUserOrders : expressOrders;
-    List<UserOrder> scheduledData =
-        loadingStandard ? dummyUserOrders : scheduledOrders;
+    List<Order> expressData = loadingExpress ? dummyOrders : expressOrders;
+    List<Order> scheduledData = loadingStandard ? dummyOrders : scheduledOrders;
     bool canShowExpressData = loadingExpress || expressOrders.isNotEmpty;
     bool canShowStandardData = loadingStandard || scheduledOrders.isNotEmpty;
 
@@ -123,7 +123,7 @@ class _IndividualOrderHistoryState
                                   return SizedBox(height: 20.h);
                                 }
 
-                                UserOrder order = scheduledData[index];
+                                Order order = scheduledData[index];
 
                                 return Container(
                                   width: 375.w,
@@ -162,7 +162,8 @@ class _IndividualOrderHistoryState
                                                   context.textTheme.bodySmall,
                                             ),
                                             TextSpan(
-                                              text: order.address,
+                                              text:
+                                                  "${order.metadata.pickUpAddress}, ${order.metadata.pickUpLocation}",
                                               style: context
                                                   .textTheme.bodySmall!
                                                   .copyWith(
@@ -208,27 +209,6 @@ class _IndividualOrderHistoryState
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Delivered on: ",
-                                              style:
-                                                  context.textTheme.bodySmall,
-                                            ),
-                                            TextSpan(
-                                              text: formatDateRawWithTime(
-                                                  DateTime.parse(
-                                                      order.scheduledTime)),
-                                              style: context
-                                                  .textTheme.bodySmall!
-                                                  .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            )
                                           ],
                                         ),
                                       ),
@@ -300,7 +280,7 @@ class _IndividualOrderHistoryState
                                   return SizedBox(height: 20.h);
                                 }
 
-                                UserOrder order = expressData[index];
+                                Order order = expressData[index];
 
                                 return Container(
                                   width: 375.w,
@@ -339,7 +319,8 @@ class _IndividualOrderHistoryState
                                                   context.textTheme.bodySmall,
                                             ),
                                             TextSpan(
-                                              text: order.address,
+                                              text:
+                                                  "${order.metadata.pickUpAddress}, ${order.metadata.pickUpLocation}",
                                               style: context
                                                   .textTheme.bodySmall!
                                                   .copyWith(
@@ -401,8 +382,7 @@ class _IndividualOrderHistoryState
                                             ),
                                             TextSpan(
                                               text: formatDateRawWithTime(
-                                                DateTime.parse(
-                                                    order.pickedUpTime),
+                                                DateTime.parse(order.createdAt),
                                               ),
                                               style: context
                                                   .textTheme.bodySmall!

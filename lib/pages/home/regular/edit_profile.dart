@@ -7,6 +7,7 @@ import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class EditIndividualProfilePage extends ConsumerStatefulWidget {
   const EditIndividualProfilePage({
@@ -30,9 +31,11 @@ class _EditIndividualProfilePageState
     "firstName": "",
     "lastName": "",
     "address": "",
+    "location": "",
     "user": "",
   };
 
+  String? location;
   bool loading = false;
 
   @override
@@ -43,6 +46,11 @@ class _EditIndividualProfilePageState
     firstNameController.text = user.firstName;
     lastNameController.text = user.lastName;
     addressController.text = user.address;
+    location = user.location;
+    if(location!.isEmpty) {
+      location = null;
+    }
+
     authDetails["user"] = ref.read(userProvider).id;
   }
 
@@ -79,6 +87,7 @@ class _EditIndividualProfilePageState
       firstName: newFirstName,
       lastName: newLastName,
       address: newAddress,
+      location: location!,
     );
 
     navigate();
@@ -175,10 +184,27 @@ class _EditIndividualProfilePageState
                         onSave: (value) =>
                             authDetails["address"] = value!.trim(),
                       ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "Location",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      ComboBox(
+                        onChanged: (val) => setState(() => location = val),
+                        value: location,
+                        dropdownItems: allLocations,
+                        hint: "Select Location",
+                        dropdownWidth: 330.w,
+                        icon: const Icon(
+                          IconsaxPlusLinear.arrow_down,
+                          color: monokai,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                SizedBox(height: 300.h),
+                SizedBox(height: 240.h),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primary,
@@ -190,6 +216,13 @@ class _EditIndividualProfilePageState
                   ),
                   onPressed: () {
                     if (!validateForm(formKey) || loading) return;
+                    if(location == null) {
+                      showToast("Please choose a location", context);
+                      return;
+                    }
+
+                    authDetails["location"] = location;
+
                     setState(() => loading = true);
                     updateUser();
                   },

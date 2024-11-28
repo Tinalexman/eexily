@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/transaction.dart';
+import 'package:eexily/components/user/base.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -11,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
 
 const SpinKitThreeBounce loader = SpinKitThreeBounce(
@@ -128,7 +131,8 @@ class CustomDigitGroupFormatter extends TextInputFormatter {
 
 class FourDigitGroupFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     String newText = newValue.text.replaceAll(' ', '');
 
     StringBuffer formattedText = StringBuffer();
@@ -145,7 +149,6 @@ class FourDigitGroupFormatter extends TextInputFormatter {
     );
   }
 }
-
 
 class SpecialForm extends StatelessWidget {
   final Widget? prefix;
@@ -735,18 +738,49 @@ class OrderContainer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 80.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7.5.r),
-                image: DecorationImage(
-                  image: AssetImage(order.riderImage!),
-                  fit: BoxFit.cover,
-                ),
-              ),
+            CachedNetworkImage(
+              imageUrl: getUniqueImageUrl(order.metadata.riderName),
+              errorWidget: (_, __, ___) {
+                return Container(
+                  height: 80.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7.5.r),
+                    color: Colors.redAccent,
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    IconsaxPlusBold.gallery_slash,
+                    size: 32.r,
+                    color: Colors.white,
+                  ),
+                );
+              },
+              progressIndicatorBuilder: (_, __, ___) {
+                return Container(
+                  height: 80.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7.5.r),
+                    color: Colors.redAccent,
+                  ),
+                  alignment: Alignment.center,
+                  child: loader,
+                );
+              },
+              imageBuilder: (_, provider) {
+                return Container(
+                  height: 80.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7.5.r),
+                    image: DecorationImage(
+                      image: provider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
             ),
             Text(
-              order.riderName,
+              order.metadata.riderName,
               style: context.textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w600,
                 color: monokai,
@@ -818,17 +852,17 @@ class GasOrderDetail extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Order #${order.id}",
+            "Code #${order.code}",
             style: context.textTheme.titleLarge!.copyWith(
               fontWeight: FontWeight.w600,
               color: monokai,
             ),
           ),
           Text(
-            order.status.name.capitalize,
+            order.status.capitalize,
             style: context.textTheme.bodyLarge!.copyWith(
               fontWeight: FontWeight.w500,
-              color: order.status == OrderStatus.pending ? secondary : primary,
+              color: primary,
             ),
           ),
           Row(
@@ -846,7 +880,7 @@ class GasOrderDetail extends StatelessWidget {
                 child: Container(
                   width: 180.w,
                   decoration: BoxDecoration(
-                    color: primary50.withOpacity(0.2),
+                    color: primary50.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(7.5.r),
                   ),
                   padding: EdgeInsets.symmetric(
@@ -888,7 +922,7 @@ class GasOrderDetail extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "${order.gasQuantity}kg",
+                            "${order.quantity}kg",
                             style: context.textTheme.titleMedium!.copyWith(
                               fontWeight: FontWeight.w500,
                               color: monokai,
@@ -939,7 +973,7 @@ class RiderOrderDetail extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Rider",
+            "Rider/Driver",
             style: context.textTheme.titleLarge!.copyWith(
               fontWeight: FontWeight.w600,
               color: monokai,
@@ -950,16 +984,50 @@ class RiderOrderDetail extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 80.h,
-                width: 80.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7.5.r),
-                  image: DecorationImage(
-                    image: AssetImage(order.riderImage!),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              CachedNetworkImage(
+                imageUrl: getUniqueImageUrl(order.metadata.riderName),
+                errorWidget: (_, __, ___) {
+                  return Container(
+                    height: 80.h,
+                    width: 80.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7.5.r),
+                      color: Colors.redAccent,
+                    ),
+                    alignment: Alignment.center,
+                    child: Icon(
+                      IconsaxPlusBold.gallery_slash,
+                      size: 32.r,
+                      color: Colors.white,
+                    ),
+                  );
+                },
+                progressIndicatorBuilder: (_, __, ___) {
+                  return Container(
+                    height: 80.h,
+                    width: 80.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7.5.r),
+                      color: primary50,
+                    ),
+                    alignment: Alignment.center,
+                    child: loader,
+                  );
+                },
+                imageBuilder: (_, provider) {
+                  return Container(
+                    height: 80.h,
+                    width: 80.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7.5.r),
+                      color: primary50.withOpacity(0.5),
+                      image: DecorationImage(
+                        image: provider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
               ),
               SizedBox(width: 10.w),
               Column(
@@ -967,18 +1035,324 @@ class RiderOrderDetail extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    order.riderName,
+                    order.metadata.riderName,
                     style: context.textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w600,
                       color: monokai,
                     ),
                   ),
-                  SizedBox(height: 5.h),
+                  SizedBox(
+                    width: 210.w,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Phone: ${order.metadata.riderPhoneNumber}",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: monokai,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => launchPhoneNumber(
+                              order.metadata.riderPhoneNumber),
+                          icon: const Icon(
+                            Icons.phone,
+                            color: primary,
+                          ),
+                          iconSize: 16.r,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class UserOrderDetail extends StatelessWidget {
+  final Order order;
+
+  const UserOrderDetail({
+    super.key,
+    required this.order,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 140.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.r),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 1,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: 10.h,
+        horizontal: 10.w,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Individual",
+            style: context.textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CachedNetworkImage(
+                imageUrl: getUniqueImageUrl(order.metadata.userName),
+                errorWidget: (_, __, ___) {
+                  return Container(
+                    height: 80.h,
+                    width: 80.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7.5.r),
+                      color: Colors.redAccent,
+                    ),
+                    alignment: Alignment.center,
+                    child: Icon(
+                      IconsaxPlusBold.gallery_slash,
+                      size: 32.r,
+                      color: Colors.white,
+                    ),
+                  );
+                },
+                progressIndicatorBuilder: (_, __, ___) {
+                  return Container(
+                    height: 80.h,
+                    width: 80.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7.5.r),
+                      color: primary50,
+                    ),
+                    alignment: Alignment.center,
+                    child: loader,
+                  );
+                },
+                imageBuilder: (_, provider) {
+                  return Container(
+                    height: 80.h,
+                    width: 80.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7.5.r),
+                      color: primary50.withOpacity(0.5),
+                      image: DecorationImage(
+                        image: provider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   Text(
-                    "Vehicle Number: ${order.riderBike}",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w500,
+                    order.metadata.userName,
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
                       color: monokai,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 210.w,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Phone: ${order.metadata.userPhoneNumber}",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: monokai,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () =>
+                              launchPhoneNumber(order.metadata.userPhoneNumber),
+                          icon: const Icon(
+                            Icons.phone,
+                            color: primary,
+                          ),
+                          iconSize: 16.r,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 210.w,
+                    child: Text(
+                      "${order.metadata.pickUpAddress}, ${order.metadata.pickUpLocation}",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        color: monokai,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MerchantOrderDetail extends StatelessWidget {
+  final Order order;
+
+  const MerchantOrderDetail({
+    super.key,
+    required this.order,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 140.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.r),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 1,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: 10.h,
+        horizontal: 10.w,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Merchant",
+            style: context.textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CachedNetworkImage(
+                imageUrl: getUniqueImageUrl(order.metadata.merchantName),
+                errorWidget: (_, __, ___) {
+                  return Container(
+                    height: 80.h,
+                    width: 80.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7.5.r),
+                      color: Colors.redAccent,
+                    ),
+                    alignment: Alignment.center,
+                    child: Icon(
+                      IconsaxPlusBold.gallery_slash,
+                      size: 32.r,
+                      color: Colors.white,
+                    ),
+                  );
+                },
+                progressIndicatorBuilder: (_, __, ___) {
+                  return Container(
+                    height: 80.h,
+                    width: 80.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7.5.r),
+                      color: primary50,
+                    ),
+                    alignment: Alignment.center,
+                    child: loader,
+                  );
+                },
+                imageBuilder: (_, provider) {
+                  return Container(
+                    height: 80.h,
+                    width: 80.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7.5.r),
+                      color: primary50.withOpacity(0.5),
+                      image: DecorationImage(
+                        image: provider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    order.metadata.merchantName,
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: monokai,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 210.w,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Phone: ${order.metadata.merchantPhoneNumber}",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: monokai,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => launchPhoneNumber(
+                              order.metadata.merchantPhoneNumber),
+                          icon: const Icon(
+                            Icons.phone,
+                            color: primary,
+                          ),
+                          iconSize: 16.r,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 210.w,
+                    child: Text(
+                      "${order.metadata.merchantAddress}, ${order.metadata.merchantLocation}",
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        color: monokai,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ],
@@ -1010,7 +1384,7 @@ class _UserGasStatisticsState extends ConsumerState<UserGasStatistics> {
   void initState() {
     super.initState();
     String? endingDate = ref.read(gasEndingDateProvider);
-    if(endingDate != null){
+    if (endingDate != null) {
       likelyRunningOutDate = DateTime.parse(endingDate);
     }
   }
@@ -1199,6 +1573,284 @@ class SuccessModal extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class CustomOrderStepper extends ConsumerStatefulWidget {
+  final Order order;
+
+  const CustomOrderStepper({
+    super.key,
+    required this.order,
+  });
+
+  @override
+  ConsumerState<CustomOrderStepper> createState() => _CustomOrderStepperState();
+}
+
+class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
+  late int total;
+
+  late Widget completedStepIcon,
+      nextStepToBeCompletedIcon,
+      notCompletedStepIcon;
+
+  late bool isDriver,
+      isMerchant,
+      isUser,
+      canPay,
+      canPickUp,
+      canRefill,
+      canDeliver;
+
+  @override
+  void initState() {
+    super.initState();
+    total = OrderState.values.length - 2;
+    completedStepIcon = Center(
+      child: Icon(
+        Icons.done,
+        size: 26.r,
+        color: Colors.white,
+      ),
+    );
+
+    nextStepToBeCompletedIcon = Center(
+      child: CircleAvatar(
+        radius: 18.r,
+        backgroundColor: Colors.white,
+        child: Center(
+          child: CircleAvatar(
+            radius: 5.r,
+            backgroundColor: primary,
+          ),
+        ),
+      ),
+    );
+
+    notCompletedStepIcon = Center(
+      child: CircleAvatar(
+        radius: 18.r,
+        backgroundColor: Colors.white,
+      ),
+    );
+
+    UserBase base = ref.read(userProvider);
+    isMerchant = base.role == UserRole.merchant;
+    isDriver = base.role == UserRole.driver;
+    isUser = base.role == UserRole.individual;
+    canPay = isUser && widget.order.status == "MATCHED";
+    canPickUp = isDriver && widget.order.status == "PAID";
+    canRefill = isMerchant && widget.order.status == "PICK_UP";
+    canDeliver = isDriver && widget.order.status == "REFILL";
+  }
+
+  String getOrderTitle(int index) {
+    switch (index) {
+      case 0:
+        return "Pending";
+      case 1:
+        return "Matched";
+      case 2:
+        return "Paid";
+      case 3:
+        return "Picked Up";
+      case 4:
+        return "Refilled";
+      case 5:
+        return "Delivered";
+      default:
+        return "";
+    }
+  }
+
+  String getOrderSubtitle(int index) {
+    switch (index) {
+      case 0:
+        return "Your request is pending!";
+      case 1:
+        return "Your request has been matched!";
+      case 2:
+        return "Your payment has been confirmed!";
+      case 3:
+        return "Your gas cylinder has been picked up!";
+      case 4:
+        return "Your gas cylinder has been refilled!";
+      case 5:
+        return "Your gas cylinder has been delivered!";
+      default:
+        return "";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: total,
+      itemBuilder: (_, index) {
+        OrderState state = OrderState.values[index];
+        bool hasStepBeingCompleted = index < widget.order.states.length;
+        bool isNextToBeCompleted = index == widget.order.states.length;
+        bool isLastStep = index == total - 1;
+        DateTime? stepTimestamp;
+        if (index < widget.order.states.length) {
+          stepTimestamp = DateTime.parse(widget.order.states[index].timestamp);
+        }
+
+        return SizedBox(
+          width: 375.w,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 20.r,
+                    backgroundColor: primary,
+                    child: hasStepBeingCompleted
+                        ? completedStepIcon
+                        : isNextToBeCompleted
+                            ? nextStepToBeCompletedIcon
+                            : notCompletedStepIcon,
+                  ),
+                  if (!isLastStep)
+                    Container(
+                      width: 2.w,
+                      height: 60.r,
+                      color: primary50,
+                    )
+                ],
+              ),
+              SizedBox(width: 10.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    getOrderTitle(index),
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    getOrderSubtitle(index),
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  if (canPay && index == 2)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () =>
+                              launchPayStackUrl(widget.order.paymentUrl),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7.5.r),
+                            ),
+                            elevation: 1.0,
+                            fixedSize: Size(120.w, 40.h),
+                          ),
+                          child: Text(
+                            "Pay Now",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7.5.r),
+                            ),
+                            side: const BorderSide(color: Colors.redAccent),
+                            elevation: 1.0,
+                            fixedSize: Size(140.w, 40.h),
+                          ),
+                          child: Text(
+                            "Cancel Order",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              color: Colors.redAccent,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  if (canPickUp && index == 3)
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.5.r),
+                        ),
+                        elevation: 1.0,
+                        fixedSize: Size(120.w, 40.h),
+                      ),
+                      child: Text(
+                        "Picked Up",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  if (canRefill && index == 4)
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.5.r),
+                        ),
+                        elevation: 1.0,
+                        fixedSize: Size(120.w, 40.h),
+                      ),
+                      child: Text(
+                        "Refilled",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  if (canDeliver && index == 5)
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.5.r),
+                        ),
+                        elevation: 1.0,
+                        fixedSize: Size(120.w, 40.h),
+                      ),
+                      child: Text(
+                        "Delivered",
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  if (stepTimestamp != null)
+                    Text(
+                      formatDateRawWithTime(stepTimestamp),
+                      style: context.textTheme.bodySmall,
+                    ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

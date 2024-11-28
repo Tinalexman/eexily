@@ -32,8 +32,8 @@ Future<void> main() async {
         defaultColor: primary,
         ledColor: Colors.white,
         importance: NotificationImportance.High,
-        playSound: true,
-        soundSource: 'resource://raw/gas_feel',
+        // playSound: true,
+        // soundSource: 'resource://raw/gas_feel',
       ),
     ],
     channelGroups: [
@@ -118,7 +118,6 @@ class _EexilyState extends ConsumerState<Eexily> {
           body: notification.message,
           fullScreenIntent: true,
           wakeUpScreen: true,
-          customSound: "gas_feel",
         ),
       );
       List<n.Notification> notifications = ref.watch(notificationsProvider);
@@ -128,9 +127,9 @@ class _EexilyState extends ConsumerState<Eexily> {
       ];
 
       if (notification.actionLabel == "Order Status") {
-        List<UserOrder> userOrders = ref.watch(initialExpressOrdersProvider);
+        List<Order> userOrders = ref.watch(initialExpressOrdersProvider);
         if (userOrders.isNotEmpty) {
-          UserOrder order = userOrders.first;
+          Order order = userOrders.first;
           List<OrderStates> states = order.states;
           OrderState newState = convertState(notification.notificationType);
           states.add(

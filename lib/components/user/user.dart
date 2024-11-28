@@ -27,6 +27,7 @@ class User extends UserBase {
     String? image,
     String? lastName,
     String? phoneNumber,
+    String? location,
   }) {
     return User(
       hasCompletedGasQuestions: hasCompletedGas ?? hasCompletedGasQuestions,
@@ -38,6 +39,7 @@ class User extends UserBase {
       image: image ?? this.image,
       lastName: lastName ?? this.lastName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      location: location ?? this.location,
     );
   }
 
@@ -54,6 +56,7 @@ class User extends UserBase {
     String phoneNumber =
         otherUser.phoneNumber.isEmpty ? this.phoneNumber : otherUser.phoneNumber;
     String image = otherUser.image.isEmpty ? this.image : otherUser.image;
+    String location = otherUser.location.isEmpty ? this.location : otherUser.location;
     bool completed = otherUser.hasCompletedGasQuestions;
 
     return User(
@@ -62,6 +65,7 @@ class User extends UserBase {
       lastName: lastName,
       dateJoined: dateJoined,
       image: image,
+      location: location,
       id: id,
       address: address,
       hasCompletedGasQuestions: completed,

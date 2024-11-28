@@ -48,8 +48,10 @@ class _RefillState extends ConsumerState<Refill> {
       );
     }
 
-    List<UserOrder> orders = ref.watch(initialExpressOrdersProvider);
-    return orders.isNotEmpty && orders.first.status != "DELIVERED"
+    List<Order> orders = ref.watch(initialExpressOrdersProvider);
+    return orders.isNotEmpty &&
+            orders.first.status != "DELIVERED" &&
+            orders.first.status != "CANCELED"
         ? _HasOrder(
             order: orders.first,
             getExpress: getExpress,
@@ -59,7 +61,7 @@ class _RefillState extends ConsumerState<Refill> {
 }
 
 class _HasOrder extends ConsumerStatefulWidget {
-  final UserOrder order;
+  final Order order;
   final VoidCallback getExpress;
 
   const _HasOrder({
@@ -87,6 +89,12 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
               fontWeight: FontWeight.w600,
             ),
           ),
+          Text(
+            "G-Code: ${widget.order.code}",
+            style: context.textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           SizedBox(height: 20.h),
           SizedBox(
             height: 580.h,
@@ -97,10 +105,8 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
                     true;
                 widget.getExpress();
               },
-              child: _CustomOrderStepper(
-                data: widget.order.states,
-                paymentUrl: widget.order.paymentUrl,
-                canPay: widget.order.status == "MATCHED",
+              child: CustomOrderStepper(
+                order: widget.order,
               ),
             ),
           ),
@@ -295,185 +301,3 @@ class _RefillNow extends StatelessWidget {
   }
 }
 
-class _CustomOrderStepper extends StatefulWidget {
-  final String paymentUrl;
-  final bool canPay;
-  final List<OrderStates> data;
-
-  const _CustomOrderStepper({
-    super.key,
-    required this.canPay,
-    required this.paymentUrl,
-    required this.data,
-  });
-
-  @override
-  State<_CustomOrderStepper> createState() => _CustomOrderStepperState();
-}
-
-class _CustomOrderStepperState extends State<_CustomOrderStepper> {
-  late int total;
-
-  late Widget completedStepIcon,
-      nextStepToBeCompletedIcon,
-      notCompletedStepIcon;
-
-  @override
-  void initState() {
-    super.initState();
-    total = OrderState.values.length - 1;
-    completedStepIcon = Center(
-      child: Icon(
-        Icons.done,
-        size: 26.r,
-        color: Colors.white,
-      ),
-    );
-
-    nextStepToBeCompletedIcon = Center(
-      child: CircleAvatar(
-        radius: 18.r,
-        backgroundColor: Colors.white,
-        child: Center(
-          child: CircleAvatar(
-            radius: 5.r,
-            backgroundColor: primary,
-          ),
-        ),
-      ),
-    );
-
-    notCompletedStepIcon = Center(
-      child: CircleAvatar(
-        radius: 18.r,
-        backgroundColor: Colors.white,
-      ),
-    );
-  }
-
-  String getOrderTitle(int index) {
-    switch (index) {
-      case 0:
-        return "Pending";
-      case 1:
-        return "Matched";
-      case 2:
-        return "Paid";
-      case 3:
-        return "Picked Up";
-      case 4:
-        return "Refilled";
-      case 5:
-        return "Delivered";
-      default:
-        return "";
-    }
-  }
-
-  String getOrderSubtitle(int index) {
-    switch (index) {
-      case 0:
-        return "Your request is pending!";
-      case 1:
-        return "Your request has been matched!";
-      case 2:
-        return "Your payment has been confirmed!";
-      case 3:
-        return "Your gas cylinder has been picked up!";
-      case 4:
-        return "Your gas cylinder has been refilled!";
-      case 5:
-        return "Your gas cylinder has been delivered!";
-      default:
-        return "";
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: total,
-      itemBuilder: (_, index) {
-        OrderState state = OrderState.values[index];
-        bool hasStepBeingCompleted = index < widget.data.length;
-        bool isNextToBeCompleted = index == widget.data.length;
-        bool isLastStep = index == total - 1;
-        DateTime? stepTimestamp;
-        if (index < widget.data.length) {
-          stepTimestamp = DateTime.parse(widget.data[index].timestamp);
-        }
-
-        return SizedBox(
-          width: 375.w,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 20.r,
-                    backgroundColor: primary,
-                    child: hasStepBeingCompleted
-                        ? completedStepIcon
-                        : isNextToBeCompleted
-                            ? nextStepToBeCompletedIcon
-                            : notCompletedStepIcon,
-                  ),
-                  if (!isLastStep)
-                    Container(
-                      width: 2.w,
-                      height: 60.r,
-                      color: primary50,
-                    )
-                ],
-              ),
-              SizedBox(width: 10.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    getOrderTitle(index),
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    getOrderSubtitle(index),
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  if (widget.canPay && index == 2)
-                    ElevatedButton(
-                      onPressed: () => launchPayStackUrl(widget.paymentUrl),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.5.r),
-                        ),
-                        elevation: 1.0,
-                        fixedSize: Size(150.w, 40.h),
-                      ),
-                      child: Text(
-                        "Make Payment",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  if (stepTimestamp != null)
-                    Text(
-                      formatDateRawWithTime(stepTimestamp),
-                      style: context.textTheme.bodySmall,
-                    ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}

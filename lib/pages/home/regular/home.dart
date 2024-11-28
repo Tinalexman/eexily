@@ -68,11 +68,8 @@ class _HomeState extends ConsumerState<Home>
             ),
           ),
           SizedBox(height: 20.h),
-          GestureDetector(
-            onTap: () => context.router.pushNamed(Pages.updateCylinder),
-            child: UserGasStatistics(
-              hasCompleted: hasCompletedGasQuestions,
-            ),
+          UserGasStatistics(
+            hasCompleted: hasCompletedGasQuestions,
           ),
           SizedBox(height: 20.h),
           if (!hasCompletedGasQuestions)

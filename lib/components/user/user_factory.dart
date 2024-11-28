@@ -48,6 +48,7 @@ class UserFactory {
           accountName: typeData?["accountName"] ?? "",
           accountNumber: typeData?["accountNumber"] ?? "",
           bankName: typeData?["bankName"] ?? "",
+          location: typeData?["location"] ?? "",
           image: map["image"] ??
               "https://gravatar.com/avatar/${map["_id"].hashCode
                   .toString()}?s=400&d=robohash&r=x",
@@ -79,6 +80,7 @@ class UserFactory {
           storeName: typeData?["storeName"] ?? "",
           phoneNumber: map["phoneNumber"] ?? "",
           dateJoined: map["createdAt"] ?? "",
+          location: typeData?["location"] ?? "",
           email: map["email"] ?? "",
           image: map["image"] ??
               "https://gravatar.com/avatar/${map["_id"].hashCode
@@ -97,6 +99,7 @@ class UserFactory {
               "https://gravatar.com/avatar/${map["_id"].hashCode
                   .toString()}?s=400&d=robohash&r=x",
           hasCompletedGasQuestions: map["isGas"],
+          location: typeData?["location"] ?? "",
         );
       default:
         return dummyBase;

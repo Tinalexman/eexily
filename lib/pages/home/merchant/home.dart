@@ -78,7 +78,7 @@ class _HomeState extends ConsumerState<Home> {
       return;
     }
 
-    List<Order> orders = ref.watch(driverOrdersProvider);
+    List<Order> orders = ref.watch(merchantOrdersProvider);
 
     List<Order> response = await compute(
       filterOtherOrders,
@@ -255,8 +255,10 @@ class _HomeState extends ConsumerState<Home> {
                 child: Skeletonizer(
                   enabled: loading,
                   child: ListView.separated(
-                    itemBuilder: (_, index) =>
-                        NonUserOrderContainer(order: merchantOrders[index]),
+                    itemBuilder: (_, index) => NonUserOrderContainer(
+                      order: merchantOrders[index],
+                      destination: Pages.viewMerchantOrder,
+                    ),
                     separatorBuilder: (_, __) => SizedBox(height: 10.h),
                     padding: const EdgeInsets.all(1),
                     itemCount: merchantOrders.length,

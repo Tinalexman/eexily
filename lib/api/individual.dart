@@ -78,18 +78,15 @@ Future<EexilyResponse<GasData?>> createIndividualGasQuestions(
 }
 
 Future<EexilyResponse<GasData?>> updateGasData(
-    String refillDate, String amountFilled) async {
+    Map<String, dynamic> data) async {
   try {
     Response response = await dio.patch(
-      "/prediction",
-      data: {
-        "refillDate": refillDate,
-        "amountFilled": amountFilled,
-      },
+      "/prediction/refill",
+      data: data,
       options: configuration,
     );
 
-    if (response.statusCode! == 201) {
+    if (response.statusCode! == 200) {
       Map<String, dynamic> map = response.data["payload"];
 
       GasData gd = GasData(

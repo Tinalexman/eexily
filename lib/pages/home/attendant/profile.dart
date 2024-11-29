@@ -1,4 +1,6 @@
-import 'package:eexily/components/user/support.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eexily/components/user/attendant.dart';
+import 'package:eexily/components/user/attendant.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -14,7 +16,6 @@ class Profile extends ConsumerStatefulWidget {
 }
 
 class _ProfileState extends ConsumerState<Profile> {
-
   late Color background, text;
 
   @override
@@ -25,118 +26,117 @@ class _ProfileState extends ConsumerState<Profile> {
     text = chooseTextColor(background);
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    Support support = ref.watch(userProvider) as Support;
+    Attendant attendant = ref.watch(userProvider) as Attendant;
 
-
-    return BackButtonListener(
-      onBackButtonPressed: () async {
-        final canPop = context.router.canPop();
-        if(!canPop) {
-          ref.watch(pageIndexProvider.notifier).state = 0;
-
-        }
-        return !canPop;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "My Profile",
-            style: context.textTheme.titleMedium!.copyWith(
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CachedNetworkImage(
+            imageUrl: attendant.image,
+            errorWidget: (_, __, ___) => Container(
+              width: 375.w,
+              height: 250.h,
+              decoration: BoxDecoration(
+                color: Colors.redAccent,
+                borderRadius: BorderRadius.circular(15.r),
+              ),
+            ),
+            progressIndicatorBuilder: (_, __, ___) => Container(
+              width: 375.w,
+              height: 250.h,
+              decoration: BoxDecoration(
+                color: primary50,
+                borderRadius: BorderRadius.circular(15.r),
+              ),
+            ),
+            imageBuilder: (_, provider) => Container(
+              width: 375.w,
+              height: 250.h,
+              decoration: BoxDecoration(
+                color: primary50,
+                borderRadius: BorderRadius.circular(15.r),
+                image: DecorationImage(
+                  image: provider,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 20.h),
+          Text(
+            attendant.fullName,
+            style: context.textTheme.headlineLarge!.copyWith(
               fontWeight: FontWeight.w600,
+              color: monokai,
             ),
           ),
-          automaticallyImplyLeading: false,
-        ),
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: 70.h),
-                CircleAvatar(
-                  radius: 60.r,
-                  backgroundColor: background,
-                  child: Text(
-                    support.firstName.substring(0, 1).toUpperCase(),
-                    style: context.textTheme.displayLarge!.copyWith(
-                      color: text,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  "${support.firstName} ${support.lastName}",
-                  style: context.textTheme.headlineSmall!.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  support.email,
-                  style: context.textTheme.bodyLarge,
-                ),
-                Text(
-                  support.supportRole,
-                  style: context.textTheme.bodyMedium,
-                ),
-                SizedBox(height: 30.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        logout(ref);
-                        context.router.goNamed(Pages.login);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        elevation: 0.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.5.r)
-                        ),
-                        side: const BorderSide(color: primary),
-                        fixedSize: Size(130.w, 40.h),
-                        minimumSize: Size(130.w, 40.h),
-                      ),
-                      child: Text(
-                        "Sign out",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          color: primary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10.w),
-                    ElevatedButton(
-                      onPressed: () => ref.watch(pageIndexProvider.notifier).state = 0,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: primary,
-                        elevation: 0.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7.5.r)
-                        ),
-
-                        fixedSize: Size(130.w, 40.h),
-                        minimumSize: Size(130.w, 40.h),
-                      ),
-                      child: Text(
-                        "Go home",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              ],
+          Text(
+            attendant.email,
+            style: context.textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: neutral2,
             ),
           ),
-        ),
+          SizedBox(height: 10.h),
+          Text(
+            "Phone: ${attendant.phoneNumber}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            "Location: ${attendant.location}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            "Gas Station Name: ${attendant.gasStationName}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 30.h),
+          Text(
+            "Account Information",
+            style: context.textTheme.bodyLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            "Account Name: ${attendant.accountName}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            "Bank Name: ${attendant.bankName}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            "Account Number: ${attendant.accountNumber}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
+            ),
+          ),
+        ],
       ),
     );
   }

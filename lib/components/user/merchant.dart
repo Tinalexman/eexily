@@ -1,8 +1,6 @@
 import 'base.dart';
 
 class Merchant extends UserBase {
-  final double balance;
-  final double retailGasPrice;
   final double regularGasPrice;
   final bool isOpened;
   final String storeName;
@@ -23,8 +21,6 @@ class Merchant extends UserBase {
     super.address,
     this.merchantId = "",
     this.isOpened = false,
-    this.balance = 0,
-    this.retailGasPrice = 0,
     this.regularGasPrice = 0,
     this.bankName = "",
     this.accountNumber = "",
@@ -41,7 +37,6 @@ class Merchant extends UserBase {
     String? dateJoined,
     String? email,
     double? balance,
-    double? retailGasPrice,
     double? regularGasPrice,
     bool? isOpened,
     String? address,
@@ -61,8 +56,6 @@ class Merchant extends UserBase {
       phoneNumber: phoneNumber ?? this.phoneNumber,
       dateJoined: dateJoined ?? this.dateJoined,
       email: email ?? this.email,
-      balance: balance ?? this.balance,
-      retailGasPrice: retailGasPrice ?? this.retailGasPrice,
       regularGasPrice: regularGasPrice ?? this.regularGasPrice,
       isOpened: isOpened ?? this.isOpened,
       address: address ?? this.address,

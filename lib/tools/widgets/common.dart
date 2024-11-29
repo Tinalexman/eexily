@@ -1597,6 +1597,7 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
       notCompletedStepIcon;
 
   late bool isDriver,
+  isStation,
       isMerchant,
       isUser,
       canPay,
@@ -1638,11 +1639,12 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
 
     UserBase base = ref.read(userProvider);
     isMerchant = base.role == UserRole.merchant;
+    isStation = base.role == UserRole.attendant;
     isDriver = base.role == UserRole.driver;
     isUser = base.role == UserRole.individual;
     canPay = isUser && widget.order.status == "MATCHED";
     canPickUp = isDriver && widget.order.status == "PAID";
-    canRefill = isMerchant && widget.order.status == "PICK_UP";
+    canRefill = (isMerchant || isStation) && widget.order.status == "PICK_UP";
     canDeliver = isDriver && widget.order.status == "REFILL";
   }
 
@@ -1858,9 +1860,11 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
 
 class NonUserOrderContainer extends StatefulWidget {
   final Order order;
+  final String destination;
 
   const NonUserOrderContainer({
     super.key,
+    required this.destination,
     required this.order,
   });
 
@@ -1882,7 +1886,7 @@ class _NonUserOrderContainerState extends State<NonUserOrderContainer> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => context.router.pushNamed(
-        Pages.viewDriverOrder,
+        widget.destination,
         extra: widget.order,
       ),
       child: Padding(

@@ -69,8 +69,6 @@ class UserFactory {
           lastName: typeData?["lastName"] ?? "",
           regularGasPrice: (typeData?["regularPrice"] as num).toDouble() ??
               0.0,
-          retailGasPrice: (typeData?["retailPrice"] as num).toDouble() ?? 0.0,
-          balance: 000,
           merchantId: typeData?["_id"] ?? "",
           isOpened: typeData?["isOpened"] ?? false,
           bankName: typeData?["bankName"] ?? "",

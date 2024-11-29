@@ -56,6 +56,7 @@ class Pages
   static String get cheffy => "cheffy";
   static String get lastRefill => "last-refill";
   static String get updateCylinder => "update-cylinder";
+  static String get editAttendantProfile => "edit-attendant-profile";
   static String get editMerchantProfile => "edit-merchant-profile";
   static String get editIndividualProfile => "edit-individual-profile";
   static String get editDriverProfile => "edit-driver-profile";

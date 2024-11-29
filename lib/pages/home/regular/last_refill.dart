@@ -1,4 +1,5 @@
-import 'package:eexily/components/user/base.dart';
+import 'package:eexily/api/individual.dart';
+import 'package:eexily/components/gas_data.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
@@ -23,8 +24,8 @@ class _LastRefillPageState extends ConsumerState<LastRefillPage> {
   bool loading = false;
 
   final Map<String, dynamic> details = {
-    "lastRefill": "",
-    "amountValue": "",
+    "refillDate": "",
+    "amountFilled": "",
   };
 
   DateTime? lastGasFilledDate;
@@ -37,8 +38,25 @@ class _LastRefillPageState extends ConsumerState<LastRefillPage> {
   }
 
   Future<void> update() async {
+    var response = await updateGasData(details);
+    if (!context.mounted) return;
+    showMessage(response.message, response.status ? primary : null);
     setState(() => loading = false);
+    if (response.status) {
+      GasData data = response.payload!;
+      int gasSize = ref.watch(gasCylinderSizeProvider);
+      int percentage =
+          gasSize <= 0 ? 0 : ((data.gasAmountLeft / gasSize) * 100).toInt();
+      ref.watch(gasLevelProvider.notifier).state = percentage;
+      ref.watch(gasEndingDateProvider.notifier).state = data.completionDate;
+      pop();
+    }
   }
+
+  void pop() => context.router.pop();
+
+  void showMessage(String message, [Color? color]) =>
+      showToast(message, context, backgroundColor: color);
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +115,8 @@ class _LastRefillPageState extends ConsumerState<LastRefillPage> {
                       }
                       return null;
                     },
-                    onSave: (value) => details["lastRefill"] = value!.trim(),
+                    onSave: (value) => details["refillDate"] =
+                        lastGasFilledDate!.toIso8601String(),
                   ),
                   SizedBox(height: 20.h),
                   Text(
@@ -117,7 +136,7 @@ class _LastRefillPageState extends ConsumerState<LastRefillPage> {
                       }
                       return null;
                     },
-                    onSave: (value) => details["amountValue"] = value!.trim(),
+                    onSave: (value) => details["amountFilled"] = value!.trim(),
                   ),
                   SizedBox(height: 350.h),
                   ElevatedButton(
@@ -139,12 +158,12 @@ class _LastRefillPageState extends ConsumerState<LastRefillPage> {
                     child: loading
                         ? whiteLoader
                         : Text(
-                      "Update Details",
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
+                            "Update Details",
+                            style: context.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ],
               ),

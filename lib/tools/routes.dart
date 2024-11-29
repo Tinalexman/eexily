@@ -15,35 +15,34 @@ import 'package:eexily/pages/auth/reset_password.dart';
 import 'package:eexily/pages/auth/select_bank.dart';
 import 'package:eexily/pages/auth/setup_account.dart';
 import 'package:eexily/pages/auth/verify.dart';
-import 'package:eexily/pages/home/attendant/all_orders.dart';
+import 'package:eexily/pages/home/attendant/edit_profile.dart';
 import 'package:eexily/pages/home/attendant/view_order.dart';
 import 'package:eexily/pages/home/business/activation/activation.dart';
-import 'package:eexily/pages/home/common/filter.dart';
+import 'package:eexily/pages/home/cheffy.dart';
 import 'package:eexily/pages/home/common/help.dart';
 import 'package:eexily/pages/home/common/notifications.dart';
 import 'package:eexily/pages/home/driver/edit_profile.dart';
 import 'package:eexily/pages/home/driver/view_order.dart';
 import 'package:eexily/pages/home/home.dart';
 import 'package:eexily/pages/home/inbox.dart';
-import 'package:eexily/pages/home/regular/last_refill.dart';
-import 'package:eexily/pages/home/merchant/all_orders.dart';
 import 'package:eexily/pages/home/merchant/edit_profile.dart';
 import 'package:eexily/pages/home/merchant/view_order.dart';
 import 'package:eexily/pages/home/refill/history.dart';
 import 'package:eexily/pages/home/refill/refill_now.dart';
 import 'package:eexily/pages/home/refill/schedule_refill.dart';
 import 'package:eexily/pages/home/regular/activation/activation.dart';
-import 'package:eexily/pages/home/cheffy.dart';
 import 'package:eexily/pages/home/regular/edit_profile.dart';
 import 'package:eexily/pages/home/regular/gas_details.dart';
 import 'package:eexily/pages/home/regular/gas_usage.dart';
+import 'package:eexily/pages/home/regular/last_refill.dart';
+import 'package:eexily/pages/home/regular/update_cylinder.dart';
 import 'package:eexily/pages/home/support/order_history.dart';
 import 'package:eexily/pages/home/support/view_order.dart';
-import 'package:eexily/pages/home/regular/update_cylinder.dart';
 import 'package:eexily/pages/onboard/intro.dart';
 import 'package:eexily/pages/onboard/onboard.dart';
 import 'package:eexily/pages/onboard/splash.dart';
 import 'package:go_router/go_router.dart';
+
 import 'constants.dart';
 
 final List<GoRoute> routes = [
@@ -219,6 +218,11 @@ final List<GoRoute> routes = [
     builder: (_, __) => const EditMerchantProfilePage(),
   ),
   GoRoute(
+    path: Pages.editAttendantProfile.path,
+    name: Pages.editAttendantProfile,
+    builder: (_, __) => const EditAttendantProfilePage(),
+  ),
+  GoRoute(
     path: Pages.lastRefill.path,
     name: Pages.lastRefill,
     builder: (_, __) => const LastRefillPage(),
@@ -239,16 +243,6 @@ final List<GoRoute> routes = [
     builder: (_, state) => ViewSupportOrder(order: state.extra as Order),
   ),
   GoRoute(
-    path: Pages.allAttendantOrders.path,
-    name: Pages.allAttendantOrders,
-    builder: (_, __) => const AttendantAllOrdersPage(),
-  ),
-  GoRoute(
-    path: Pages.allMerchantOrders.path,
-    name: Pages.allMerchantOrders,
-    builder: (_, __) => const MerchantAllOrdersPage(),
-  ),
-  GoRoute(
     path: Pages.viewAttendantOrder.path,
     name: Pages.viewAttendantOrder,
     builder: (_, state) => ViewAttendantOrder(order: state.extra as Order),
@@ -257,11 +251,6 @@ final List<GoRoute> routes = [
     path: Pages.viewMerchantOrder.path,
     name: Pages.viewMerchantOrder,
     builder: (_, state) => ViewMerchantOrder(order: state.extra as Order),
-  ),
-  GoRoute(
-    path: Pages.filter.path,
-    name: Pages.filter,
-    builder: (_, __) => const FilterPage(),
   ),
   GoRoute(
     path: Pages.viewDriverOrder.path,

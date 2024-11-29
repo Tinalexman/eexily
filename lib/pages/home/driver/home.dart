@@ -204,8 +204,10 @@ class _HomeState extends ConsumerState<Home> {
               child: Skeletonizer(
                 enabled: loading,
                 child: ListView.separated(
-                  itemBuilder: (_, index) =>
-                      wd.NonUserOrderContainer(order: driverOrders[index]),
+                  itemBuilder: (_, index) => wd.NonUserOrderContainer(
+                    order: driverOrders[index],
+                    destination: Pages.viewDriverOrder,
+                  ),
                   separatorBuilder: (_, __) => SizedBox(height: 10.h),
                   padding: const EdgeInsets.all(1),
                   itemCount: driverOrders.length,

@@ -1,10 +1,10 @@
 import "base.dart";
 
-Future<EexilyResponse> updateMerchantUser(
+Future<EexilyResponse> updateAttendantUser(
     Map<String, dynamic> data, String userId) async {
   try {
     Response response = await dio.patch(
-      "/merchant",
+      "/gas-station",
       data: data,
       options: configuration,
     );
@@ -23,7 +23,7 @@ Future<EexilyResponse> updateMerchantUser(
       status: false,
     );
   } catch (e) {
-    log("Update Merchant: $e");
+    log("Update Gas Station: $e");
   }
 
   return const EexilyResponse(

@@ -207,6 +207,7 @@ class _HomeState extends ConsumerState<Home> {
                   itemBuilder: (_, index) => wd.NonUserOrderContainer(
                     order: driverOrders[index],
                     destination: Pages.viewDriverOrder,
+                    key: ValueKey<String>(driverOrders[index].id),
                   ),
                   separatorBuilder: (_, __) => SizedBox(height: 10.h),
                   padding: const EdgeInsets.all(1),

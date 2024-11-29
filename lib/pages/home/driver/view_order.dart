@@ -1,10 +1,13 @@
 import 'package:eexily/components/order.dart';
+import 'package:eexily/components/user/driver.dart';
 import 'package:eexily/tools/constants.dart';
+import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ViewDriverOrder extends StatefulWidget {
+class ViewDriverOrder extends ConsumerStatefulWidget {
   final Order order;
 
   const ViewDriverOrder({
@@ -13,12 +16,14 @@ class ViewDriverOrder extends StatefulWidget {
   });
 
   @override
-  State<ViewDriverOrder> createState() => _ViewDriverOrderState();
+  ConsumerState<ViewDriverOrder> createState() => _ViewDriverOrderState();
 }
 
-class _ViewDriverOrderState extends State<ViewDriverOrder> {
+class _ViewDriverOrderState extends ConsumerState<ViewDriverOrder> {
   @override
   Widget build(BuildContext context) {
+    List<Order> orders = ref.watch(driverOrdersProvider);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -60,7 +65,20 @@ class _ViewDriverOrderState extends State<ViewDriverOrder> {
                           ],
                         ),
                       ),
-                      CustomOrderStepper(order: widget.order, onUpdateState: (order) {},),
+                      CustomOrderStepper(
+                        order: widget.order,
+                        onUpdateState: (order) {
+                          int index =
+                              orders.indexWhere((o) => o.id == widget.order.id);
+                          List<Order> pre = orders.sublist(0, index);
+                          List<Order> post = orders.sublist(index + 1);
+                          ref.watch(driverOrdersProvider.notifier).state = [
+                            ...pre,
+                            order,
+                            ...post,
+                          ];
+                        },
+                      ),
                     ],
                   ),
                 )

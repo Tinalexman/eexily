@@ -151,8 +151,8 @@ class _HomeState extends ConsumerState<Home> {
               )
             ],
           ),
-          SizedBox(height: 10.h),
-          const GasPriceContainer(),
+          // SizedBox(height: 10.h),
+          // const GasPriceContainer(),
           SizedBox(height: 10.h),
           Text(
             "Orders of the day",
@@ -258,6 +258,7 @@ class _HomeState extends ConsumerState<Home> {
                     itemBuilder: (_, index) => NonUserOrderContainer(
                       order: merchantOrders[index],
                       destination: Pages.viewMerchantOrder,
+                      key: ValueKey<String>(merchantOrders[index].id),
                     ),
                     separatorBuilder: (_, __) => SizedBox(height: 10.h),
                     padding: const EdgeInsets.all(1),

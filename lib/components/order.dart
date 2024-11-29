@@ -75,7 +75,15 @@ String convertStringState(OrderState state) {
     case OrderState.canceled: return "CANCELED";
     default: return "";
   }
+}
 
+bool canProceedTo(String previousAction, String intendingAction) {
+  switch(intendingAction) {
+    case "PICK_UP": return previousAction == "PAID";
+    case "REFILL": return previousAction == "PICK_UP";
+    case "DELIVERED": return previousAction == "REFILL";
+    default: return false;
+  }
 }
 
 class OrderStates {

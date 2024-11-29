@@ -112,12 +112,17 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                       getNotifications();
                     },
                     child: ListView.separated(
-                      itemBuilder: (_, index) => NotificationContainer(
-                        notification: notifications[index],
-                      ),
+                      itemBuilder: (_, index) {
+                        if (index == notifications.length) {
+                          return SizedBox(height: 50.h);
+                        }
+                        return NotificationContainer(
+                          notification: notifications[index],
+                        );
+                      },
                       padding: const EdgeInsets.all(1),
                       separatorBuilder: (_, __) => SizedBox(height: 10.h),
-                      itemCount: notifications.length,
+                      itemCount: notifications.length + 1,
                     ),
                   ),
                 ),

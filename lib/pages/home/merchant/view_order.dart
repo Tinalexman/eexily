@@ -1,10 +1,12 @@
 import 'package:eexily/components/order.dart';
 import 'package:eexily/tools/constants.dart';
+import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ViewMerchantOrder extends StatefulWidget {
+class ViewMerchantOrder extends ConsumerStatefulWidget {
   final Order order;
 
   const ViewMerchantOrder({
@@ -13,12 +15,14 @@ class ViewMerchantOrder extends StatefulWidget {
   });
 
   @override
-  State<ViewMerchantOrder> createState() => _ViewDriverOrderState();
+  ConsumerState<ViewMerchantOrder> createState() => _ViewMerchantOrderState();
 }
 
-class _ViewDriverOrderState extends State<ViewMerchantOrder> {
+class _ViewMerchantOrderState extends ConsumerState<ViewMerchantOrder> {
   @override
   Widget build(BuildContext context) {
+    List<Order> orders = ref.watch(merchantOrdersProvider);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -62,7 +66,38 @@ class _ViewDriverOrderState extends State<ViewMerchantOrder> {
                       ),
                       CustomOrderStepper(
                         order: widget.order,
-                        onUpdateState: (order) {},
+                        onUpdateState: (order) {
+                          int index =
+                              orders.indexWhere((o) => o.id == widget.order.id);
+                          List<Order> pre = orders.sublist(0, index);
+                          List<Order> post = orders.sublist(index + 1);
+                          ref.watch(merchantOrdersProvider.notifier).state = [
+                            ...pre,
+                            order,
+                            ...post,
+                          ];
+
+                          // Order order = userOrders.first;
+                          // List<OrderStates> states = order.states;
+                          // bool canProceed =
+                          // canProceedTo(order.status, notification.notificationType);
+                          // if (canProceed) {
+                          //   OrderState newState = convertState(notification.notificationType);
+                          //   states.add(
+                          //     OrderStates(
+                          //       state: newState,
+                          //       timestamp: notification.timestamp.toIso8601String(),
+                          //     ),
+                          //   );
+                          //   ref.watch(initialExpressOrdersProvider.notifier).state = [
+                          //     order.copyWith(
+                          //       status: notification.notificationType,
+                          //       states: states,
+                          //     ),
+                          //     ...(userOrders.sublist(1)),
+                          //   ];
+                          // }
+                        },
                       ),
                     ],
                   ),

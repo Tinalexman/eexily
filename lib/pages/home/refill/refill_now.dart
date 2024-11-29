@@ -1,3 +1,4 @@
+import 'package:eexily/api/prices.dart';
 import 'package:eexily/api/refill.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/tools/constants.dart';
@@ -42,11 +43,15 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
   }
 
   Future<void> getCurrentPrices() async {
-    await Future.delayed(const Duration(seconds: 2));
+    var response = await getPrices();
+    showMessage(response.message, response.status ? primary : null);
+
     setState(() {
-      currentPriceOfGas = 1100;
-      deliveryFee = 200;
-      priceMarkup = 100;
+      if (response.status) {
+        currentPriceOfGas = response.payload!.merchantGasPrice;
+        deliveryFee = response.payload!.expressDeliveryFee;
+        priceMarkup = 100;
+      }
       loading = false;
     });
   }
@@ -64,12 +69,10 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
   void calculateNewTotalAmount(String value) {
     int? targetQuantity = int.tryParse(value);
     if (targetQuantity != null) {
-      bool isLate = DateTime.now().hour >= 21;
       fakeDiscount = priceMarkup * targetQuantity;
       fakePriceToPayForGas = (currentPriceOfGas + priceMarkup) * targetQuantity;
       actualGasAmount = (currentPriceOfGas * targetQuantity);
       totalAmountToPay = actualGasAmount + deliveryFee;
-      totalAmountToPay += isLate ? nightOrderFee : 0;
     } else {
       fakeDiscount = 0;
       actualGasAmount = 0;
@@ -131,8 +134,6 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isLate = DateTime.now().hour >= 21;
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -302,23 +303,6 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                     ),
                   ],
                 ),
-                if (isLate)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Night Order Fee",
-                        style: context.textTheme.bodyLarge,
-                      ),
-                      Text(
-                        "₦${formatAmount("$nightOrderFee")}",
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,

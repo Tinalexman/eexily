@@ -78,6 +78,7 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
   @override
   Widget build(BuildContext context) {
     User user = ref.watch(userProvider) as User;
+    List<Order> orders = ref.watch(initialExpressOrdersProvider);
 
     return SingleChildScrollView(
       child: Column(
@@ -107,7 +108,16 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
               },
               child: CustomOrderStepper(
                 order: widget.order,
-                onUpdateState: (order) {},
+                onUpdateState: (order) {
+                  int index = orders.indexWhere((o) => o.id == widget.order.id);
+                  List<Order> pre = orders.sublist(0, index);
+                  List<Order> post = orders.sublist(index + 1);
+                  ref.watch(merchantOrdersProvider.notifier).state = [
+                    ...pre,
+                    order,
+                    ...post,
+                  ];
+                },
               ),
             ),
           ),

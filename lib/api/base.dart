@@ -8,7 +8,7 @@ export 'package:dio/dio.dart';
 
 const String onlineBase = "eexily-backend.onrender.com";
 const String localBase = "192.168.28.93:7030";
-const String baseURL = "http://$localBase";
+const String baseURL = "https://$onlineBase";
 
 String accessToken = "";
 
@@ -26,7 +26,7 @@ Socket? _socket;
 
 
 void initSocket(String id) {
-  _socket = io('ws://$localBase',
+  _socket = io('ws://$onlineBase',
       OptionBuilder().setTransports(['websocket']).build());
 
   _socket?.onConnect((e) {

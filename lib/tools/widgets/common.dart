@@ -1580,10 +1580,12 @@ class SuccessModal extends StatelessWidget {
 
 class CustomOrderStepper extends ConsumerStatefulWidget {
   final Order order;
+  final Function(Order) onUpdateState;
 
   const CustomOrderStepper({
     super.key,
     required this.order,
+    required this.onUpdateState,
   });
 
   @override
@@ -1598,7 +1600,7 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
       notCompletedStepIcon;
 
   late bool isDriver,
-  isStation,
+      isStation,
       isMerchant,
       isUser,
       canPay,
@@ -1673,27 +1675,34 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
   String getOrderSubtitle(int index) {
     switch (index) {
       case 0:
-        return "Your request is pending!";
+        return "The request is pending!";
       case 1:
-        return "Your request has been matched!";
+        return "The request has been matched!";
       case 2:
-        return "Your payment has been confirmed!";
+        return "The payment has been confirmed!";
       case 3:
-        return "Your gas cylinder has been picked up!";
+        return "The gas cylinder has been picked up!";
       case 4:
-        return "Your gas cylinder has been refilled!";
+        return "The gas cylinder has been refilled!";
       case 5:
-        return "Your gas cylinder has been delivered!";
+        return "The gas cylinder has been delivered!";
       default:
         return "";
     }
   }
 
-  Future<void> updateStatus(String status) async {
-      var response = await updateOrderStatus(status, widget.order.code);
-      setState(() => loading = true);
-  }
+  void showMessage(String message, [Color? color]) =>
+      showToast(message, context, backgroundColor: color);
 
+  Future<void> updateStatus(String status) async {
+    setState(() => loading = true);
+    var response = await updateOrderStatus(status, widget.order.code);
+    setState(() => loading = false);
+    showMessage(response.message, response.status ? primary : null);
+    if (response.status) {
+      widget.onUpdateState(response.payload!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1784,13 +1793,15 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                             elevation: 1.0,
                             fixedSize: Size(140.w, 40.h),
                           ),
-                          child: loading ? loader : Text(
-                            "Cancel Order",
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              color: Colors.redAccent,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          child: loading
+                              ? loader
+                              : Text(
+                                  "Cancel Order",
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: Colors.redAccent,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                         ),
                       ],
                     ),
@@ -1805,13 +1816,15 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                         elevation: 1.0,
                         fixedSize: Size(120.w, 40.h),
                       ),
-                      child: loading ? whiteLoader : Text(
-                        "Picked Up",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      child: loading
+                          ? whiteLoader
+                          : Text(
+                              "Picked Up",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                     ),
                   if (canRefill && index == 4)
                     ElevatedButton(
@@ -1824,13 +1837,15 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                         elevation: 1.0,
                         fixedSize: Size(120.w, 40.h),
                       ),
-                      child: loading ? whiteLoader : Text(
-                        "Refilled",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      child: loading
+                          ? whiteLoader
+                          : Text(
+                              "Refilled",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                     ),
                   if (canDeliver && index == 5)
                     ElevatedButton(
@@ -1843,13 +1858,15 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                         elevation: 1.0,
                         fixedSize: Size(120.w, 40.h),
                       ),
-                      child: loading ? whiteLoader :  Text(
-                        "Delivered",
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      child: loading
+                          ? whiteLoader
+                          : Text(
+                              "Delivered",
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                     ),
                   if (stepTimestamp != null)
                     Text(
@@ -1865,7 +1882,6 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
     );
   }
 }
-
 
 class NonUserOrderContainer extends StatefulWidget {
   final Order order;

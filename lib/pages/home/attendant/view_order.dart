@@ -60,7 +60,9 @@ class _ViewDriverOrderState extends State<ViewAttendantOrder> {
                           ],
                         ),
                       ),
-                      CustomOrderStepper(order: widget.order),
+                      CustomOrderStepper(order: widget.order,
+                        onUpdateState: (order) {},
+                      ),
                     ],
                   ),
                 )

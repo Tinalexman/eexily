@@ -107,6 +107,7 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
               },
               child: CustomOrderStepper(
                 order: widget.order,
+                onUpdateState: (order) {},
               ),
             ),
           ),
@@ -300,4 +301,3 @@ class _RefillNow extends StatelessWidget {
     );
   }
 }
-

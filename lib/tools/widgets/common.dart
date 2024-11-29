@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:eexily/api/refill.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/transaction.dart';
 import 'package:eexily/components/user/base.dart';
@@ -1605,6 +1606,8 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
       canRefill,
       canDeliver;
 
+  bool loading = false;
+
   @override
   void initState() {
     super.initState();
@@ -1686,6 +1689,12 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
     }
   }
 
+  Future<void> updateStatus(String status) async {
+      var response = await updateOrderStatus(status, widget.order.code);
+      setState(() => loading = true);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -1766,7 +1775,7 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                         ),
                         SizedBox(width: 10.w),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () => updateStatus("CANCELED"),
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(7.5.r),
@@ -1775,7 +1784,7 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                             elevation: 1.0,
                             fixedSize: Size(140.w, 40.h),
                           ),
-                          child: Text(
+                          child: loading ? loader : Text(
                             "Cancel Order",
                             style: context.textTheme.bodyMedium!.copyWith(
                               color: Colors.redAccent,
@@ -1787,7 +1796,7 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                     ),
                   if (canPickUp && index == 3)
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => updateStatus("PICK_UP"),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primary,
                         shape: RoundedRectangleBorder(
@@ -1796,7 +1805,7 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                         elevation: 1.0,
                         fixedSize: Size(120.w, 40.h),
                       ),
-                      child: Text(
+                      child: loading ? whiteLoader : Text(
                         "Picked Up",
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: Colors.white,
@@ -1806,7 +1815,7 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                     ),
                   if (canRefill && index == 4)
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => updateStatus("REFILL"),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primary,
                         shape: RoundedRectangleBorder(
@@ -1815,7 +1824,7 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                         elevation: 1.0,
                         fixedSize: Size(120.w, 40.h),
                       ),
-                      child: Text(
+                      child: loading ? whiteLoader : Text(
                         "Refilled",
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: Colors.white,
@@ -1825,7 +1834,7 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                     ),
                   if (canDeliver && index == 5)
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => updateStatus("DELIVERED"),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primary,
                         shape: RoundedRectangleBorder(
@@ -1834,7 +1843,7 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                         elevation: 1.0,
                         fixedSize: Size(120.w, 40.h),
                       ),
-                      child: Text(
+                      child: loading ? whiteLoader :  Text(
                         "Delivered",
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: Colors.white,

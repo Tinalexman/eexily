@@ -1,3 +1,4 @@
+import 'package:eexily/api/attendant.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/widgets.dart';
@@ -6,8 +7,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RegisterGasStationPage extends StatefulWidget {
+  final String userId;
   const RegisterGasStationPage({
     super.key,
+    required this.userId,
   });
 
   @override
@@ -19,10 +22,6 @@ class _RegisterGasStationPageState extends State<RegisterGasStationPage> {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController accountNameController = TextEditingController();
-  final TextEditingController accountNumberController = TextEditingController();
-  final TextEditingController bankNameController = TextEditingController();
 
   final Map<String, String> authDetails = {
     "gasStationName": "",
@@ -34,23 +33,35 @@ class _RegisterGasStationPageState extends State<RegisterGasStationPage> {
   bool loading = false;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
     nameController.dispose();
     addressController.dispose();
-    bankNameController.dispose();
-    accountNameController.dispose();
-    accountNumberController.dispose();
     super.dispose();
   }
 
-  void showMessage(String message) => showToast(message, context);
 
-  Future<void> createGasStation() async {}
+  Future<void> createGasStation() async {
+    var response = await updateAttendantUser(authDetails, widget.userId);
+    setState(() => loading = false);
+    showMessage(response.message, response.status ? primary : null);
+
+    if (!response.status) {
+      return;
+    }
+
+    navigate();
+  }
+
+  void navigate() {
+    context.router.goNamed(Pages.setupAccount, extra: [widget.userId, "Attendant"]);
+  }
+
+  void showMessage(String message, [Color? backgroundColor]) => showToast(
+    message,
+    context,
+    backgroundColor: backgroundColor,
+  );
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,16 +79,16 @@ class _RegisterGasStationPageState extends State<RegisterGasStationPage> {
               children: [
                 SizedBox(height: 40.h),
                 Image.asset(
-                  "assets/images/logo blue.png",
-                  width: 40.w,
+                  "assets/images/GF B.png",
+                  width: 140.w,
                   fit: BoxFit.cover,
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  "Gas Station Details",
-                  style: context.textTheme.headlineMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: primary,
+                  "Step 1 of 2",
+                  style: context.textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: monokai.withOpacity(0.7),
                   ),
                 ),
                 SizedBox(height: 50.h),
@@ -104,67 +115,6 @@ class _RegisterGasStationPageState extends State<RegisterGasStationPage> {
                         },
                         onSave: (value) =>
                             authDetails["gasStationName"] = value!.trim(),
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        "Account Name",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      SizedBox(height: 4.h),
-                      SpecialForm(
-                        controller: accountNameController,
-                        width: 375.w,
-                        hint: "e.g John Doe",
-                        onValidate: (value) {
-                          value = value.trim();
-                          if (value!.isEmpty) {
-                            return 'Invalid Bank Account Name';
-                          }
-                          return null;
-                        },
-                        onSave: (value) =>
-                            authDetails["accountName"] = value!.trim(),
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        "Account Number",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      SizedBox(height: 4.h),
-                      SpecialForm(
-                        controller: accountNumberController,
-                        width: 375.w,
-                        hint: "e.g 1234567890",
-                        type: TextInputType.number,
-                        onValidate: (value) {
-                          value = value.trim();
-                          if (value!.isEmpty) {
-                            return 'Invalid Account Number';
-                          }
-                          return null;
-                        },
-                        onSave: (value) =>
-                            authDetails["accountNumber"] = value!.trim(),
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        "Bank Name",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      SizedBox(height: 4.h),
-                      SpecialForm(
-                        controller: bankNameController,
-                        width: 375.w,
-                        hint: "e.g First Bank",
-                        onValidate: (value) {
-                          value = value.trim();
-                          if (value!.isEmpty) {
-                            return 'Invalid Bank Name';
-                          }
-                          return null;
-                        },
-                        onSave: (value) =>
-                            authDetails["bankName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
                       Text(

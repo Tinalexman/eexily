@@ -1,4 +1,5 @@
 import 'package:eexily/api/attendant.dart';
+import 'package:eexily/api/refill.dart';
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/attendant.dart';
 import 'package:eexily/tools/constants.dart';
@@ -37,21 +38,21 @@ class _HomeState extends ConsumerState<Home> {
   void initState() {
     super.initState();
     Attendant attendant = ref.read(userProvider) as Attendant;
-    id = attendant.gasStationId;
+    id = attendant.id;
     Future.delayed(Duration.zero, getOrders);
   }
 
   Future<void> getOrders() async {
-    // var response = await getMerchantExpressOrders(id);
-    // if (!context.mounted) return;
-    // setState(() => loading = false);
-    //
-    // if (!response.status) {
-    //   showMessage(response.message);
-    //   return;
-    // }
-    //
-    // ref.watch(attendantOrdersProvider.notifier).state = response.payload;
+    var response = await getAttendantOrders(id);
+    if (!context.mounted) return;
+    setState(() => loading = false);
+
+    if (!response.status) {
+      showMessage(response.message);
+      return;
+    }
+
+    ref.watch(attendantOrdersProvider.notifier).state = response.payload;
   }
 
   Future<void> modifyStation(bool active) async {
@@ -152,8 +153,6 @@ class _HomeState extends ConsumerState<Home> {
             ],
           ),
           SizedBox(height: 10.h),
-          const GasPriceContainer(),
-          SizedBox(height: 10.h),
           Text(
             "Orders of the day",
             style: context.textTheme.titleMedium!.copyWith(
@@ -165,9 +164,10 @@ class _HomeState extends ConsumerState<Home> {
           if (!canShowData)
             Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 50.h),
+                  SizedBox(height: 120.h),
                   Image.asset(
                     "assets/images/error.png",
                     width: 200.w,

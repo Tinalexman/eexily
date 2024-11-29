@@ -67,7 +67,7 @@ class _ProfileState extends ConsumerState<Profile> {
           ),
           SizedBox(height: 20.h),
           Text(
-            attendant.fullName,
+            attendant.gasStationName,
             style: context.textTheme.headlineLarge!.copyWith(
               fontWeight: FontWeight.w600,
               color: monokai,
@@ -91,14 +91,6 @@ class _ProfileState extends ConsumerState<Profile> {
           SizedBox(height: 10.h),
           Text(
             "Location: ${attendant.location}",
-            style: context.textTheme.bodyMedium!.copyWith(
-              fontWeight: FontWeight.w500,
-              color: monokai,
-            ),
-          ),
-          SizedBox(height: 10.h),
-          Text(
-            "Gas Station Name: ${attendant.gasStationName}",
             style: context.textTheme.bodyMedium!.copyWith(
               fontWeight: FontWeight.w500,
               color: monokai,

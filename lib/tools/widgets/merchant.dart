@@ -18,6 +18,18 @@ class GasPriceContainer extends ConsumerStatefulWidget {
 }
 
 class _GasPriceContainerState extends ConsumerState<GasPriceContainer> {
+
+  double initialRegularPrice = 0.0;
+  double initialRetailPrice = 0.0;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+
   void showModal(double currentPrice) {
     showDialog(
       context: context,

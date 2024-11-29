@@ -29,11 +29,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     showMessage(response.message, response.status ? primary : null);
 
     if(response.status) {
-      navigate();
+      navigate(authDetails["email"]!);
     }
   }
 
-  void navigate() => context.router.pushNamed(Pages.resetPassword);
+  void navigate(String email) => context.router.pushNamed(Pages.resetPassword, extra: email);
 
   void showMessage(String message, [Color? color]) => showToast(
         message,

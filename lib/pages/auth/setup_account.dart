@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:eexily/api/attendant.dart';
 import 'package:eexily/api/bank.dart';
 import 'package:eexily/api/base.dart';
 import 'package:eexily/api/merchant.dart';
@@ -61,9 +62,14 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
 
     String userId = widget.userData.first;
     String type = widget.userData[1];
-    var response = type == "Rider"
-        ? (await updateRiderUser(authDetails, userId))
-        : (await updateMerchantUser(authDetails, userId));
+    EexilyResponse response;
+    if (type == "Rider") {
+      response = await updateRiderUser(authDetails, userId);
+    } else if (type == "Merchant") {
+      response = await updateMerchantUser(authDetails, userId);
+    } else {
+      response = await updateAttendantUser(authDetails, userId);
+    }
     setState(() => loading = false);
     showMessage(response.message,
         backgroundColor: response.status ? primary : null);

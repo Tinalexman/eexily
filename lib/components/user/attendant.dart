@@ -12,6 +12,7 @@ class Attendant extends UserBase {
   final String bankName;
 
   final String gasStationId;
+  final String regCode;
 
 
   const Attendant({
@@ -24,6 +25,7 @@ class Attendant extends UserBase {
     super.dateJoined,
     super.email,
     super.phoneNumber,
+    this.regCode = "",
     this.bankName = "",
     this.accountNumber = "",
     this.isOpened = false,
@@ -54,8 +56,10 @@ class Attendant extends UserBase {
     String? bankName,
     String? gasStationId,
     String? location,
+    String? regCode,
   }) {
     return Attendant(
+      regCode: regCode ?? this.regCode,
       gasStationId: gasStationId ?? this.gasStationId,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,

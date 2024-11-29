@@ -313,3 +313,108 @@ Future<EexilyResponse<List<Order>>> getMerchantExpressOrders(String id) async {
     status: false,
   );
 }
+
+Future<EexilyResponse<List<Order>>> getAttendantOrders(String id) async {
+  try {
+    Response response = await dio.get(
+      "/express-refill/gasStation/$id",
+      options: configuration,
+    );
+
+    if (response.statusCode! == 200) {
+      List<Order> orders = [];
+      List<dynamic> _orders = response.data["payload"] as List<dynamic>;
+
+      for (var element in _orders) {
+        Map<String, dynamic> metadata = element["metaData"];
+        List<dynamic> states = element["statusHistory"];
+        List<OrderStates> orderStates = [];
+        for (var element in states) {
+          OrderStates state = OrderStates(
+            state: convertState(element["status"]),
+            timestamp: element["updatedAt"],
+          );
+          orderStates.add(state);
+        }
+        Order order = Order(
+          createdAt: element["createdAt"],
+          price: (element["price"] as num).toDouble(),
+          status: element["status"],
+          code: element["gcode"],
+          id: element["_id"],
+          states: orderStates,
+          quantity: (element["quantity"] as num).toInt(),
+          metadata: OrderMetadata(
+            riderName: metadata["riderName"] ?? "",
+            gasStationAddress: metadata["gasStationAddress"] ?? "",
+            gasStationLocation: metadata["gasStationLocation"] ?? "",
+            gasStationName: metadata["gasStationName"] ?? "",
+            merchantAddress: metadata["merchantAddress"] ?? "",
+            merchantLocation: metadata["merchantLocation"] ?? "",
+            merchantName: metadata["merchantName"] ?? "",
+            merchantPhoneNumber: metadata["merchantPhoneNumber"] ?? "",
+            pickUpAddress: metadata["pickUpAddress"] ?? "",
+            pickUpLocation: metadata["pickUpLocation"] ?? "",
+            riderPhoneNumber: metadata["riderPhoneNumber"] ?? "",
+            userName: metadata["userName"] ?? "",
+            userPhoneNumber: metadata["userPhoneNumber"] ?? "",
+          ),
+        );
+        orders.add(order);
+      }
+
+      return EexilyResponse(
+        message: "Orders Retrieved",
+        payload: orders,
+        status: true,
+      );
+    }
+  } on DioException catch (e) {
+    return EexilyResponse(
+      message: e.response?.data["message"] ?? "An error occurred.",
+      payload: [],
+      status: false,
+    );
+  } catch (e) {
+    log("Retrieve Merchant Orders: $e");
+  }
+
+  return const EexilyResponse(
+    message: "An error occurred. Please try again.",
+    payload: [],
+    status: false,
+  );
+}
+
+
+
+Future<EexilyResponse<bool>> updateOrderStatus(String status, String code) async {
+  try {
+    Response response = await dio.patch(
+      "/express-refill/status/$code",
+      data: {
+        "status": status
+      },
+      options: configuration,
+    );
+
+    if (response.statusCode! == 200) {
+      Map<String, dynamic> data = response.data["payload"];
+
+    }
+  } on DioException catch (e) {
+    return EexilyResponse(
+      message: e.response?.data["message"] ?? "An error occurred.",
+      payload: false,
+      status: false,
+    );
+  } catch (e) {
+    log("Update Order Status: $e");
+  }
+
+  return const EexilyResponse(
+    message: "An error occurred. Please try again.",
+    payload: false,
+    status: false,
+  );
+}

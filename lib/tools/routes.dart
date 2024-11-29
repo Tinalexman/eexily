@@ -89,7 +89,7 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.resetPassword.path,
     name: Pages.resetPassword,
-    builder: (_, __) => const ResetPasswordPage(),
+    builder: (_, state) => ResetPasswordPage(email: state.extra as String),
   ),
   GoRoute(
     path: Pages.registerUser.path,
@@ -119,7 +119,7 @@ final List<GoRoute> routes = [
   GoRoute(
     path: Pages.registerStation.path,
     name: Pages.registerStation,
-    builder: (_, __) => const RegisterGasStationPage(),
+    builder: (_, state) => RegisterGasStationPage(userId: state.extra as String),
   ),
   GoRoute(
     path: Pages.chooseDriverImage.path,

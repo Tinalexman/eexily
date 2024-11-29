@@ -64,6 +64,20 @@ OrderState convertState(String state) {
   }
 }
 
+String convertStringState(OrderState state) {
+  switch(state) {
+    case OrderState.pending: return "PENDING";
+    case OrderState.matched: return "MATCHED";
+    case OrderState.paid: return "PAID";
+    case OrderState.pickedUp: return "PICK_UP";
+    case OrderState.refilled: return "REFILL";
+    case OrderState.delivered: return "DELIVERED";
+    case OrderState.canceled: return "CANCELED";
+    default: return "";
+  }
+
+}
+
 class OrderStates {
   final OrderState state;
   final String timestamp;

@@ -4,7 +4,7 @@ Future<EexilyResponse> updateAttendantUser(
     Map<String, dynamic> data, String userId) async {
   try {
     Response response = await dio.patch(
-      "/gas-station",
+      "/gas-station/update/$userId",
       data: data,
       options: configuration,
     );

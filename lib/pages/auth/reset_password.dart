@@ -1,6 +1,5 @@
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:eexily/api/authentication.dart';
-import 'package:eexily/main.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/widgets/common.dart';
@@ -8,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+  final String email;
+  const ResetPasswordPage({super.key, required this.email,});
 
   @override
   State<ResetPasswordPage> createState() => _ResetPasswordPageState();
@@ -27,6 +27,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     "otp": "",
     "newPassword": "",
   };
+
+  @override
+  void initState() {
+    super.initState();
+    authDetails["email"] = widget.email;
+  }
 
   Future<void> resetPassword() async {
     var response = await reset(authDetails);

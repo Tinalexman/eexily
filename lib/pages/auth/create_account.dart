@@ -91,7 +91,7 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
     } else if (type == optionKeys[5]) {
       destination = Pages.registerSupport;
     }
-    context.router.goNamed(
+    context.router.pushNamed(
       // Pages.verification,
       // extra: {
       //   "email": email,

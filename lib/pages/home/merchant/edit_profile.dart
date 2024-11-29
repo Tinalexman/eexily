@@ -60,6 +60,11 @@ class _EditMerchantProfilePageState
     accountNameController.text = merchant.accountName;
     accountNumberController.text = merchant.accountNumber;
 
+    location = merchant.location;
+    if(location!.isEmpty) {
+      location = null;
+    }
+
     bankName = merchant.bankName;
   }
 
@@ -74,13 +79,13 @@ class _EditMerchantProfilePageState
     super.dispose();
   }
 
-  void showMessage(String message) => showToast(message, context);
+  void showMessage(String message, [Color? color]) => showToast(message, context, backgroundColor: color,);
 
   Future<void> updateMerchant() async {
     String id = ref.watch(userProvider.select((u) => u.id));
     var response = await updateMerchantUser(authDetails, id);
     setState(() => loading = false);
-    showMessage(response.message);
+    showMessage(response.message, response.status ? primary : null);
 
     if (!response.status) {
       return;

@@ -10,7 +10,6 @@ import 'package:iconsax_plus/iconsax_plus.dart';
 
 import 'home.dart';
 import 'profile.dart';
-import 'store.dart';
 
 class MerchantHome extends ConsumerStatefulWidget {
   const MerchantHome({super.key});
@@ -28,17 +27,8 @@ class _MerchantHomeState extends ConsumerState<MerchantHome> {
     super.initState();
     children = const [
       Home(),
-      Store(),
       Profile(),
     ];
-  }
-
-  String get title {
-    int index = ref.watch(pageIndexProvider);
-    if (index == 1) return "Store";
-    if (index == 2) return "Profile";
-
-    return "";
   }
 
   @override
@@ -70,7 +60,7 @@ class _MerchantHomeState extends ConsumerState<MerchantHome> {
                   ),
                 )
               : Text(
-                  title,
+                  "Profile",
                   style: context.textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -102,23 +92,22 @@ class _MerchantHomeState extends ConsumerState<MerchantHome> {
                   ),
                 ),
               ),
-            if (index != 1)
-              IconButton(
-                onPressed: () {
-                  if (index == 0) {
-                    context.router.pushNamed(Pages.notification);
-                  } else if (index == 2) {
-                    context.router.pushNamed(Pages.editMerchantProfile);
-                  }
-                },
-                icon: Icon(
-                  index == 0
-                      ? IconsaxPlusBroken.notification_1
-                      : IconsaxPlusBroken.edit_2,
-                  color: monokai,
-                ),
-                iconSize: 26.r,
-              )
+            IconButton(
+              onPressed: () {
+                if (index == 0) {
+                  context.router.pushNamed(Pages.notification);
+                } else if (index == 1) {
+                  context.router.pushNamed(Pages.editMerchantProfile);
+                }
+              },
+              icon: Icon(
+                index == 0
+                    ? IconsaxPlusBroken.notification_1
+                    : IconsaxPlusBroken.edit_2,
+                color: monokai,
+              ),
+              iconSize: 26.r,
+            )
           ],
         ),
         body: SafeArea(
@@ -149,17 +138,6 @@ class _MerchantHomeState extends ConsumerState<MerchantHome> {
                 size: 22.r,
               ),
               label: "Overview",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                IconsaxPlusBroken.shop,
-                size: 22.r,
-              ),
-              activeIcon: Icon(
-                IconsaxPlusBold.shop,
-                size: 22.r,
-              ),
-              label: "Store",
             ),
             BottomNavigationBarItem(
               icon: Icon(

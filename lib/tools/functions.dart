@@ -383,10 +383,10 @@ Future<List<Order>> filterDriverOrders(FilterOption option) async {
   return response;
 }
 
-Future<List<Order>> filterMerchantOrders(FilterOption option) async {
+Future<List<Order>> filterOtherOrders(FilterOption option) async {
   List<Order> response = [];
   for (Order order in option.orders) {
-    if ((option.filterIndex == 1 && order.status == "MATCHED") ||
+    if ((option.filterIndex == 1 && order.status == "PAID") ||
         (option.filterIndex == 2 && order.status == "REFILLED")) {
       response.add(order);
     }

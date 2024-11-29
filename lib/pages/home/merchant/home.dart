@@ -6,6 +6,7 @@ import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
 import 'package:eexily/tools/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,6 +23,17 @@ class _HomeState extends ConsumerState<Home> {
   bool loading = true;
   String id = "";
 
+  bool hasFilter = false;
+  final List<Order> filteredOrders = [];
+
+  final List<String> filterOptions = [
+    "All",
+    "Paid",
+    "Refilled",
+  ];
+
+  int currentFilterIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +44,7 @@ class _HomeState extends ConsumerState<Home> {
 
   Future<void> getOrders() async {
     var response = await getMerchantExpressOrders(id);
+    if (!context.mounted) return;
     setState(() => loading = false);
 
     if (!response.status) {
@@ -55,14 +68,41 @@ class _HomeState extends ConsumerState<Home> {
     }
   }
 
+  Future<void> onFilterChange(int newFilterIndex) async {
+    filteredOrders.clear();
+    currentFilterIndex = newFilterIndex;
+
+    if (newFilterIndex == 0) {
+      hasFilter = false;
+      setState(() {});
+      return;
+    }
+
+    List<Order> orders = ref.watch(driverOrdersProvider);
+
+    List<Order> response = await compute(
+      filterOtherOrders,
+      FilterOption(
+        orders: orders,
+        filterIndex: newFilterIndex,
+      ),
+    );
+    filteredOrders.addAll(response);
+    hasFilter = true;
+    setState(() {});
+  }
+
   void showMessage(String message) => showToast(message, context);
 
   @override
   Widget build(BuildContext context) {
     Merchant merchant = ref.watch(userProvider) as Merchant;
-    List<Order> orders =
-        loading ? dummyOrders : ref.watch(merchantOrdersProvider);
-    bool canShowData = loading || orders.isNotEmpty;
+    List<Order> merchantOrders = hasFilter
+        ? filteredOrders
+        : loading
+            ? dummyOrders
+            : ref.watch(merchantOrdersProvider);
+    bool canShowData = hasFilter || loading || merchantOrders.isNotEmpty;
 
     return SingleChildScrollView(
       child: Column(
@@ -111,58 +151,17 @@ class _HomeState extends ConsumerState<Home> {
               )
             ],
           ),
-          SizedBox(height: 5.h),
-          const RevenueChart(),
-          SizedBox(height: 30.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Hero(
-                tag: "Incoming Orders Tag",
-                child: Text(
-                  "Incoming Orders",
-                  style: context.textTheme.titleMedium!.copyWith(
-                    color: monokai,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              if (!loading && orders.length > 2)
-                GestureDetector(
-                  onTap: () =>
-                      context.router.pushNamed(Pages.allAttendantOrders),
-                  child: Text(
-                    "View all",
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: primary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-            ],
+          SizedBox(height: 10.h),
+          const GasPriceContainer(),
+          SizedBox(height: 10.h),
+          Text(
+            "Orders of the day",
+            style: context.textTheme.titleMedium!.copyWith(
+              color: monokai,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           SizedBox(height: 10.h),
-          if (canShowData)
-            SizedBox(
-              height: 180.h,
-              child: Skeletonizer(
-                enabled: loading,
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisExtent: 165.h,
-                    crossAxisSpacing: 20.h,
-                  ),
-                  itemBuilder: (_, index) => OrderContainer(
-                    order: orders[index],
-                    link: Pages.viewMerchantOrder,
-                  ),
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: orders.length < 2 ? orders.length : 2,
-                ),
-              ),
-            ),
           if (!canShowData)
             Center(
               child: Column(
@@ -206,6 +205,64 @@ class _HomeState extends ConsumerState<Home> {
                   ),
                   SizedBox(height: 100.h),
                 ],
+              ),
+            ),
+          if (canShowData)
+            Column(
+              children: [
+                SizedBox(
+                  height: 50.h,
+                  child: ListView.separated(
+                    itemBuilder: (_, index) {
+                      bool selected = currentFilterIndex == index;
+                      return GestureDetector(
+                        onTap: () => onFilterChange(index),
+                        child: Chip(
+                          label: Text(
+                            filterOptions[index],
+                            style: context.textTheme.bodySmall!.copyWith(
+                              fontWeight:
+                                  selected ? FontWeight.w500 : FontWeight.w400,
+                            ),
+                          ),
+                          backgroundColor:
+                              selected ? secondary : primary50.withOpacity(0.2),
+                          elevation: selected ? 1.0 : 0.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7.5.r),
+                          ),
+                          side: const BorderSide(color: Colors.transparent),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (_, __) => SizedBox(width: 10.w),
+                    itemCount: filterOptions.length,
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                  ),
+                ),
+                SizedBox(height: 10.h),
+              ],
+            ),
+          if (canShowData)
+            SizedBox(
+              height: 600.h,
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  setState(() => loading = true);
+                  getOrders();
+                },
+                child: Skeletonizer(
+                  enabled: loading,
+                  child: ListView.separated(
+                    itemBuilder: (_, index) =>
+                        NonUserOrderContainer(order: merchantOrders[index]),
+                    separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                    padding: const EdgeInsets.all(1),
+                    itemCount: merchantOrders.length,
+                    physics: const BouncingScrollPhysics(),
+                  ),
+                ),
               ),
             ),
         ],

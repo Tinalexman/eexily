@@ -1,4 +1,4 @@
-import 'package:eexily/components/user/merchant.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eexily/components/user/merchant.dart';
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
@@ -15,7 +15,6 @@ class Profile extends ConsumerStatefulWidget {
 }
 
 class _ProfileState extends ConsumerState<Profile> {
-
   late Color background, text;
 
   @override
@@ -26,94 +25,118 @@ class _ProfileState extends ConsumerState<Profile> {
     text = chooseTextColor(background);
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     Merchant merchant = ref.watch(userProvider) as Merchant;
 
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(height: 70.h),
-        CircleAvatar(
-          radius: 60.r,
-          backgroundColor: background,
-          child: Text(
-            merchant.firstName.substring(0, 1).toUpperCase(),
-            style: context.textTheme.displayLarge!.copyWith(
-              color: text,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CachedNetworkImage(
+            imageUrl: merchant.image,
+            errorWidget: (_, __, ___) => Container(
+              width: 375.w,
+              height: 250.h,
+              decoration: BoxDecoration(
+                color: Colors.redAccent,
+                borderRadius: BorderRadius.circular(15.r),
+              ),
+            ),
+            progressIndicatorBuilder: (_, __, ___) => Container(
+              width: 375.w,
+              height: 250.h,
+              decoration: BoxDecoration(
+                color: primary50,
+                borderRadius: BorderRadius.circular(15.r),
+              ),
+            ),
+            imageBuilder: (_, provider) => Container(
+              width: 375.w,
+              height: 250.h,
+              decoration: BoxDecoration(
+                color: primary50,
+                borderRadius: BorderRadius.circular(15.r),
+                image: DecorationImage(
+                  image: provider,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 20.h),
+          Text(
+            merchant.fullName,
+            style: context.textTheme.headlineLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: monokai,
+            ),
+          ),
+          Text(
+            merchant.email,
+            style: context.textTheme.titleMedium!.copyWith(
               fontWeight: FontWeight.w500,
+              color: neutral2,
             ),
           ),
-        ),
-        SizedBox(height: 10.h),
-        Text(
-          merchant.fullName,
-          style: context.textTheme.headlineSmall!.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Text(
-          merchant.email,
-          style: context.textTheme.bodyLarge,
-        ),
-        Text(
-          "merchant.merchantRole",
-          style: context.textTheme.bodyMedium,
-        ),
-        SizedBox(height: 30.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                logout(ref);
-                context.router.goNamed(Pages.login);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                elevation: 0.0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7.5.r)
-                ),
-                side: const BorderSide(color: primary),
-                fixedSize: Size(130.w, 40.h),
-                minimumSize: Size(130.w, 40.h),
-              ),
-              child: Text(
-                "Sign out",
-                style: context.textTheme.bodyLarge!.copyWith(
-                  color: primary,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+          SizedBox(height: 10.h),
+          Text(
+            "Phone: ${merchant.phoneNumber}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
             ),
-            SizedBox(width: 10.w),
-            ElevatedButton(
-              onPressed: () => ref.watch(pageIndexProvider.notifier).state = 0,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primary,
-                elevation: 0.0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7.5.r)
-                ),
-
-                fixedSize: Size(130.w, 40.h),
-                minimumSize: Size(130.w, 40.h),
-              ),
-              child: Text(
-                "Go home",
-                style: context.textTheme.bodyLarge!.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            )
-          ],
-        )
-      ],
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            "Location: ${merchant.location}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            "Store Name: ${merchant.storeName}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 30.h),
+          Text(
+            "Account Information",
+            style: context.textTheme.bodyLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            "Account Name: ${merchant.accountName}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            "Bank Name: ${merchant.bankName}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            "Account Number: ${merchant.accountNumber}",
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: monokai,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -174,71 +174,30 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
                             authDetails["storeName"] = value!.trim(),
                       ),
                       SizedBox(height: 10.h),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Retail Price",
-                                style: context.textTheme.bodyMedium,
-                              ),
-                              SizedBox(height: 4.h),
-                              SpecialForm(
-                                controller: retailController,
-                                width: 150.w,
-                                hint: "e.g 1000",
-                                type: TextInputType.number,
-                                formatters: [
-                                  DigitGroupFormatter(),
-                                ],
-                                onValidate: (value) {
-                                  value = value.trim();
-                                  if (value!.isEmpty) {
-                                    return 'Invalid Price';
-                                  }
-                                  return null;
-                                },
-                                onSave: (String value) => authDetails[
-                                    "retailPrice"] = double.tryParse(
-                                        value.trim().replaceAll(",", "")) ??
-                                    0,
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Regular Price",
-                                style: context.textTheme.bodyMedium,
-                              ),
-                              SizedBox(height: 4.h),
-                              SpecialForm(
-                                controller: regularController,
-                                width: 150.w,
-                                hint: "e.g 1000",
-                                type: TextInputType.number,
-                                formatters: [
-                                  DigitGroupFormatter(),
-                                ],
-                                onValidate: (value) {
-                                  value = value.trim();
-                                  if (value!.isEmpty) {
-                                    return 'Invalid Price';
-                                  }
-                                  return null;
-                                },
-                                onSave: (String value) => authDetails[
-                                    "regularPrice"] = double.tryParse(
-                                        value.trim().replaceAll(",", "")) ??
-                                    0,
-                              ),
-                            ],
-                          ),
+                      Text(
+                        "Regular Price",
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 4.h),
+                      SpecialForm(
+                        controller: regularController,
+                        width: 375.w,
+                        hint: "e.g 1000",
+                        type: TextInputType.number,
+                        formatters: [
+                          DigitGroupFormatter(),
                         ],
+                        onValidate: (value) {
+                          value = value.trim();
+                          if (value!.isEmpty) {
+                            return 'Invalid Price';
+                          }
+                          return null;
+                        },
+                        onSave: (String value) => authDetails[
+                        "regularPrice"] = double.tryParse(
+                            value.trim().replaceAll(",", "")) ??
+                            0,
                       ),
                       SizedBox(height: 10.h),
                       Text(

@@ -4,7 +4,7 @@ import 'package:eexily/components/user/driver.dart' as d;
 import 'package:eexily/tools/constants.dart';
 import 'package:eexily/tools/functions.dart';
 import 'package:eexily/tools/providers.dart';
-import 'package:eexily/tools/widgets/driver.dart' as wd;
+import 'package:eexily/tools/widgets.dart' as wd;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -205,7 +205,7 @@ class _HomeState extends ConsumerState<Home> {
                 enabled: loading,
                 child: ListView.separated(
                   itemBuilder: (_, index) =>
-                      wd.OrderContainer(order: driverOrders[index]),
+                      wd.NonUserOrderContainer(order: driverOrders[index]),
                   separatorBuilder: (_, __) => SizedBox(height: 10.h),
                   padding: const EdgeInsets.all(1),
                   itemCount: driverOrders.length,

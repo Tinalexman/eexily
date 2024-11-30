@@ -55,7 +55,7 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
     });
 
     setState(() => loading = false);
-    showMessage(response.message);
+    showMessage(response.message, response.status ? primary : null);
     if (!response.status) return;
 
     setState(() => verified = true);
@@ -67,7 +67,7 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
     setState(() => loading = false);
   }
 
-  void showMessage(String message) => showToast(message, context);
+  void showMessage(String message, [Color? color]) => showToast(message, context, backgroundColor: color);
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20.h),
+                SizedBox(height: verified ? 60.h : 20.h),
                 Image.asset(
                   "assets/images/${verified ? "success" : "OTP"}.png",
                   width: 150.r,
@@ -159,7 +159,7 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
                       ],
                     ),
                   ),
-                SizedBox(height: verified ? 380.h : 280.h),
+                SizedBox(height: verified ? 320.h : 280.h),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primary,
@@ -177,7 +177,10 @@ class _VerifyOTPPageState extends State<VerifyOTPPage> {
                     }
 
                     if (!verified) return;
-                    context.router.goNamed(widget.config["destination"]!);
+                    context.router.goNamed(
+                      widget.config["destination"]!,
+                      extra: widget.config["userId"]!,
+                    );
                   },
                   child: loading
                       ? whiteLoader

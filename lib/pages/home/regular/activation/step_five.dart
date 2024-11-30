@@ -16,13 +16,6 @@ class StepFive extends ConsumerStatefulWidget {
 }
 
 class _StepFiveState extends ConsumerState<StepFive> {
-  final TextEditingController controller = TextEditingController();
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +32,7 @@ class _StepFiveState extends ConsumerState<StepFive> {
         ),
         SizedBox(height: 20.h),
         Text(
-          "Do you gas for anything besides cooking?",
+          "Do you use gas for anything besides cooking?",
           style: context.textTheme.bodyLarge,
         ),
         SizedBox(height: 10.h),

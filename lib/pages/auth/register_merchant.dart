@@ -33,8 +33,6 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
     "address": "",
     "firstName": "",
     "lastName": "",
-    "retailPrice": 0,
-    "regularPrice": 0,
     "location": "",
   };
 
@@ -172,32 +170,6 @@ class _RegisterMerchantPageState extends State<RegisterMerchantPage> {
                         },
                         onSave: (value) =>
                             authDetails["storeName"] = value!.trim(),
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        "Regular Price",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      SizedBox(height: 4.h),
-                      SpecialForm(
-                        controller: regularController,
-                        width: 375.w,
-                        hint: "e.g 1000",
-                        type: TextInputType.number,
-                        formatters: [
-                          DigitGroupFormatter(),
-                        ],
-                        onValidate: (value) {
-                          value = value.trim();
-                          if (value!.isEmpty) {
-                            return 'Invalid Price';
-                          }
-                          return null;
-                        },
-                        onSave: (String value) => authDetails[
-                        "regularPrice"] = double.tryParse(
-                            value.trim().replaceAll(",", "")) ??
-                            0,
                       ),
                       SizedBox(height: 10.h),
                       Text(

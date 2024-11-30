@@ -262,7 +262,7 @@ class _HomeState extends ConsumerState<Home> {
                     separatorBuilder: (_, __) => SizedBox(height: 10.h),
                     padding: const EdgeInsets.all(1),
                     itemCount: attendantOrders.length,
-                    physics: const BouncingScrollPhysics(),
+                    physics: const AlwaysScrollableScrollPhysics(),
                   ),
                 ),
               ),

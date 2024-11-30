@@ -126,8 +126,8 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
 
     List<Order> orders = ref.watch(initialExpressOrdersProvider);
     ref.watch(initialExpressOrdersProvider.notifier).state = [
-      ...orders,
       response.payload!,
+      ...orders,
     ];
     showSuccessModal(response.payload!.paymentUrl);
   }
@@ -247,7 +247,10 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                 ComboBox(
                   hint: "Select refill target",
                   value: refillTarget,
-                  dropdownItems: const ["Gas Station", "Merchant"],
+                  dropdownItems: const [
+                    // "Gas Station",
+                    "Merchant",
+                  ],
                   onChanged: (value) => setState(() => refillTarget = value),
                 ),
                 SizedBox(height: 50.h),
@@ -336,6 +339,12 @@ class _RefillNowPageState extends ConsumerState<RefillNowPage> {
                     String quantity = quantityController.text.trim();
                     if (quantity.isEmpty) {
                       showToast("Enter your desired gas quantity", context);
+                      return;
+                    } else if(refillTarget == null) {
+                      showToast("Enter your refill target", context);
+                      return;
+                    } else if(deliveryFee == 0) {
+                      showToast("Invalid gas prices. Please check your connection and reload this page.", context);
                       return;
                     }
 

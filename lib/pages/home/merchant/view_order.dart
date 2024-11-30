@@ -65,7 +65,7 @@ class _ViewMerchantOrderState extends ConsumerState<ViewMerchantOrder> {
                         ),
                       ),
                       CustomOrderStepper(
-                        order: widget.order,
+                        widgetOrder: widget.order,
                         onUpdateState: (order) {
                           int index =
                               orders.indexWhere((o) => o.id == widget.order.id);
@@ -76,6 +76,7 @@ class _ViewMerchantOrderState extends ConsumerState<ViewMerchantOrder> {
                             order,
                             ...post,
                           ];
+                          setState(() {});
 
                           // Order order = userOrders.first;
                           // List<OrderStates> states = order.states;

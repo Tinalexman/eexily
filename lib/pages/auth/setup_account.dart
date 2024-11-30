@@ -59,6 +59,7 @@ class _SetupAccountPageState extends State<SetupAccountPage> {
 
   Future<void> update() async {
     authDetails["bankName"] = bankName;
+    authDetails["bankCode"] = bankCode;
 
     String userId = widget.userData.first;
     String type = widget.userData[1];

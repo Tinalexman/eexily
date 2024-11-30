@@ -41,9 +41,9 @@ class _IndividualOrderHistoryState
       if (loadingExpress) {
         getExpress();
       }
-      if (loadingStandard) {
-        getStandard();
-      }
+      // if (loadingStandard) {
+      //   getStandard();
+      // }
     });
   }
 
@@ -99,403 +99,634 @@ class _IndividualOrderHistoryState
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TabBar(
-                  dividerColor: Colors.transparent,
-                  labelStyle: context.textTheme.titleMedium,
-                  tabs: const [
-                    Tab(text: "Standard"),
-                    Tab(text: "Express"),
-                  ],
-                ),
-                SizedBox(height: 5.h),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      if (canShowStandardData)
-                        Skeletonizer(
-                          enabled: loadingStandard,
-                          child: RefreshIndicator(
-                            onRefresh: () async {},
-                            child: ListView.separated(
-                              itemBuilder: (_, index) {
-                                if (index == scheduledData.length) {
-                                  return SizedBox(height: 20.h);
-                                }
-
-                                Order order = scheduledData[index];
-
-                                return Container(
-                                  width: 375.w,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15.r),
-                                    color: Colors.white,
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius: 1,
-                                      ),
-                                    ],
+                if (canShowExpressData)
+                  Expanded(
+                    child: Skeletonizer(
+                      enabled: loadingExpress,
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          setState(() => loadingExpress = true);
+                          getExpress();
+                        },
+                        child: ListView.separated(
+                          itemBuilder: (_, index) {
+                            if (index == expressData.length) {
+                              return SizedBox(height: 20.h);
+                            }
+                    
+                            Order order = expressData[index];
+                    
+                            return Container(
+                              width: 375.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15.r),
+                                color: Colors.white,
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 1,
                                   ),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 10.h,
-                                    horizontal: 10.w,
+                                ],
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10.h,
+                                horizontal: 10.w,
+                              ),
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "G-Code: ${order.code}",
+                                    style: context.textTheme.bodyLarge!
+                                        .copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Order #${index + 1}",
-                                        style: context.textTheme.bodyLarge!
-                                            .copyWith(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      SizedBox(height: 10.h),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Delivered to: ",
-                                              style:
-                                                  context.textTheme.bodySmall,
-                                            ),
-                                            TextSpan(
-                                              text:
-                                                  "${order.metadata.pickUpAddress}, ${order.metadata.pickUpLocation}",
-                                              style: context
-                                                  .textTheme.bodySmall!
-                                                  .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Amount of gas ordered: ",
-                                              style:
-                                                  context.textTheme.bodySmall,
-                                            ),
-                                            TextSpan(
-                                              text: "${order.quantity}kg",
-                                              style: context
-                                                  .textTheme.bodySmall!
-                                                  .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Amount paid: ",
-                                              style:
-                                                  context.textTheme.bodySmall,
-                                            ),
-                                            TextSpan(
-                                              text:
-                                                  "₦${formatAmount(order.price.toStringAsFixed(0))}",
-                                              style: context
-                                                  .textTheme.bodySmall!
-                                                  .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (_, __) =>
                                   SizedBox(height: 10.h),
-                              itemCount: scheduledData.length + 1,
-                            ),
-                          ),
-                        ),
-                      if (!canShowStandardData)
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                "assets/images/error.png",
-                                width: 200.w,
-                                fit: BoxFit.cover,
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Address: ",
+                                          style:
+                                          context.textTheme.bodySmall,
+                                        ),
+                                        TextSpan(
+                                          text:
+                                          "${order.metadata.pickUpAddress}, ${order.metadata.pickUpLocation}",
+                                          style: context
+                                              .textTheme.bodySmall!
+                                              .copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Amount of gas ordered: ",
+                                          style:
+                                          context.textTheme.bodySmall,
+                                        ),
+                                        TextSpan(
+                                          text: "${order.quantity}kg",
+                                          style: context
+                                              .textTheme.bodySmall!
+                                              .copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Amount paid: ",
+                                          style:
+                                          context.textTheme.bodySmall,
+                                        ),
+                                        TextSpan(
+                                          text:
+                                          "₦${formatAmount(order.price.toStringAsFixed(0))}",
+                                          style: context
+                                              .textTheme.bodySmall!
+                                              .copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Date Ordered: ",
+                                          style:
+                                          context.textTheme.bodySmall,
+                                        ),
+                                        TextSpan(
+                                          text: formatDateRawWithTime(
+                                            DateTime.parse(order.createdAt),
+                                          ),
+                                          style: context
+                                              .textTheme.bodySmall!
+                                              .copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Seller Type: ",
+                                          style:
+                                          context.textTheme.bodySmall,
+                                        ),
+                                        TextSpan(
+                                          text: order.sellerType
+                                              .toLowerCase()
+                                              .replaceAll("_", "")
+                                              .capitalize,
+                                          style: context
+                                              .textTheme.bodySmall!
+                                              .copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Status: ",
+                                          style:
+                                          context.textTheme.bodySmall,
+                                        ),
+                                        TextSpan(
+                                          text: order.status
+                                              .toLowerCase()
+                                              .replaceAll("_", " ")
+                                              .capitalize,
+                                          style: context
+                                              .textTheme.bodySmall!
+                                              .copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 30.h),
-                              Text(
-                                "Oops :(",
-                                style: context.textTheme.titleLarge!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: 5.h),
-                              Text(
-                                "Seems like you have not made any standard orders.",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: "WorkSans",
-                                ),
-                              ),
+                            );
+                          },
+                          separatorBuilder: (_, __) =>
                               SizedBox(height: 10.h),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() => loadingStandard = true);
-                                  getStandard();
-                                },
-                                child: Text(
-                                  "Click to Refresh",
-                                  style: context.textTheme.bodyLarge!.copyWith(
-                                    fontFamily: "WorkSans",
-                                    fontWeight: FontWeight.w600,
-                                    color: primary,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          itemCount: expressData.length + 1,
                         ),
-                      if (canShowExpressData)
-                        Skeletonizer(
-                          enabled: loadingExpress,
-                          child: RefreshIndicator(
-                            onRefresh: () async {
-                              setState(() => loadingExpress = true);
-                              getExpress();
-                            },
-                            child: ListView.separated(
-                              itemBuilder: (_, index) {
-                                if (index == expressData.length) {
-                                  return SizedBox(height: 20.h);
-                                }
-
-                                Order order = expressData[index];
-
-                                return Container(
-                                  width: 375.w,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15.r),
-                                    color: Colors.white,
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius: 1,
-                                      ),
-                                    ],
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 10.h,
-                                    horizontal: 10.w,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "G-Code: ${order.code}",
-                                        style: context.textTheme.bodyLarge!
-                                            .copyWith(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      SizedBox(height: 10.h),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Address: ",
-                                              style:
-                                                  context.textTheme.bodySmall,
-                                            ),
-                                            TextSpan(
-                                              text:
-                                                  "${order.metadata.pickUpAddress}, ${order.metadata.pickUpLocation}",
-                                              style: context
-                                                  .textTheme.bodySmall!
-                                                  .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: 5.h),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Amount of gas ordered: ",
-                                              style:
-                                                  context.textTheme.bodySmall,
-                                            ),
-                                            TextSpan(
-                                              text: "${order.quantity}kg",
-                                              style: context
-                                                  .textTheme.bodySmall!
-                                                  .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: 5.h),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Amount paid: ",
-                                              style:
-                                                  context.textTheme.bodySmall,
-                                            ),
-                                            TextSpan(
-                                              text:
-                                                  "₦${formatAmount(order.price.toStringAsFixed(0))}",
-                                              style: context
-                                                  .textTheme.bodySmall!
-                                                  .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: 5.h),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Date Ordered: ",
-                                              style:
-                                                  context.textTheme.bodySmall,
-                                            ),
-                                            TextSpan(
-                                              text: formatDateRawWithTime(
-                                                DateTime.parse(order.createdAt),
-                                              ),
-                                              style: context
-                                                  .textTheme.bodySmall!
-                                                  .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: 5.h),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Seller Type: ",
-                                              style:
-                                                  context.textTheme.bodySmall,
-                                            ),
-                                            TextSpan(
-                                              text: order.sellerType
-                                                  .toLowerCase()
-                                                  .replaceAll("_", "")
-                                                  .capitalize,
-                                              style: context
-                                                  .textTheme.bodySmall!
-                                                  .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: 5.h),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Status: ",
-                                              style:
-                                                  context.textTheme.bodySmall,
-                                            ),
-                                            TextSpan(
-                                              text: order.status
-                                                  .toLowerCase()
-                                                  .replaceAll("_", " ")
-                                                  .capitalize,
-                                              style: context
-                                                  .textTheme.bodySmall!
-                                                  .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (_, __) =>
-                                  SizedBox(height: 10.h),
-                              itemCount: expressData.length + 1,
-                            ),
-                          ),
-                        ),
-                      if (!canShowExpressData)
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                "assets/images/error.png",
-                                width: 200.w,
-                                fit: BoxFit.cover,
-                              ),
-                              SizedBox(height: 30.h),
-                              Text(
-                                "Oops :(",
-                                style: context.textTheme.titleLarge!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: 5.h),
-                              Text(
-                                "Seems like you have not made any express orders.",
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: "WorkSans",
-                                ),
-                              ),
-                              SizedBox(height: 10.h),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() => loadingExpress = true);
-                                  getExpress();
-                                },
-                                child: Text(
-                                  "Click to Refresh",
-                                  style: context.textTheme.bodyLarge!.copyWith(
-                                    fontFamily: "WorkSans",
-                                    fontWeight: FontWeight.w600,
-                                    color: primary,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                    ],
+                      ),
+                    ),
                   ),
-                )
+                if (!canShowExpressData)
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/error.png",
+                          width: 200.w,
+                          fit: BoxFit.cover,
+                        ),
+                        SizedBox(height: 30.h),
+                        Text(
+                          "Oops :(",
+                          style: context.textTheme.titleLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 5.h),
+                        Text(
+                          "Seems like you have not made any express orders.",
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontFamily: "WorkSans",
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() => loadingExpress = true);
+                            getExpress();
+                          },
+                          child: Text(
+                            "Click to Refresh",
+                            style: context.textTheme.bodyLarge!.copyWith(
+                              fontFamily: "WorkSans",
+                              fontWeight: FontWeight.w600,
+                              color: primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                // TabBar(
+                //   dividerColor: Colors.transparent,
+                //   labelStyle: context.textTheme.titleMedium,
+                //   tabs: const [
+                //     Tab(text: "Standard"),
+                //     Tab(text: "Express"),
+                //   ],
+                // ),
+                // SizedBox(height: 5.h),
+                // Expanded(
+                //   child: TabBarView(
+                //     children: [
+                //       if (canShowStandardData)
+                //         Skeletonizer(
+                //           enabled: loadingStandard,
+                //           child: RefreshIndicator(
+                //             onRefresh: () async {},
+                //             child: ListView.separated(
+                //               itemBuilder: (_, index) {
+                //                 if (index == scheduledData.length) {
+                //                   return SizedBox(height: 20.h);
+                //                 }
+                //
+                //                 Order order = scheduledData[index];
+                //
+                //                 return Container(
+                //                   width: 375.w,
+                //                   decoration: BoxDecoration(
+                //                     borderRadius: BorderRadius.circular(15.r),
+                //                     color: Colors.white,
+                //                     boxShadow: const [
+                //                       BoxShadow(
+                //                         color: Colors.black12,
+                //                         blurRadius: 1,
+                //                       ),
+                //                     ],
+                //                   ),
+                //                   padding: EdgeInsets.symmetric(
+                //                     vertical: 10.h,
+                //                     horizontal: 10.w,
+                //                   ),
+                //                   child: Column(
+                //                     crossAxisAlignment:
+                //                         CrossAxisAlignment.start,
+                //                     children: [
+                //                       Text(
+                //                         "Order #${index + 1}",
+                //                         style: context.textTheme.bodyLarge!
+                //                             .copyWith(
+                //                           fontWeight: FontWeight.w600,
+                //                         ),
+                //                       ),
+                //                       SizedBox(height: 10.h),
+                //                       RichText(
+                //                         text: TextSpan(
+                //                           children: [
+                //                             TextSpan(
+                //                               text: "Delivered to: ",
+                //                               style:
+                //                                   context.textTheme.bodySmall,
+                //                             ),
+                //                             TextSpan(
+                //                               text:
+                //                                   "${order.metadata.pickUpAddress}, ${order.metadata.pickUpLocation}",
+                //                               style: context
+                //                                   .textTheme.bodySmall!
+                //                                   .copyWith(
+                //                                 fontWeight: FontWeight.w500,
+                //                               ),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ),
+                //                       RichText(
+                //                         text: TextSpan(
+                //                           children: [
+                //                             TextSpan(
+                //                               text: "Amount of gas ordered: ",
+                //                               style:
+                //                                   context.textTheme.bodySmall,
+                //                             ),
+                //                             TextSpan(
+                //                               text: "${order.quantity}kg",
+                //                               style: context
+                //                                   .textTheme.bodySmall!
+                //                                   .copyWith(
+                //                                 fontWeight: FontWeight.w500,
+                //                               ),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ),
+                //                       RichText(
+                //                         text: TextSpan(
+                //                           children: [
+                //                             TextSpan(
+                //                               text: "Amount paid: ",
+                //                               style:
+                //                                   context.textTheme.bodySmall,
+                //                             ),
+                //                             TextSpan(
+                //                               text:
+                //                                   "₦${formatAmount(order.price.toStringAsFixed(0))}",
+                //                               style: context
+                //                                   .textTheme.bodySmall!
+                //                                   .copyWith(
+                //                                 fontWeight: FontWeight.w500,
+                //                               ),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ),
+                //                     ],
+                //                   ),
+                //                 );
+                //               },
+                //               separatorBuilder: (_, __) =>
+                //                   SizedBox(height: 10.h),
+                //               itemCount: scheduledData.length + 1,
+                //             ),
+                //           ),
+                //         ),
+                //       if (!canShowStandardData)
+                //         Center(
+                //           child: Column(
+                //             mainAxisAlignment: MainAxisAlignment.center,
+                //             crossAxisAlignment: CrossAxisAlignment.center,
+                //             children: [
+                //               Image.asset(
+                //                 "assets/images/error.png",
+                //                 width: 200.w,
+                //                 fit: BoxFit.cover,
+                //               ),
+                //               SizedBox(height: 30.h),
+                //               Text(
+                //                 "Oops :(",
+                //                 style: context.textTheme.titleLarge!.copyWith(
+                //                   fontWeight: FontWeight.bold,
+                //                 ),
+                //                 textAlign: TextAlign.center,
+                //               ),
+                //               SizedBox(height: 5.h),
+                //               Text(
+                //                 "Seems like you have not made any standard orders.",
+                //                 style: context.textTheme.bodyMedium!.copyWith(
+                //                   fontFamily: "WorkSans",
+                //                 ),
+                //               ),
+                //               SizedBox(height: 10.h),
+                //               GestureDetector(
+                //                 onTap: () {
+                //                   setState(() => loadingStandard = true);
+                //                   getStandard();
+                //                 },
+                //                 child: Text(
+                //                   "Click to Refresh",
+                //                   style: context.textTheme.bodyLarge!.copyWith(
+                //                     fontFamily: "WorkSans",
+                //                     fontWeight: FontWeight.w600,
+                //                     color: primary,
+                //                   ),
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       if (canShowExpressData)
+                //         Skeletonizer(
+                //           enabled: loadingExpress,
+                //           child: RefreshIndicator(
+                //             onRefresh: () async {
+                //               setState(() => loadingExpress = true);
+                //               getExpress();
+                //             },
+                //             child: ListView.separated(
+                //               itemBuilder: (_, index) {
+                //                 if (index == expressData.length) {
+                //                   return SizedBox(height: 20.h);
+                //                 }
+                //
+                //                 Order order = expressData[index];
+                //
+                //                 return Container(
+                //                   width: 375.w,
+                //                   decoration: BoxDecoration(
+                //                     borderRadius: BorderRadius.circular(15.r),
+                //                     color: Colors.white,
+                //                     boxShadow: const [
+                //                       BoxShadow(
+                //                         color: Colors.black12,
+                //                         blurRadius: 1,
+                //                       ),
+                //                     ],
+                //                   ),
+                //                   padding: EdgeInsets.symmetric(
+                //                     vertical: 10.h,
+                //                     horizontal: 10.w,
+                //                   ),
+                //                   child: Column(
+                //                     crossAxisAlignment:
+                //                         CrossAxisAlignment.start,
+                //                     children: [
+                //                       Text(
+                //                         "G-Code: ${order.code}",
+                //                         style: context.textTheme.bodyLarge!
+                //                             .copyWith(
+                //                           fontWeight: FontWeight.w600,
+                //                         ),
+                //                       ),
+                //                       SizedBox(height: 10.h),
+                //                       RichText(
+                //                         text: TextSpan(
+                //                           children: [
+                //                             TextSpan(
+                //                               text: "Address: ",
+                //                               style:
+                //                                   context.textTheme.bodySmall,
+                //                             ),
+                //                             TextSpan(
+                //                               text:
+                //                                   "${order.metadata.pickUpAddress}, ${order.metadata.pickUpLocation}",
+                //                               style: context
+                //                                   .textTheme.bodySmall!
+                //                                   .copyWith(
+                //                                 fontWeight: FontWeight.w500,
+                //                               ),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ),
+                //                       SizedBox(height: 5.h),
+                //                       RichText(
+                //                         text: TextSpan(
+                //                           children: [
+                //                             TextSpan(
+                //                               text: "Amount of gas ordered: ",
+                //                               style:
+                //                                   context.textTheme.bodySmall,
+                //                             ),
+                //                             TextSpan(
+                //                               text: "${order.quantity}kg",
+                //                               style: context
+                //                                   .textTheme.bodySmall!
+                //                                   .copyWith(
+                //                                 fontWeight: FontWeight.w500,
+                //                               ),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ),
+                //                       SizedBox(height: 5.h),
+                //                       RichText(
+                //                         text: TextSpan(
+                //                           children: [
+                //                             TextSpan(
+                //                               text: "Amount paid: ",
+                //                               style:
+                //                                   context.textTheme.bodySmall,
+                //                             ),
+                //                             TextSpan(
+                //                               text:
+                //                                   "₦${formatAmount(order.price.toStringAsFixed(0))}",
+                //                               style: context
+                //                                   .textTheme.bodySmall!
+                //                                   .copyWith(
+                //                                 fontWeight: FontWeight.w500,
+                //                               ),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ),
+                //                       SizedBox(height: 5.h),
+                //                       RichText(
+                //                         text: TextSpan(
+                //                           children: [
+                //                             TextSpan(
+                //                               text: "Date Ordered: ",
+                //                               style:
+                //                                   context.textTheme.bodySmall,
+                //                             ),
+                //                             TextSpan(
+                //                               text: formatDateRawWithTime(
+                //                                 DateTime.parse(order.createdAt),
+                //                               ),
+                //                               style: context
+                //                                   .textTheme.bodySmall!
+                //                                   .copyWith(
+                //                                 fontWeight: FontWeight.w500,
+                //                               ),
+                //                             )
+                //                           ],
+                //                         ),
+                //                       ),
+                //                       SizedBox(height: 5.h),
+                //                       RichText(
+                //                         text: TextSpan(
+                //                           children: [
+                //                             TextSpan(
+                //                               text: "Seller Type: ",
+                //                               style:
+                //                                   context.textTheme.bodySmall,
+                //                             ),
+                //                             TextSpan(
+                //                               text: order.sellerType
+                //                                   .toLowerCase()
+                //                                   .replaceAll("_", "")
+                //                                   .capitalize,
+                //                               style: context
+                //                                   .textTheme.bodySmall!
+                //                                   .copyWith(
+                //                                 fontWeight: FontWeight.w500,
+                //                               ),
+                //                             )
+                //                           ],
+                //                         ),
+                //                       ),
+                //                       SizedBox(height: 5.h),
+                //                       RichText(
+                //                         text: TextSpan(
+                //                           children: [
+                //                             TextSpan(
+                //                               text: "Status: ",
+                //                               style:
+                //                                   context.textTheme.bodySmall,
+                //                             ),
+                //                             TextSpan(
+                //                               text: order.status
+                //                                   .toLowerCase()
+                //                                   .replaceAll("_", " ")
+                //                                   .capitalize,
+                //                               style: context
+                //                                   .textTheme.bodySmall!
+                //                                   .copyWith(
+                //                                 fontWeight: FontWeight.w500,
+                //                               ),
+                //                             )
+                //                           ],
+                //                         ),
+                //                       ),
+                //                     ],
+                //                   ),
+                //                 );
+                //               },
+                //               separatorBuilder: (_, __) =>
+                //                   SizedBox(height: 10.h),
+                //               itemCount: expressData.length + 1,
+                //             ),
+                //           ),
+                //         ),
+                //       if (!canShowExpressData)
+                //         Center(
+                //           child: Column(
+                //             mainAxisAlignment: MainAxisAlignment.center,
+                //             crossAxisAlignment: CrossAxisAlignment.center,
+                //             children: [
+                //               Image.asset(
+                //                 "assets/images/error.png",
+                //                 width: 200.w,
+                //                 fit: BoxFit.cover,
+                //               ),
+                //               SizedBox(height: 30.h),
+                //               Text(
+                //                 "Oops :(",
+                //                 style: context.textTheme.titleLarge!.copyWith(
+                //                   fontWeight: FontWeight.bold,
+                //                 ),
+                //                 textAlign: TextAlign.center,
+                //               ),
+                //               SizedBox(height: 5.h),
+                //               Text(
+                //                 "Seems like you have not made any express orders.",
+                //                 style: context.textTheme.bodyMedium!.copyWith(
+                //                   fontFamily: "WorkSans",
+                //                 ),
+                //               ),
+                //               SizedBox(height: 10.h),
+                //               GestureDetector(
+                //                 onTap: () {
+                //                   setState(() => loadingExpress = true);
+                //                   getExpress();
+                //                 },
+                //                 child: Text(
+                //                   "Click to Refresh",
+                //                   style: context.textTheme.bodyLarge!.copyWith(
+                //                     fontFamily: "WorkSans",
+                //                     fontWeight: FontWeight.w600,
+                //                     color: primary,
+                //                   ),
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //     ],
+                //   ),
+                // )
               ],
             ),
           ),

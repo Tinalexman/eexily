@@ -42,7 +42,10 @@ class _RegisterRiderPageState extends ConsumerState<RegisterRiderPage> {
     "gcode": "",
   };
 
-  final Map<String, String> options = {"Driver": "DRIVER", "Rider": "RIDER"};
+  final Map<String, String> options = {
+    // "Driver": "DRIVER",
+    "Rider": "RIDER",
+  };
 
   String? type, location;
   DateTime? licenseExpiry;

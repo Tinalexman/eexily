@@ -107,12 +107,12 @@ class _HasOrderState extends ConsumerState<_HasOrder> {
                 widget.getExpress();
               },
               child: CustomOrderStepper(
-                order: widget.order,
+                widgetOrder: widget.order,
                 onUpdateState: (order) {
                   int index = orders.indexWhere((o) => o.id == widget.order.id);
                   List<Order> pre = orders.sublist(0, index);
                   List<Order> post = orders.sublist(index + 1);
-                  ref.watch(merchantOrdersProvider.notifier).state = [
+                  ref.watch(initialExpressOrdersProvider.notifier).state = [
                     ...pre,
                     order,
                     ...post,
@@ -132,31 +132,32 @@ class _NoOrder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TabBar(
-            dividerColor: Colors.transparent,
-            labelStyle: context.textTheme.titleMedium,
-            tabs: const [
-              Tab(text: "Standard"),
-              Tab(text: "Express"),
-            ],
-          ),
-          SizedBox(height: 5.h),
-          const Expanded(
-            child: TabBarView(
-              children: [
-                _ScheduleRefill(),
-                _RefillNow(),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+    // return DefaultTabController(
+    //   length: 2,
+    //   child: Column(
+    //     crossAxisAlignment: CrossAxisAlignment.start,
+    //     children: [
+    //       TabBar(
+    //         dividerColor: Colors.transparent,
+    //         labelStyle: context.textTheme.titleMedium,
+    //         tabs: const [
+    //           Tab(text: "Standard"),
+    //           Tab(text: "Express"),
+    //         ],
+    //       ),
+    //       SizedBox(height: 5.h),
+    //       const Expanded(
+    //         child: TabBarView(
+    //           children: [
+    //             _ScheduleRefill(),
+    //             _RefillNow(),
+    //           ],
+    //         ),
+    //       )
+    //     ],
+    //   ),
+    // );
+    return const _RefillNow();
   }
 }
 
@@ -276,6 +277,7 @@ class _RefillNow extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          SizedBox(height: 50.h),
           Image.asset(
             "assets/images/refill now.png",
             fit: BoxFit.cover,
@@ -286,7 +288,7 @@ class _RefillNow extends StatelessWidget {
             style: context.textTheme.bodyMedium,
             textAlign: TextAlign.start,
           ),
-          SizedBox(height: 197.h),
+          SizedBox(height: 180.h),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               elevation: 0.0,

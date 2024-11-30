@@ -1,4 +1,5 @@
 import 'dart:math';
+import'dart:developer' as d;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -1579,12 +1580,12 @@ class SuccessModal extends StatelessWidget {
 }
 
 class CustomOrderStepper extends ConsumerStatefulWidget {
-  final Order order;
+  final Order widgetOrder;
   final Function(Order) onUpdateState;
 
   const CustomOrderStepper({
     super.key,
-    required this.order,
+    required this.widgetOrder,
     required this.onUpdateState,
   });
 
@@ -1609,6 +1610,8 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
       canDeliver;
 
   bool loading = false;
+
+  late Order order;
 
   @override
   void initState() {
@@ -1642,15 +1645,20 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
       ),
     );
 
+    order = widget.widgetOrder;
+    determineFlags();
+  }
+
+  void determineFlags() {
     UserBase base = ref.read(userProvider);
     isMerchant = base.role == UserRole.merchant;
     isStation = base.role == UserRole.attendant;
     isDriver = base.role == UserRole.driver;
     isUser = base.role == UserRole.individual;
-    canPay = isUser && widget.order.status == "MATCHED";
-    canPickUp = isDriver && widget.order.status == "PAID";
-    canRefill = (isMerchant || isStation) && widget.order.status == "PICK_UP";
-    canDeliver = isDriver && widget.order.status == "REFILL";
+    canPay = isUser && order.status == "MATCHED";
+    canPickUp = isDriver && order.status == "PAID";
+    canRefill = (isMerchant || isStation) && order.status == "PICK_UP";
+    canDeliver = isDriver && order.status == "REFILL";
   }
 
   String getOrderTitle(int index) {
@@ -1696,11 +1704,15 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
 
   Future<void> updateStatus(String status) async {
     setState(() => loading = true);
-    var response = await updateOrderStatus(status, widget.order.code);
+    var response = await updateOrderStatus(status, order.code);
     setState(() => loading = false);
     showMessage(response.message, response.status ? primary : null);
     if (response.status) {
       widget.onUpdateState(response.payload!);
+      setState(() {
+        order = response.payload!;
+        determineFlags();
+      });
     }
   }
 
@@ -1709,13 +1721,12 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
     return ListView.builder(
       itemCount: total,
       itemBuilder: (_, index) {
-        OrderState state = OrderState.values[index];
-        bool hasStepBeingCompleted = index < widget.order.states.length;
-        bool isNextToBeCompleted = index == widget.order.states.length;
+        bool hasStepBeingCompleted = index < order.states.length;
+        bool isNextToBeCompleted = index == order.states.length;
         bool isLastStep = index == total - 1;
         DateTime? stepTimestamp;
-        if (index < widget.order.states.length) {
-          stepTimestamp = DateTime.parse(widget.order.states[index].timestamp);
+        if (index < order.states.length) {
+          stepTimestamp = DateTime.parse(order.states[index].timestamp);
         }
 
         return SizedBox(
@@ -1765,7 +1776,7 @@ class _CustomOrderStepperState extends ConsumerState<CustomOrderStepper> {
                       children: [
                         ElevatedButton(
                           onPressed: () =>
-                              launchPayStackUrl(widget.order.paymentUrl),
+                              launchPayStackUrl(order.paymentUrl),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: primary,
                             shape: RoundedRectangleBorder(

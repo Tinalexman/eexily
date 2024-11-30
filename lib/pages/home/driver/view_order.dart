@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:eexily/components/order.dart';
 import 'package:eexily/components/user/driver.dart';
 import 'package:eexily/tools/constants.dart';
@@ -20,6 +22,14 @@ class ViewDriverOrder extends ConsumerStatefulWidget {
 }
 
 class _ViewDriverOrderState extends ConsumerState<ViewDriverOrder> {
+
+  @override
+  void didUpdateWidget(covariant ViewDriverOrder oldWidget) {
+    log("Driver: New ${widget.order.status} Old ${oldWidget.order.status}");
+    super.didUpdateWidget(oldWidget);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     List<Order> orders = ref.watch(driverOrdersProvider);
@@ -66,7 +76,7 @@ class _ViewDriverOrderState extends ConsumerState<ViewDriverOrder> {
                         ),
                       ),
                       CustomOrderStepper(
-                        order: widget.order,
+                        widgetOrder: widget.order,
                         onUpdateState: (order) {
                           int index =
                               orders.indexWhere((o) => o.id == widget.order.id);
@@ -77,6 +87,7 @@ class _ViewDriverOrderState extends ConsumerState<ViewDriverOrder> {
                             order,
                             ...post,
                           ];
+                          setState(() {});
                         },
                       ),
                     ],

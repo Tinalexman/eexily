@@ -85,25 +85,23 @@ Future<EexilyResponse<List<dynamic>?>> login(Map<String, dynamic> data) async {
   );
 }
 
-Future<EexilyResponse<UserBase?>> verify(Map<String, dynamic> data) async {
+Future<EexilyResponse<bool>> verify(Map<String, dynamic> data) async {
   try {
     Response response = await dio.post("/auth/verify-user", data: data);
     if (response.statusCode! == 200) {
-      Map<String, dynamic> data = response.data["payload"]["user"];
       String token = response.data["payload"]["token"];
       accessToken = token;
 
-      UserBase base = UserFactory.createUser(data);
-      return EexilyResponse(
+      return const EexilyResponse(
         message: "Account Verified",
-        payload: base,
+        payload: true,
         status: true,
       );
     }
   } on DioException catch (e) {
     return EexilyResponse(
       message: e.response?.data["message"] ?? "An error occurred.",
-      payload: null,
+      payload: false,
       status: false,
     );
   } catch (e) {
@@ -112,7 +110,7 @@ Future<EexilyResponse<UserBase?>> verify(Map<String, dynamic> data) async {
 
   return const EexilyResponse(
     message: "An error occurred. Please try again.",
-    payload: null,
+    payload: false,
     status: false,
   );
 }
@@ -120,7 +118,7 @@ Future<EexilyResponse<UserBase?>> verify(Map<String, dynamic> data) async {
 Future<EexilyResponse> resendToken(String email) async {
   try {
     Response response =
-        await dio.post("/auth/verify-user", data: {"email": email});
+        await dio.post("/auth/resend-otp", data: {"email": email});
     if (response.statusCode! == 200) {
       return const EexilyResponse(
         message: "Verification Code Sent",

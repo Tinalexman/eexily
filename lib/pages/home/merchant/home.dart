@@ -161,7 +161,7 @@ class _HomeState extends ConsumerState<Home> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 5.h),
           if (!canShowData)
             Center(
               child: Column(
@@ -258,12 +258,12 @@ class _HomeState extends ConsumerState<Home> {
                     itemBuilder: (_, index) => NonUserOrderContainer(
                       order: merchantOrders[index],
                       destination: Pages.viewMerchantOrder,
-                      key: ValueKey<String>(merchantOrders[index].id),
+                      key: ValueKey<int>(merchantOrders[index].states.length),
                     ),
                     separatorBuilder: (_, __) => SizedBox(height: 10.h),
                     padding: const EdgeInsets.all(1),
                     itemCount: merchantOrders.length,
-                    physics: const BouncingScrollPhysics(),
+                    physics: const AlwaysScrollableScrollPhysics(),
                   ),
                 ),
               ),

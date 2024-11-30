@@ -196,23 +196,23 @@ class _HomeState extends ConsumerState<Home> {
           ),
         if (canShowData)
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                setState(() => loading = true);
-                getOrders();
-              },
-              child: Skeletonizer(
-                enabled: loading,
+            child: Skeletonizer(
+              enabled: loading,
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  setState(() => loading = true);
+                  getOrders();
+                },
                 child: ListView.separated(
                   itemBuilder: (_, index) => wd.NonUserOrderContainer(
                     order: driverOrders[index],
                     destination: Pages.viewDriverOrder,
-                    key: ValueKey<String>(driverOrders[index].id),
+                    key: ValueKey<int>(driverOrders[index].states.length),
                   ),
                   separatorBuilder: (_, __) => SizedBox(height: 10.h),
                   padding: const EdgeInsets.all(1),
                   itemCount: driverOrders.length,
-                  physics: const BouncingScrollPhysics(),
+                  physics: const AlwaysScrollableScrollPhysics(),
                 ),
               ),
             ),

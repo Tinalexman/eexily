@@ -6,9 +6,9 @@ export 'dart:developer' show log;
 
 export 'package:dio/dio.dart';
 
-const String onlineBase = "eexily-backend.onrender.com";
+const String onlineBase = "api.eexily.com";
 const String localBase = "192.168.28.93:7030";
-const String baseURL = "https://$onlineBase";
+const String baseURL = "http://$onlineBase";
 
 String accessToken = "";
 

@@ -41,9 +41,29 @@ android {
         versionName = flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'gas_feel'
+            keyPassword 'gas_feel'
+            storeFile file('../gas_feel.jks')
+            storePassword 'gas_feel'
+        }
+
+        debug {
+            keyAlias 'AndroidDebugKey'
+            keyPassword 'android'
+            storeFile file('C:/Users/taiwo/.android/debug.keystore')
+            storePassword 'android'
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig = signingConfigs.debug
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 }

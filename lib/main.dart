@@ -33,8 +33,6 @@ Future<void> main() async {
         defaultColor: primary,
         ledColor: Colors.white,
         importance: NotificationImportance.High,
-        // playSound: true,
-        // soundSource: 'resource://raw/gas_feel',
       ),
     ],
     channelGroups: [
